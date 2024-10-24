@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Cipher: Treasure Hunter's Guide</title>
+    <link rel="stylesheet" href="style/vig.css">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+       
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Treasure Hunter's Guide</h2>
+        <ul>
+            <li><a href="vig_Lecture.html"><i class="fas fa-book"></i><span> Lecture</span></a></li>
+            <li><a href="vig.html"><i class="fas fa-cogs"></i><span> Demonstration</span></a></li>
+            <li><a href="vig_Story.html"><i class="fas fa-scroll"></i><span> Story</span></a></li>
+            <li><a href="vig_Puzzle.html"><i class="fas fa-puzzle-piece"></i><span> Puzzle</span></a></li>
+            <li><a href="achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Vigenère Cipher: A Treasure Hunter's Tool</h1>
+        <div class="content-wrapper">
+            <div class="left-column">
+                <div class="input-section">
+                    <div class="input-container">
+                        <label for="plaintext"><strong>Secret Message:</strong></label>
+                        <input type="text" id="plaintext" value="The best">
+                    </div>
+                    <div class="input-container">
+                        <label for="key"><strong>Treasure Key:</strong></label>
+                        <input type="text" id="key" value="grandpa">
+                    </div>
+                    <button id="start" onclick="AchievementSystem.unlockAchievement('vig_tool')">Encode</button>
+                </div>
+                <div id="vigenere-square"></div>
+            </div>
+            <div class="right-column">
+                <div class="explanation-container">
+                    <div id="explanation"> </div>
+                    <div id="vigenere-hints" class="hints-box"></div>
+                </div>
+                <div class="result-container">
+                    <div class="input-container">
+                        <label for="ciphertext"><strong>Encrypted Treasure Map:</strong></label>
+                        <input type="text" id="ciphertext" readonly>
+                    </div>
+                    <div class="button-container">
+                        <button id="next"  disabled>Decode Next Clue</button>
+                        <button id="reset">Reset the Map</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let plaintext = '';
+        let key = '';
+        let currentStep = 0;
+
+        const plaintextElement = document.getElementById('plaintext');
+        const keyElement = document.getElementById('key');
+        const ciphertextElement = document.getElementById('ciphertext');
+        const explanationElement = document.getElementById('explanation');
+        const square = document.getElementById('vigenere-square');
+        const startButton = document.getElementById('start');
+        const nextButton = document.getElementById('next');
+        const resetButton = document.getElementById('reset');
+
+        function createVigenereSquare() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            square.innerHTML = ''; // Clear any existing content
+            
+            // Create the top row (A-Z)
+            const topRow = document.createElement('div');
+            topRow.className = 'row';
+            topRow.appendChild(createCell(' ', 'highlight-top')); // Empty cell in top-left corner
+            for (let letter of alphabet) {
+                topRow.appendChild(createCell(letter, 'highlight-top'));
+            }
+            square.appendChild(topRow);
+
+            // Create the main grid
+            for (let i = 0; i < 26; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.appendChild(createCell(alphabet[i], 'highlight-left'));
+                for (let j = 0; j < 26; j++) {
+                    row.appendChild(createCell(alphabet[(i + j) % 26]));
+                }
+                square.appendChild(row);
+            }
+        }
+
+        function createCell(content, className = '') {
+            const cell = document.createElement('div');
+            cell.textContent = content;
+            cell.className = 'cell ' + className;
+            return cell;
+        }
+
+        function highlightStep() {
+            if (currentStep >= plaintext.length) {
+                alert("Encryption complete!");
+                return;
+            }
+
+            clearHighlights();
+
+            const p = plaintext[currentStep];
+            const k = key[currentStep % key.length];
+            const c = String.fromCharCode((p.charCodeAt(0) - 65 + k.charCodeAt(0) - 65) % 26 + 65);
+
+            // Highlight row
+            const rowIndex = k.charCodeAt(0) - 64;
+            const row = square.children[rowIndex];
+            for (let i = 1; i < row.children.length; i++) {
+                row.children[i].classList.add('highlight');
+            }
+
+            // Highlight column
+            const colIndex = p.charCodeAt(0) - 64;
+            for (let i = 0; i < square.children.length; i++) {
+                square.children[i].children[colIndex].classList.add('highlight');
+            }
+
+            // Highlight intersection
+            square.children[rowIndex].children[colIndex].classList.add('intersect');
+
+            explanationElement.innerHTML = `Step ${currentStep + 1}: Secret letter '${p}' + Key letter '${k}' = Encrypted letter '${c}'<br>
+                                        Find row '${k}', column '${p}', intersection is '${c}'`;
+
+            ciphertextElement.value += c;
+            currentStep++;
+        }
+
+        function clearHighlights() {
+            square.querySelectorAll('.highlight, .intersect').forEach(cell => {
+                cell.classList.remove('highlight', 'intersect');
+            });
+        }
+
+        function addHints() {
+            const hintsElement = document.getElementById('vigenere-hints');
+            hintsElement.innerHTML = `
+                <p><strong>How to use the Vigenère Square:</strong></p>
+                <ul>
+                    <li>The <span style="color: #cd853f;">top row</span> represents letters from your <strong>Secret Message</strong>.</li>
+                    <li>The <span style="color: #deb887;">leftmost column</span> represents letters from your <strong>Treasure Key</strong>.</li>
+                    <li>Find where the row and column intersect to get the encrypted letter!</li>
+                </ul>
+            `;
+        }
+
+        function startEncryption() {
+            plaintext = plaintextElement.value.toUpperCase().replace(/[^A-Z]/g, '');
+            key = keyElement.value.toUpperCase().replace(/[^A-Z]/g, '');
+            
+            if (plaintext === '' || key === '') {
+                alert('Please enter both a secret message and a treasure key.');
+                return;
+            }
+            
+            currentStep = 0;
+            ciphertextElement.value = '';
+            explanationElement.textContent = 'Click "Next Step" to begin encryption.';
+            clearHighlights();
+            
+            startButton.disabled = true;
+            nextButton.disabled = false;
+            plaintextElement.readOnly = true;
+            keyElement.readOnly = true;
+        }
+
+        startButton.addEventListener('click', startEncryption);
+
+        nextButton.addEventListener('click', highlightStep);
+
+        resetButton.addEventListener('click', () => {
+            currentStep = 0;
+            ciphertextElement.value = '';
+            explanationElement.textContent = '';
+            clearHighlights();
+            startButton.disabled = false;
+            nextButton.disabled = true;
+            plaintextElement.readOnly = false;
+            keyElement.readOnly = false;
+        });
+
+
+
+        window.onload = function() {
+            createVigenereSquare();
+            addHints();
+            explanationElement.textContent = 'Enter your secret message and treasure key, then click "Start Encryption".';
+        };
+    </script>
+
+</body>
+</html>

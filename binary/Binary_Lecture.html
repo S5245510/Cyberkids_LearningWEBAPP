@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex's Digital Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    <style>
+
+img {
+            display: block;  /* Remove extra space under the image */
+            max-width: 100%;  /* Image will not exceed the screen width */
+            height: auto;     /* Maintain aspect ratio */
+            margin: 0 auto;   /* Center the image */
+        }
+
+        body {
+            margin: 0; /* Remove any default margins */
+            padding: 0;
+            text-align: center; /* Center content horizontally */
+        }
+        .game-container {
+    flex-grow: 1;
+    margin-left: 220px;
+    margin-top: 50px;  /* Add space above the content */
+    margin-bottom: 50px;  /* Add space below the content */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: rgba(15, 52, 96, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #00fff5;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        .sidebar h3 {
+            font-family: 'Bangers', cursive;
+            color: #00fff5;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 255, 245, 0.5);
+            letter-spacing: 1px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            font-family: 'Nunito', sans-serif;
+            color: #e0e0e0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        .sidebar a:hover {
+            background-color: rgba(0, 255, 245, 0.2);
+            transform: translateX(5px);
+            color: #fca311;
+        }
+        .sidebar a .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .sidebar .levels-group {
+            margin-bottom: 20px;
+        }
+        .sidebar .levels-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sidebar .levels-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sidebar .levels-list.show {
+            max-height: 500px;
+        }
+        .sidebar .levels-list a {
+            padding-left: 30px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar h3, .sidebar a span {
+                display: none;
+            }
+            .sidebar a {
+                justify-content: center;
+            }
+            .sidebar a .emoji {
+                margin-right: 0;
+                font-size: 1.5em;
+            }
+            .sidebar .levels-list a {
+                padding-left: 10px;
+            }
+        }
+        .game-container {
+            flex-grow: 1;
+            margin-left: 220px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #00fff5;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 255, 245, 0.5);
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        .puzzle-container {
+            height: 190%;
+            overflow-y: auto;
+            background-color: rgba(15, 52, 96, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: -111px;
+            width: 100%;
+            max-width: 900px;
+            align-self: center;
+        }
+        .level {
+            display: none;
+            margin-top: 20px;
+            background: rgba(15, 52, 96, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 255, 245, 0.3);
+            transform: translateZ(0);
+            transition: all 0.5s ease-in-out;
+        }
+        .puzzle {
+            background-color: rgba(26, 26, 46, 0.8);
+            border: 2px solid #00fff5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(0, 255, 245, 0.2);
+        }
+        .hint {
+            color: #fca311;
+            font-style: italic;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(252, 163, 17, 0.5);
+        }
+        input[type="text"], button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: rgba(44, 44, 68, 0.8);
+            color: #e0e0e0;
+            border: 2px solid #00fff5;
+            border-radius: 25px;
+            margin-right: 10px;
+            box-shadow: 0 4px 6px rgba(0, 255, 245, 0.1);
+            transition: all 0.3s ease;
+        }
+        input[type="text"] {
+            width: 60%;
+        }
+        button {
+            background-color: #14a76c;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0e8c5f;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 255, 245, 0.2);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .success {
+            color: #14a76c;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background-color: rgba(22, 33, 62, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 245, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease-out;
+            max-width: 300px;
+            text-align: center;
+        }
+        .popup.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .popup h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #00fff5;
+        }
+        .popup p {
+            font-size: 1.2em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .popup button {
+            background-color: #14a76c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .popup button:hover {
+            background-color: #0e8c5f;
+        }
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .binary-char {
+            position: absolute;
+            font-size: 20px;
+            color: #0f0;
+            opacity: 0;
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #2c2c44;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: #14a76c;
+            transition: width 0.5s ease-in-out;
+        }
+        .mini-game {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .mini-game button {
+            margin: 5px;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        .symbol {
+            font-size: 2.5em;
+            animation: float 3s ease-in-out infinite;
+            margin: 0 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 245, 0.7);
+        }
+        @keyframes suckIntoComputer {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(0.5) rotate(360deg); opacity: 0.5; }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; }
+        }
+        .suck-into-computer {
+            animation: suckIntoComputer 2s ease-in-out forwards;
+        }
+
+   
+
+        
+        /* Hide default scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .game-container {
+                margin-left: 220px;
+                padding: 20px;
+            }
+
+            .sidebar {
+                width: 200px;
+                height: 100%;
+                position: fixed;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding: 0;
+                margin: 0;
+            }
+
+            .sidebar li {
+                margin: 0 0 15px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                margin-left: 60px;
+                padding: 20px;
+            }
+
+            .sidebar {
+                width: 60px;
+                height: 100%;
+                position: fixed;
+                padding: 10px 5px;
+            }
+
+            .sidebar ul {
+                flex-direction: column;
+            }
+
+            .sidebar li {
+                margin: 10px 0;
+            }
+
+            .sidebar a {
+                justify-content: center;
+                padding: 10px 5px;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.5em;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .puzzle-container {
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .chat-container {
+                height: 40vh;
+            }
+        }
+
+        .level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .binary-code {
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .input-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 48px) {
+            .input-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            input[type="text"], button {
+                width: 10%;
+                max-width: 30px;
+            }
+        }
+
+        #caesar-table {
+            display: grid;
+            grid-template-columns: repeat(26, 30px);
+            gap: 1px;
+            margin-top: 20px;
+            background-color: rgba(140, 28, 19, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        #caesar-table .row {
+            display: contents;
+        }
+        #caesar-table .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #8c1c13;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #e6d2b5;
+        }
+        #caesar-table .row:first-child .cell {
+            background-color: #2c1a1a;
+            font-weight: bold;
+        }
+        #caesar-table .row:last-child .cell {
+            background-color: #4a2511;
+        }
+        #shift-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #f1c40f;
+        }
+        #ciphertext {
+            font-weight: bold;
+            color: #f1c40f;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            font-size: 20px;
+
+        
+        }
+
+        .mission-briefing {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.briefing-content {
+    background-color: #0a192f;
+    color: #64ffda;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #64ffda;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    font-family: 'Courier New', monospace;
+    border-radius: 10px;
+}
+
+.briefing-content h2 {
+    color: #ccd6f6;
+    text-align: center;
+    margin-top: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#acknowledge-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 10px;
+    background-color: #64ffda;
+    color: #0a192f;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Courier New', monospace;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#acknowledge-btn:hover {
+    background-color: #ccd6f6;
+    color: #0a192f;
+}
+    
+    </style>
+
+
+</head>
+<body>
+    <div id="mission-briefing" class="mission-briefing">
+        <div class="briefing-content">
+            <h2>Mission Briefing</h2>
+            <p id="briefing-message"></p>
+            <button id="acknowledge-btn">Acknowledge</button>
+        </div>
+    </div>
+    <div class="sidebar">
+        <h3>🎮 Binary Quest</h3>
+        <ul>
+            <li><a href="Binary_Lecture.html"><span class="emoji">📚</span><span>Lecture</span></a></li>
+            <li><a href="Binary_Puzzle.html"><span class="emoji">🧩</span><span>Puzzle</span></a></li>
+            <li><a href="Binary_Tool.html"><span class="emoji">🔧</span><span>Decode Tool</span></a></li>
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+    <div class="game-container">
+        <h1>🃏 Understanding Binary and Cryptography</h1>
+        <div class="puzzle-container">
+            <div id="level1" class="level">
+<body>
+    <div class="content">
+        <h1>The Role of Binary in Cryptography</h1>
+        <p>Binary is the fundamental language of computers, using only 0s and 1s to represent data. Every letter, number, or image you see on a screen is stored as a sequence of binary digits. For example, the letter 'A' is represented in binary as <code>01000001</code>. In encryption, data like this is transformed through various mathematical operations to keep it secure. Think of binary as the building blocks of secret codes.</p>
+        
+        <h2>Using Binary to Encrypt and Decrypt Data</h2>
+        <p>Let’s say you have a message written in binary, like <code>101</code>. To convert it to a more familiar number, you calculate its decimal value: 101 in binary equals 5 in decimal. This is similar to using a codebook to turn numbers into words or vice versa. Encryption often involves converting data from one form (like text) into another (like binary) and then applying complex rules to hide the original message. Decryption is the process of reversing these steps to reveal the hidden information.</p>
+
+        <h2>How Encryption Protects Our Data</h2>
+        <p>Every time you use a secure website or send a message through an encrypted app, encryption is working behind the scenes. It turns your information into a scrambled form that can only be read by the intended recipient. This prevents hackers from reading your data even if they manage to intercept it. For instance, when you log into your email, your password is encrypted before it’s sent to the server, so no one else can steal it.</p>
+
+        <h2>Relating It to Everyday Examples</h2>
+        <p>Imagine a treasure map that’s written in a secret code. If someone finds it, they won’t know where the treasure is without the key to decode the map. Cryptography works the same way for your personal information online. The ‘key’ in this case is a complex mathematical formula that only your computer and the receiving server know. This keeps your information safe from prying eyes, just like the treasure map’s secret code.</p>
+
+        <h3>Conclusion</h3>
+        <p>In essence, cryptography and encryption are all about using secret codes (often in binary) to protect information. Just like writing a secret message to a friend that only they can read, encryption keeps our digital information secure in a world full of potential eavesdroppers. Understanding how binary and encryption work together gives us insight into how our data stays safe in the digital world.</p>
+
+        <h2>1. Binary to Decimal Conversion</h2>
+        <p>Binary is a base-2 number system that uses only 0s and 1s. To convert a binary number to decimal, you multiply each bit by 2 raised to the power of its position (starting from 0 on the right) and then sum all the values.</p>
+
+        <h3>Steps:</h3>
+        <ol>
+            <li>Write down the binary number and assign powers of 2 from right to left, starting at 0.</li>
+            <li>Multiply each bit by 2 raised to the power of its position.</li>
+            <li>Add up all the results to get the decimal equivalent.</li>
+        </ol>
+
+        <h3>Example:</h3>
+        <div class="code">
+            Convert binary <code>1101</code> to decimal.
+
+            Bit   1   1   0   1
+            Power 3   2   1   0
+
+            1 × 2^3 = 8
+            1 × 2^2 = 4
+            0 × 2^1 = 0
+            1 × 2^0 = 1
+
+            Sum: 8 + 4 + 0 + 1 = 13
+
+            Result: Binary 1101 is decimal 13.
+        </div>
+
+        <h2>2. Decimal to Binary Conversion</h2>
+        <p>To convert a decimal number to binary, you repeatedly divide the number by 2 and keep track of the remainders.</p>
+
+        <h3>Steps:</h3>
+        <ol>
+            <li>Divide the decimal number by 2.</li>
+            <li>Record the remainder (0 or 1).</li>
+            <li>Repeat the process with the quotient from the previous division.</li>
+            <li>Read the remainders from bottom to top to get the binary equivalent.</li>
+        </ol>
+
+        <h3>Example:</h3>
+        <div class="code">
+            Convert decimal 9 to binary.
+
+            9 ÷ 2 = 4 remainder 1
+            4 ÷ 2 = 2 remainder 0
+            2 ÷ 2 = 1 remainder 0
+            1 ÷ 2 = 0 remainder 1
+
+            Reading from bottom to top, the binary equivalent is 1001.
+
+            Result: Decimal 9 is binary 1001.
+        </div>
+
+        <h2>3. Hexadecimal to Text Conversion</h2>
+        <p>Hexadecimal (or "hex") is a base-16 number system that uses the digits 0-9 and letters A-F. Each pair of hex digits represents a single character in the ASCII system.</p>
+
+        <h3>Steps:</h3>
+        <ol>
+            <li>Split the hex code into pairs of digits.</li>
+            <li>Convert each pair to a decimal number.</li>
+            <li>Find the corresponding character in the ASCII table.</li>
+        </ol>
+
+        <h3>Example:</h3>
+        <div class="code">
+            Convert hex <code>48 65 6c 6c 6f</code> to text.
+
+            48 in decimal is 72, which corresponds to the letter H.
+            65 in decimal is 101, which corresponds to the letter e.
+            6c in decimal is 108, which corresponds to the letter l.
+            6c again is 108, corresponding to l.
+            6f in decimal is 111, which corresponds to o.
+
+            Result: Hex 48 65 6c 6c 6f is the text "Hello".
+        </div>
+
+        <p>By understanding these basic conversions, you can decode and encode numbers and text between different formats used in computing and cryptography.</p>
+    </div>
+</body>
+<p>EASY VIDEO FOR BINARY TO DECIMAL CONVERSION</p>
+<video controls width="600">
+    <!-- Video sources -->
+    <source src="binary.mp4" type="video/mp4">
+    <!-- Fallback message -->
+    Your browser does not support the video tag.
+</video>
+
+<p>EASY VIDEO FOR DECIMAL TO BINARY CONVERSION</p>
+<video controls width="600">
+    <!-- Video sources -->
+    <source src="decimal.mp4" type="video/mp4">
+    <!-- Fallback message -->
+    Your browser does not support the video tag.
+</video>
+
+<p>THE ASCII TABLE</p>
+    <P>This Ascii Table can help with all conversions and is very easy to use. Follow the line of what conversion you wish to know and then chheck the corresponding decimal, hexadecimal or character. </p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <img src="ascii.png" alt="Description of the image">
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+                            const briefingBox = document.getElementById('mission-briefing');
+                            const briefingMessage = document.getElementById('briefing-message');
+                            const acknowledgeBtn = document.getElementById('acknowledge-btn');
+        
+                            const message = "Agent, focus. The binary system is the foundation of all digital communication. Learn to read the language of 1s and 0s, and you'll decipher the very code that controls the digital world, revealing secrets hidden within the smallest bits of data.";
+        
+                            briefingMessage.textContent = message;
+        
+                            // Show the briefing box
+                            briefingBox.style.display = 'block';
+        
+                            // Hide the briefing box when acknowledged
+                            acknowledgeBtn.addEventListener('click', function() {
+                                briefingBox.style.display = 'none';
+                            });
+                        });
+        </script>
+            <script defer src="style/all.min.js"></script>
+
+</body>
+
+</html>

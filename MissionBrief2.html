@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Briefing:  Toolkit</title>
+    <link rel="stylesheet" href="style/missionbrief.css">
+    <link rel="stylesheet" href="style/all.min.css">
+    <style>
+
+    </style>
+</head>
+<body>
+    <div id="custom-alert" class="custom-alert">
+        <div class="alert-content">
+            <h2>Urgent Mission Update</h2>
+            <p id="alert-message"></p>
+            <button id="alert-confirm">Accept Mission</button>
+        </div>
+    </div>
+
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1 class="mission-title">Mission Briefing</h1>
+        <div class="content-wrapper">
+            <!-- Left column -->
+            <div class="left-column">
+                <!-- Character display area -->
+                <!-- This div can be used to display a large character, icon, or visual representation -->
+                <div class="character-display" id="character-display">
+                    <video width="100%" height="100%" autoplay loop muted playsinline>
+                        <source src="../images/missionbriefing.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="futuristic-element">
+                    <div class="agent-status">
+                        <div class="status-item">
+                            <div class="status-label">Agent ID</div>
+                            <div class="status-value" id="agent-id-display">Not Set</div>                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Clearance Level</div>
+                            <div class="status-value">Beta</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Mission Status</div>
+                            <div class="status-value">Active</div>
+                        </div>
+                    </div>
+                    <div class="mission-timer" id="mission-timer">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="right-column">
+                <!-- Terminal-like explanation container -->
+                <div class="explanation-container">
+                    <!-- Terminal header with title and control buttons -->
+                    <div class="terminal-header">
+                        <div class="terminal-title">Mission Details</div>
+                        <div class="terminal-controls">
+                            <span class="terminal-minimize"></span>
+                            <span class="terminal-maximize"></span>
+                            <span class="terminal-close"></span>
+                        </div>
+                    </div>
+                    <!-- Area for new things to add -->
+                    <div id="explanation"></div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="window.location.href='./vig_Lecture.html'">Accept Mission</button>
+                        <button class="action-button">Review Intel</button>
+                        <button class="action-button">Equipment Check</button>
+                    </div>
+                </div>
+                <div class="equipment-block">
+                    <h3 class="equipment-title">Mission Equipment: Cryptographic Techniques</h3>
+                    <div class="technique">
+                        <h4>Vigenère Cipher</h4>
+                        <p>A polyalphabetic substitution cipher using a keyword to shift the alphabet for each letter in the plaintext.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Resistant to frequency analysis</li>
+                                    <li>Multiple alphabets make it harder to crack</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Key management can be challenging</li>
+                                    <li>Vulnerable to known-plaintext attacks</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="technique">
+                        <h4>Tabula Recta</h4>
+                        <p>A square table of alphabets that is essential for using the Vigenère cipher.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Visual aid for encryption/decryption</li>
+                                    <li>Easy to memorize and recreate</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Can be time-consuming for long messages</li>
+                                    <li>Requires the table to be present or memorized</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const explanation = document.getElementById('explanation');
+            const briefing = [
+                "Agent, your mission is critical. We're sending you back to the year 2010 to help a young cipher specialist in need.",
+                "Your target: Assist Jayden during his childhood, a future renowned cryptographer, as he embarks on a journey to rediscover lost memories tied to his past.",
+                "Objective: Help young Jayden decode an encrypted treasure map left by his grandfather, revealing a mysterious location connected to his childhood.",
+                "Warning: The emotional and cryptographic challenges are intertwined. Your actions will shape not only Jayden's future but also his path as a cipher specialist.",
+                "Technique: Use your skills in cryptography, including the Vigenère cipher, to unravel the hidden secrets of the treasure map and guide Jayden to rediscover his roots.",
+                "Reward: Upon success, Jayden will reconnect with his childhood memories, restoring his hope and setting him on the path to becoming a renowned cryptographer.",
+                "Remember, Agent, the future of Jayden’s life and the field of cryptography rests on your success.",
+                "Good luck. The journey back to 2010 and the fate of a young Jayden lies in your hands."
+            ];
+
+
+
+            function typeWriter(text, i) {
+                if (i < text.length) {
+                    explanation.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(function() {
+                        typeWriter(text, i);
+                    }, 50);
+                } else {
+                    explanation.innerHTML += '<br><br>';
+                    showNextLine();
+                }
+            }
+
+            function showNextLine() {
+                if (briefing.length > 0) {
+                    const line = briefing.shift();
+                    typeWriter(line, 0);
+                }
+            }
+
+            showNextLine();
+
+            const agentIDDisplay = document.getElementById('agent-id-display');
+            const storedAgentID = localStorage.getItem('UserID');
+            if (storedAgentID) {
+                agentIDDisplay.textContent = "Agent-" + storedAgentID;
+            } else {
+                agentIDDisplay.textContent = 'Not Set';
+            }
+
+            // Mission timer
+            let seconds = 0;
+            setInterval(function() {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                document.getElementById('mission-timer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+            }, 1000);
+
+            function showMissionAlert() {
+                    const customAlert = document.getElementById('custom-alert');
+                    const alertMessage = document.getElementById('alert-message');
+                    const alertConfirm = document.getElementById('alert-confirm');
+
+                alertMessage.textContent = "Agent, your expertise is urgently needed. The window of opportunity is closing. Accept the mission now to safeguard the future!";
+                customAlert.style.display = 'block';
+
+                alertConfirm.onclick = function() {
+                    customAlert.style.display = 'none';
+                    window.location.href = './vig_Lecture.html';
+                };
+            }
+
+          
+            const typingEffect = document.createElement('div');
+            typingEffect.className = 'typing-effect';
+            typingEffect.textContent = 'Initializing mission parameters...';
+            document.querySelector('.futuristic-element').appendChild(typingEffect);
+        });
+    </script>
+    <script defer src="style/all.min.js"></script>
+</body>
+</html>

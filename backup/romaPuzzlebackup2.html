@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Puzzle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+   <style>
+        body {
+            font-family: 'Cinzel', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a0f0f;
+            color: #e6d2b5;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c1a1a;
+            color: #e6d2b5;
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #8c1c13;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar h2 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            margin-top: 0;
+            border-bottom: 2px solid #8c1c13;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+        .sidebar a {
+            color: #e6d2b5;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar a:hover {
+            color: #f1c40f;
+            transform: translateX(5px);
+        }
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('path/to/parchment-texture.jpg');
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+        h1 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            color: #8c1c13;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .encrypted-message, .decode-area {
+            background-color: #e0c9a6; /* Darker old parchment color */
+            background-image: url('path/to/parchment-texture.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            border: 2px solid #8c1c13;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .encrypted-message {
+            font-size: 32px;
+            text-align: center;
+            font-family: 'Almendra Display', cursive;
+            letter-spacing: 3px;
+            color: #2a0704;
+            text-shadow: 1px 1px 0px #e0c9a6, -1px -1px 0px #e0c9a6, 1px -1px 0px #e0c9a6, -1px 1px 0px #e0c9a6;
+            font-weight: bold;
+        }
+        .alphabet-table {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .letter, .decode-slot:not(:empty) {
+            width: 40px;
+            height: 40px;
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px;
+            font-size: 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .letter {
+            cursor: move;
+        }
+        .letter:hover {
+            transform: scale(1.1);
+        }
+        .decode-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+        .decode-slot {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #8c1c13;
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            border-radius: 5px;
+            background-color: rgba(249, 237, 199, 0.7);
+            color: #2a0704;
+            transition: all 0.3s ease;
+        }
+        .decode-slot.unfillable {
+            background-color: rgba(212, 167, 106, 0.7);
+            border: none;
+        }
+        .submit-btn {
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #a82315;
+        }
+        .puzzle-container {
+            display: none;
+        }
+        .puzzle-container.active {
+            display: block;
+        }
+        .locked-puzzle {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .dev-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .dev-controls input {
+            width: 50px;
+            margin-left: 10px;
+            padding: 5px;
+        }
+        .reset-btn {
+            background-color: #4a4a4a;
+            color: #e6d2b5;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            margin-left: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .reset-btn:hover {
+            background-color: #5a5a5a;
+        }
+        #manualInput {
+            padding: 8px;
+            font-size: 14px;
+            margin-right: 10px;
+            border: 2px solid #8c1c13;
+            border-radius: 5px;
+            background-color: #e6d2b5;
+            color: #2a0704;
+        }
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .fill-btn {
+            background-color: #4a69bd;
+            color: #e6d2b5;
+        }
+        .fill-btn:hover {
+            background-color: #5a7bd0;
+        }
+        .submit-btn {
+            background-color: #8c1c13;
+            color: #e6d2b5;
+        }
+        .submit-btn:hover {
+            background-color: #a82315;
+        }
+        .reset-btn {
+            background-color: #4a4a4a;
+            color: #e6d2b5;
+        }
+        .reset-btn:hover {
+            background-color: #5a5a5a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: #2c1a1a;
+            margin: 15% auto;
+            padding: 20px;
+            border: 2px solid #8c1c13;
+            width: 60%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: slideDown 0.5s;
+        }
+
+        #feedback-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .success-message {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+
+        .error-message {
+            background-color: rgba(244, 67, 54, 0.3);
+            color: #F44336;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes slideDown {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+
+        .puzzle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e0c9a6;
+            background-image: url('path/to/parchment-texture.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            border: 2px solid #8c1c13;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .encrypted-message {
+            font-size: 32px;
+            text-align: center;
+            font-family: 'Almendra Display', cursive;
+            letter-spacing: 3px;
+            color: #2a0704;
+            text-shadow: 1px 1px 0px #e0c9a6, -1px -1px 0px #e0c9a6, 1px -1px 0px #e0c9a6, -1px 1px 0px #e0c9a6;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+    .key-display {
+        font-size: 24px;
+        font-family: 'Cinzel', serif;
+        color: #8c1c13;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-left: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: inline-block; /* Makes the width adjust based on content */
+        width: auto; /* Ensures the width is only as wide as the content */
+        white-space: nowrap; /* Prevents the content from wrapping to a new line */
+    }
+
+        .dev-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    #devRomaStoryLevel {
+        width: 60px;
+        margin-right: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    #resetStoryButton {
+        padding: 5px 10px;
+        font-size: 16px;
+        background-color: #8c1c13;
+        color: #e6d2b5;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #resetStoryButton:hover {
+        background-color: #a82315;
+    }
+
+    #level-alert-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+        background-color: #2c1a1a;
+        margin: 15% auto;
+        padding: 20px;
+        border: 2px solid #8c1c13;
+        width: 60%;
+        max-width: 500px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        text-align: center;
+        animation: slideDown 0.5s;
+    }
+
+    #level-alert-message {
+        font-size: 24px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: rgba(140, 28, 19, 0.2);
+        color: #e6d2b5;
+    }
+
+    .action-btn {
+        background-color: #8c1c13;
+        color: #e6d2b5;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background-color: #a82315;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes slideDown {
+        from {transform: translateY(-50px); opacity: 0;}
+        to {transform: translateY(0); opacity: 1;}
+    }
+
+    .character-container {
+        display: none;
+        position: relative;
+        margin: 20px auto;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .character-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #8c1c13;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        float: left;
+    }
+
+    .character-icon video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .dialogue-bubble {
+        margin-left: 120px;
+        background-color: #e0c9a6;
+        border: 2px solid #8c1c13;
+        border-radius: 15px;
+        padding: 10px 15px;
+        width: calc(100% - 140px);
+        box-sizing: border-box;
+    }
+
+    .dialogue-bubble::before {
+        content: '';
+        position: absolute;
+        left: 110px;
+        top: 20px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #8c1c13;
+    }
+
+    .dialogue-bubble::after {
+        content: '';
+        position: absolute;
+        left: 113px;
+        top: 21px;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 9px solid #e0c9a6;
+    }
+
+    #dialogueText {
+        font-family: 'Cinzel', serif;
+        color: #2a0704;
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .action-btn {
+        background-color: #8c1c13;
+        color: #e6d2b5;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        margin: 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background-color: #a82315;
+        transform: scale(1.05);
+    }
+
+    .success-message {
+        background-color: rgba(76, 175, 80, 0.3);
+        color: #4CAF50;
+    }
+
+    .error-message {
+        background-color: rgba(244, 67, 54, 0.3);
+        color: #F44336;
+    }
+
+    #userAnswerInput {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #8c1c13;
+        border-radius: 5px;
+        margin-right: 10px;
+        background-color: rgba(249, 237, 199, 0.7);
+        color: #2a0704;
+    }
+
+
+    .stars-container {
+        /* Remove background color */
+        background-color: transparent;
+        border: none;
+        padding: 20px;
+        margin-top: 30px;
+        box-shadow: none;
+    }
+
+    .stars-container h2 {
+        color: #8c1c13; /* Change to match the theme color */
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: 'Trajan Pro', 'Cinzel', serif;
+    }
+
+    .levels-grid {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .level-stars {
+        background-color: transparent;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .level-stars:hover {
+        transform: scale(1.05);
+    }
+
+    .level-number {
+        display: block;
+        font-size: 18px;
+        color: #ffb86b; /* Change to match the theme color */
+        margin-bottom: 5px;
+        font-family: 'Cinzel', serif;
+    }
+
+    .stars {
+        font-size: 24px;
+    }
+
+    .stars i {
+        color: #f6f3db;
+        margin: 0 2px;
+        opacity: 0.3;
+        transition: all 0.5s ease;
+    }
+
+    .stars i.active {
+        opacity: 1;
+        color: #f1c40f;
+    }
+
+    @keyframes starPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
+
+    .stars i.pop {
+        animation: starPop 0.3s ease;
+    }
+
+    
+</style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Caesar's Scroll</h2>
+        <ul>
+            <li><a href="RomaLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="Roma.html"><i class="fas fa-key"></i><span>Cipher Tool</span></a></li>
+            <li><a href="RomaStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+            <li><a href="RomaPuzzle.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            <li><a href="RomaMap.html"><i class="fas fa-map-marked-alt"></i><span>Map</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Decipher the Secret Message</h1>
+
+        <div class="character-container">
+            <div class="character-icon">
+                <video id="characterVideo" loop>
+                    <source src="images/samlevel1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="dialogue-bubble">
+                <p id="dialogueText"></p>
+            </div>
+        </div>
+
+        <div class="dev-controls">
+            <input type="number" id="devRomaStoryLevel" min="1" max="11" value="1">
+            <button id="resetPuzzleButton">Reset Puzzles</button>
+            <button class="action-btn reset-progress-btn" onclick="resetProgress()">Reset Progress</button>
+
+        </div>
+
+
+        <div class="stars-container">
+            <h2>Level Progress</h2>
+            <div class="levels-grid">
+                <!-- Repeat this block for each level -->
+                <div class="level-stars">
+                    <span class="level-number">Level 1</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <!-- End of level block -->
+                <div class="level-stars">
+                    <span class="level-number">Level 2</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="level-stars">
+                    <span class="level-number">Level 3</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="level-stars">
+                    <span class="level-number">Level 4</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <!-- Add more level blocks as needed -->
+            </div>
+        </div>
+
+        <div class="puzzle-container">
+            <div class="encrypted-message" id="encryptedMessage"></div>
+            <div class="key-display" id="keyDisplay"></div>
+        </div>
+        <div class="alphabet-table" id="alphabetTable"></div>
+        <div class="decode-area" id="decodeArea"></div>
+        <div class="input-container">
+            <input type="text" id="userAnswerInput" placeholder="Enter your answer here">
+            <button class="action-btn fill-btn" onclick="fillAnswer()">Fill Answer</button>
+            <button class="action-btn submit-btn" onclick="checkSolution()">Submit Solution</button>
+            <button class="action-btn reset-btn" onclick="resetAnswer()">Reset Answer</button>
+        </div>
+    </div>
+
+    <script>
+        // Define puzzles array
+        const puzzles = [
+            { encryptedMessage: "WXQQHO", key: 3, videoSrc: "images/samlevel1.mp4" },
+            { encryptedMessage: "XTZYM", key: 5, videoSrc: "images/samlevel2.mp4" },
+            { encryptedMessage: "URYYB JBEYQ", key: 13, videoSrc: "images/samlevel3.mp4" },
+            { encryptedMessage: "PNRFNE PVCURE", key: 3, videoSrc: "images/samlevel4.mp4" },
+            // Add more puzzles here...
+        ];
+
+        let storyProgress = 1;
+        let currentLevel = 1;
+
+        // Define a single object for both alert messages and dialogue texts
+        const levelMessages = {
+            1: {
+                alert: "You are a hidden Roma spy. Go help Sam to escape.",
+                dialogue: "There's no time to explain. You have to trust me. Take it to the secret rendezvous point, and do not open it. Understand?"
+            },
+            2: {
+                alert: "The unreadable message on the wall must be the way to leave this tunnel to the outside of the city.",
+                dialogue: "Great job on the first message! This one looks trickier. Can you crack it?"
+            },
+            3: {
+                alert: "Quickly solve the encrypted message on the scroll. It must be a safe path to the Roman Camp.",
+                dialogue: "You're getting better! This scroll holds crucial information. Decipher it carefully."
+            },
+            4: {
+                alert: "Decipher the message to uncover the next step in your mission.",
+                dialogue: "Each message brings you closer to your goal. What secrets does this one hold?"
+            },
+            5: {
+                alert: "A new encrypted message has arrived. Solve it to continue your journey.",
+                dialogue: "Halfway there! Your skills are improving. Can you handle this new challenge?"
+            },
+            6: {
+                alert: "The enemy's plans are hidden in this code. Break it to gain the upper hand.",
+                dialogue: "The enemy is clever, but you're cleverer. Unravel their plans!"
+            },
+            7: {
+                alert: "This message contains vital information for your allies. Decode it swiftly.",
+                dialogue: "Time is of the essence. Your allies are counting on you to decode this message quickly!"
+            },
+            8: {
+                alert: "An ancient Roman cipher guards this secret. Use your skills to reveal it.",
+                dialogue: "This ancient cipher is a tough one. Put all your knowledge to the test!"
+            },
+            9: {
+                alert: "The final stages of your mission depend on solving this puzzle.",
+                dialogue: "You're almost there! This puzzle is crucial for the final stage of your mission."
+            },
+            10: {
+                alert: "The fate of Rome rests on deciphering this last message. Good luck, spy!",
+                dialogue: "This is it! The final message. The fate of Rome is in your hands. Decode with care!"
+            }
+        };
+
+        function showLevelAlert(level) {
+            const messages = levelMessages[level] || {
+                alert: "Solve the puzzle to progress in the story!",
+                dialogue: "Keep working on deciphering these messages. You're doing great!"
+            };
+
+            const modal = document.getElementById('level-alert-modal');
+            const messageElement = document.getElementById('level-alert-message');
+            const closeBtn = document.getElementById('level-alert-close-btn');
+
+            messageElement.textContent = messages.alert;
+            modal.style.display = 'block';
+
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+                playCharacterVideo(messages.dialogue, true);
+            };
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                    playCharacterVideo(messages.dialogue, true);
+                }
+            };
+        }
+
+        function playCharacterVideo(message, playOnce = false) {
+            const characterContainer = document.querySelector('.character-container');
+            const video = document.getElementById('characterVideo');
+            const dialogueText = document.getElementById('dialogueText');
+            
+            characterContainer.style.display = 'block';
+            dialogueText.textContent = message;
+            video.currentTime = 0;
+            
+            if (playOnce) {
+                video.muted = false;
+                video.loop = false;
+            } else {
+                video.muted = true;
+                video.loop = true;
+            }
+            
+            video.play();
+
+            video.onended = function() {
+                if (!playOnce) {
+                    video.currentTime = 0;
+                    video.play();
+                }
+            };
+
+            // Ensure the puzzle is visible
+            document.querySelector('.puzzle-container').style.display = 'block';
+        }
+
+        function initializePuzzle(level) {
+            const puzzle = puzzles[level - 1];
+            if (puzzle) {
+                document.getElementById('encryptedMessage').textContent = puzzle.encryptedMessage;
+                document.getElementById('keyDisplay').textContent = `Key: ${puzzle.key}`;
+                document.getElementById('characterVideo').src = puzzle.videoSrc;
+                createAlphabetTable();
+                createDecodeArea(puzzle.encryptedMessage);
+            }
+        }
+
+        function createAlphabetTable() {
+            const table = document.getElementById('alphabetTable');
+            table.innerHTML = ''; // Clear existing content
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            alphabet.split('').forEach(letter => {
+                const letterDiv = document.createElement('div');
+                letterDiv.className = 'letter';
+                letterDiv.textContent = letter;
+                letterDiv.draggable = true;
+                letterDiv.addEventListener('dragstart', drag);
+                table.appendChild(letterDiv);
+            });
+        }
+
+        function createDecodeArea(encryptedMessage) {
+            const decodeArea = document.getElementById('decodeArea');
+            decodeArea.innerHTML = ''; // Clear existing content
+            const maxSlotsPerLine = 20; // You can adjust this value
+            encryptedMessage.split('').forEach((char, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'decode-slot';
+                slot.id = `slot-${index}`;
+                if (char === ' ') {
+                    slot.classList.add('unfillable');
+                    slot.textContent = ' ';
+                } else {
+                    slot.addEventListener('dragover', allowDrop);
+                    slot.addEventListener('drop', drop);
+                }
+                decodeArea.appendChild(slot);
+
+                // Add a line break after every maxSlotsPerLine slots
+                if ((index + 1) % maxSlotsPerLine === 0 && index !== encryptedMessage.length - 1) {
+                    decodeArea.appendChild(document.createElement('br'));
+                }
+            });
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.textContent);
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const target = ev.target.classList.contains('decode-slot') ? ev.target : ev.target.parentElement;
+            
+            if (target.classList.contains('decode-slot') && !target.classList.contains('unfillable')) {
+                target.textContent = data;
+                target.style.backgroundColor = '#8c1c13';
+                target.style.color = '#e6d2b5';
+                target.style.border = 'none';
+            }
+        }
+
+        function fillAnswer() {
+            const userInput = document.getElementById('userAnswerInput').value.toUpperCase();
+            const decodeSlots = document.querySelectorAll('.decode-slot');
+            
+            if (userInput.length > 0) {
+                let inputIndex = 0;
+                decodeSlots.forEach((slot, index) => {
+                    setTimeout(() => {
+                        if (inputIndex < userInput.length) {
+                            if (userInput[inputIndex] === ' ' && slot.classList.contains('unfillable')) {
+                                inputIndex++;
+                            }
+                            if (inputIndex < userInput.length) {
+                                slot.textContent = userInput[inputIndex];
+                                slot.style.backgroundColor = '#8c1c13';
+                                slot.style.color = '#e6d2b5';
+                                slot.style.border = 'none';
+                                slot.style.transform = 'scale(1.1)';
+                                setTimeout(() => {
+                                    slot.style.transform = 'scale(1)';
+                                }, 150);
+                                inputIndex++;
+                            }
+                        } else {
+                            if (!slot.classList.contains('unfillable')) {
+                                slot.textContent = '';
+                                slot.style.backgroundColor = 'rgba(249, 237, 199, 0.7)';
+                                slot.style.color = '#2a0704';
+                                slot.style.border = '2px solid #8c1c13';
+                            }
+                        }
+                    }, index * 100);
+                });
+            } else {
+                alert('Please enter some text to fill the answer.');
+            }
+        }
+
+        function checkSolution() {
+    const decodeSlots = document.querySelectorAll('.decode-slot');
+    const puzzle = puzzles[currentLevel - 1];
+
+    // Track the attempt first
+    ProgressTracker.recordAttempt();  // No need to pass the level; it's handled inside the function
+
+    if (puzzle) {
+        const userSolution = Array.from(decodeSlots).map(slot => slot.textContent).join('');
+        const correctSolution = caesarDecrypt(puzzle.encryptedMessage, puzzle.key);
+        
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        
+        if (userSolution.replace(/\s/g, '') === correctSolution.replace(/\s/g, '')) {
+            feedbackMessage.textContent = 'Congratulations! You have deciphered the message correctly!';
+            feedbackMessage.className = 'success-message';
+            modalCloseBtn.onclick = function() {
+                feedbackModal.style.display = 'none';
+                redirectToStory(currentLevel);
+            };
+            ProgressTracker.calculateStars(currentLevel); // Correct solution, calculate stars
+            AchievementSystem.checkAchievements(); // Check for achievements after solving
+        } else {
+            feedbackMessage.textContent = 'That\'s not quite right. Try again!';
+            feedbackMessage.className = 'error-message';
+            modalCloseBtn.onclick = function() {
+                feedbackModal.style.display = 'none';
+            };
+        }
+        
+        feedbackModal.style.display = 'block';
+    }
+}
+
+
+
+
+        function redirectToStory(solvedLevel) {
+            // Store the solved level in localStorage
+            localStorage.setItem('lastSolvedPuzzleLevel', solvedLevel);
+            
+            // Redirect to the story page with parameters to expand the correct chapter
+            window.location.href = `RomaStory.html?level=${solvedLevel + 1}&expandChapter=${solvedLevel + 1}`;
+        }
+
+        function resetAnswer() {
+            const decodeSlots = document.querySelectorAll('.decode-slot:not(.unfillable)');
+            const puzzle = puzzles[currentLevel - 1];
+            
+            if (puzzle) {
+                decodeSlots.forEach((slot, index) => {
+                    setTimeout(() => {
+                        slot.textContent = '';
+                        slot.style.backgroundColor = 'rgba(249, 237, 199, 0.7)';
+                        slot.style.color = '#2a0704';
+                        slot.style.border = '2px solid #8c1c13';
+                        slot.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            slot.style.transform = 'scale(1)';
+                        }, 150);
+                    }, index * 50);
+                });
+            }
+            
+            // Clear the user input box
+            document.getElementById('userAnswerInput').value = '';
+        }
+
+        function caesarDecrypt(encryptedText, shift) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            return encryptedText.split('').map(char => {
+                if (char === ' ') return ' ';
+                const index = alphabet.indexOf(char.toUpperCase());
+                if (index === -1) return char;
+                return alphabet[(index - shift + 26) % 26];
+            }).join('');
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const levelFromUrl = parseInt(urlParams.get('level')) || 1;
+            currentLevel = (levelFromUrl >= 1 && levelFromUrl <= puzzles.length) ? levelFromUrl : storyProgress;
+            if (!ProgressTracker.startTime) {
+                ProgressTracker.startTimer(currentLevel); // Start timer only if it hasn't started yet
+            }
+
+            initializePuzzle(currentLevel);
+            showLevelAlert(currentLevel);
+
+            displayStars(); // Call the function to display stars
+
+            document.getElementById('resetPuzzleButton').addEventListener('click', function() {
+                currentLevel = 1;
+                
+                // Reset the last solved level in localStorage
+                localStorage.setItem('lastSolvedPuzzleLevel', currentLevel);
+                
+                // Reinitialize the puzzle and display the updated alert
+                initializePuzzle(currentLevel);
+                showLevelAlert(currentLevel);
+            });
+
+
+            document.getElementById('devRomaStoryLevel').addEventListener('change', function() {
+                currentLevel = parseInt(this.value);
+
+                // Update the current level in localStorage
+                localStorage.setItem('lastSolvedPuzzleLevel', currentLevel);
+                
+                // Reinitialize the puzzle and display the updated alert
+                initializePuzzle(currentLevel);
+                showLevelAlert(currentLevel);
+            });
+
+
+
+        };
+    </script>
+
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <div id="feedback-message"></div>
+            <button id="modal-close-btn" class="action-btn">Continue</button>
+        </div>
+    </div>
+
+    <div id="level-alert-modal" class="modal">
+        <div class="modal-content">
+            <div id="level-alert-message"></div>
+            <button id="level-alert-close-btn" class="action-btn">Continue</button>
+        </div>
+    </div>
+</body>
+</html>

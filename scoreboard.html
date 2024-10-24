@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography Game Scoreboard</title>
+
+    <link rel="stylesheet" href="style/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            animation: fadeIn 10s ease-out;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #16213e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #00fff5;
+            margin-bottom: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0f3460;
+            color: #00fff5;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr {
+            background-color: #1f4068;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        tr:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .current-user {
+            background-color: #533483;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        .return-home {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #e94560;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .return-home:hover {
+            background-color: #ff6b6b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .rank-icon {
+            margin-right: 10px;
+        }
+
+        .gold { color: #ffd700; }
+        .silver { color: #c0c0c0; }
+        .bronze { color: #cd7f32; }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            transform: translateY(-3px);
+        }
+
+        .tab.active {
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #totalStars {
+            background-color: #4a4e69;
+            color: #ffd700;
+        }
+
+        #roma {
+            background-color: #8b0000;
+            color: #fff;
+        }
+
+        #vig {
+            background-color: #006400;
+            color: #fff;
+        }
+
+        #binary {
+            background-color: #00008b;
+            color: #fff;
+        }
+
+        #hash {
+            background-color: #4b0082;
+            color: #fff;
+        }
+
+        #achievements {
+            background-color: #ff4500;
+            color: #fff;
+        }
+
+        .top-nav {
+            background-color: #0f3460;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-button {
+            background-color: #e94560;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            background-color: #ff6b6b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .nav-title {
+            color: #00fff5;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Adjust the container to account for the top nav */
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+
+        <a href="javascript:history.back()" class="nav-button">Back</a>
+        <span class="nav-title">Agent Performance</span>
+        <a href="chapterlist.html" class="nav-button">Chapter List</a>
+    </nav>
+    <div class="container">
+        <h1><i class="fas fa-trophy"></i> Cryptography  Scoreboard</h1>
+        <div class="tabs">
+            <div id="totalStars" class="tab active" onclick="setActiveTab('totalStars')">Total Stars</div>
+            <div id="roma" class="tab" onclick="setActiveTab('roma')">Ancient Rome</div>
+            <div id="vig" class="tab" onclick="setActiveTab('vig')">Treasure Hunt</div>
+            <div id="binary" class="tab" onclick="setActiveTab('binary')">Digital World</div>
+            <div id="hash" class="tab" onclick="setActiveTab('hash')">Hash </div>
+            <div id="achievements" class="tab" onclick="setActiveTab('achievements')">Achievements</div>
+        </div>
+        <table id="scoreboardTable">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Achievements</th>
+                </tr>
+            </thead>
+            <tbody id="scoreboardBody">
+                <!-- This will be filled by JavaScript -->
+            </tbody>
+        </table>
+        <a href="chapterlist.html" class="return-home"><i class="fas fa-home"></i> Return to Home</a>
+    </div>
+
+    <script src="scoreboard.js"></script>
+</body>
+</html>

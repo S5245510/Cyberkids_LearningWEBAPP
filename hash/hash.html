@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSafe: Emergency Protocol Training</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    
+    <!-- CryptoJS for MD5 and SHA-256 Hashing -->
+    <script src="../style/crypto-js.min.js"></script>
+    
+    <!-- Inline CSS Styles -->
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #FFFFFF; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Darker color for sidebar */
+            color: #FFFFFF; /* Light text color */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #CBCDCD; /* Lighter text color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #F29269; /* Accent color on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 5%;
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+        
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #ffffff; /* Darker heading color */
+            text-align: center;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #eff3f9; /* Secondary heading color */
+            text-align: center;
+        }
+
+        .main-content h3 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #edf6f7;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        
+
+        .content-wrapper {
+            position: relative;
+            background-color: #595f7b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1; /* Ensure it's on top of the canvas */
+            width: 100%;
+            max-width: 800px; /* Adjust based on your design needs */
+            margin: 20px auto; /* Center the content horizontally */
+        }
+
+        h1 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            color: #D6CE93;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .input-container {
+            margin-bottom: 20px;
+            width: 540px;
+        }
+        .input-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #f0f8c3dc;
+        }
+        .input-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #f0f8c3dc;
+            border-radius: 5px;
+            background-color: #1d2330;
+            color: #f0f8c3dc;
+            font-family: 'Cinzel', serif;
+        }
+        button {
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #b82a1f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .output-container {
+            margin-top: 20px;
+            width: 540px;
+        }
+        .output-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #f0f8c3dc;
+        }
+        .output-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #f0f8c3dc;
+            border-radius: 5px;
+            background-color: #1d2330;
+            color: #e6d2b5;
+            font-family: 'Cinzel', serif;
+        }
+        canvas {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+        }
+        #formContainer {
+            z-index: 1; /* Keep the form on top */
+            position: relative;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+            <li><a href="hashpuzzle1.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="content-wrapper">
+            <h1>Hash Generator</h1>
+            <div class="input-container">
+                <label for="key"><strong>Input the message to generate hash:</strong></label>
+                <input type="text" id="key" placeholder="Enter any text or number">
+            </div>
+
+            <button id="generateHash">Generate Hashes</button> <!-- Add the button to trigger hash generation -->
+
+            <div class="output-container">
+                    <label for="md5Hash">MD5 Hash:</label>
+                    <input type="text" id="md5Hash" readonly>
+            </div>
+                
+            <div class="output-container">
+                <label for="sha256Hash">SHA-256 Hash:</label>
+                <input type="text" id="sha256Hash" readonly>
+            </div>
+            
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+        
+
+    <canvas class="hacker-3d-shiz"></canvas> 
+    <canvas class="bars-and-stuff"></canvas>
+    <div class="output-console"></div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listener for generate button
+            document.getElementById('generateHash').addEventListener('click', generateHashes);
+
+            // Event listener for pressing 'Enter' key in input field
+            document.getElementById('key').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    generateHashes(); // Call the same function when 'Enter' is pressed
+                }
+            });
+
+            // Event listener for reset button
+            document.getElementById('reset').addEventListener('click', function() {
+                document.getElementById('md5Hash').value = ''; // Clear MD5 hash
+                document.getElementById('sha256Hash').value = ''; // Clear SHA-256 hash
+                document.getElementById('key').value = ''; // Clear input field
+            });
+        });
+
+        function generateHashes() {
+            var inputText = document.getElementById('key').value; // Get the input value
+            console.log("Input Text:", inputText); // Debugging
+
+            // Validate input
+            if (inputText === "") {
+                alert("Please enter your input to generate hashes");
+                return;
+            }
+
+            // Calculate MD5 hash
+            var md5Hash = CryptoJS.MD5(inputText).toString();
+            console.log("MD5 Hash:", md5Hash); // Debugging
+
+            // Calculate SHA-256 hash
+            var sha256Hash = CryptoJS.SHA256(inputText).toString();
+            console.log("SHA-256 Hash:", sha256Hash); // Debugging
+
+            // Display hashes
+            document.getElementById('md5Hash').value = md5Hash; // Update value for input field
+            document.getElementById('sha256Hash').value = sha256Hash; // Update value for input field
+        }
+</script>
+       
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"The Vault Defenders -- CyberFlex</title>
+    <link rel="stylesheet" href="style/content.css">
+    <style>
+                .hero {
+        position: relative;
+        height: 80vh;
+        background-image: url('images/hash7.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/cyberlogo.png" alt="CyberFlix" class="logo">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="chapterlist.html">Series</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">New & Popular</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <input type="text" placeholder="Search" class="search-input">
+            <img src="images/avatar.png" alt="User Avatar" class="user-avatar">
+        </div>
+    </nav>
+    <main>
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">"The Vault Defenders"</h1>
+                <div class="metadata">
+                    <span class="age-rating">16+</span>
+                    <span class="duration">3 Episodes</span>
+                    <span class="year">2023</span>
+                    <span class="quality">4K Ultra HD</span>
+                </div>
+                <div class="genres">
+                    <span class="genre">Cybersecurity</span>
+                    <span class="genre">Thriller</span>
+                    <span class="genre">Tech</span>
+                </div>
+                <p class="hero-description">In a world where the digital realm is constantly under threat, a team of elite cybersecurity experts—Nova, Zoe, Aria, and Leo—are tasked with defending the unthinkable: a school’s digital vault, containing the most sensitive data. But when the vault is breached by an unseen force, the clock starts ticking. With their deep knowledge of hash functions and cryptography, they must unravel complex puzzles and fight to secure the future of the school's data. Each chapter brings new challenges in encryption and security, pushing the team to the limits of their skills and courage. Can they stop the data from falling into the wrong hands before it’s too late?</p>
+                <a href="../MissionBrief4.html" class="btn btn-play">▶ Play </a>
+                <a href="#" class="btn btn-info">ⓘ More Info</a>
+            </div>
+        </div>
+        <section class="content-details">
+            <div class="details-tabs">
+                <ul class="tabs-list">
+                    <li class="tab-item active" data-tab="episodes">Episodes</li>
+                    <li class="tab-item" data-tab="agent-tools">Agent Tools</li>
+                    <li class="tab-item" data-tab="skills-needed">Skills Needed</li>
+                    <li class="tab-item" data-tab="learning-outcomes">Learning Outcomes</li>
+                </ul>
+                <div class="tab-content">
+                    <div id="episodes" class="tab-pane active">
+                        <div class="episode-list">
+                            <div class="episode">
+                                <img src="../hash/h4.png" alt="Episode 1" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>1. Hash manipulation</h4>
+                                    <p>Unlock the Vault: Master the Art of Hash Manipulation!"
+                                    </p>
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="../hash/h2.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>2. Hash Collision</h4>
+                                    <p>Collision Course: Find the Digital Doppelganger!"</p>
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="../hash/h3.png" alt="Episode 3" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>3. Hacker Attack</h4>
+                                    <p>Race Against Time: Crack the Code, Save the Data!"</p>
+                                    <span class="duration">8m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trailers" class="tab-pane">
+                        <h3>Trailers & More</h3>
+                        <p>Coming soon...</p>
+                    </div>
+                    <div id="similar" class="tab-pane">
+                        <h3>More Like This</h3>
+                        <p>Explore similar series and movies...</p>
+                    </div>
+                    <div id="details" class="tab-pane">
+                        <h3>Details</h3>
+                        <p>Cast, crew, and production details...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="popular-shows">
+            <h2>Popular on CyberFlix</h2>
+            <div class="shows-grid">
+                <div class="show-item">
+                    <img src="images/money-heist.png" alt="Money Heist" class="show-image">
+                    <p class="show-title">Money Heist</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/Certicate4.png" alt="Certificate, Please" class="show-image" >
+                    <p class="show-title">Certificate, Please</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/binaryposter2.png" alt="Binary" class="show-image" >
+                    <p class="show-title">Digital Man</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/vigposter2.png" alt="Stranger Things" class="show-image" >
+                    <p class="show-title">Treasure Hunt</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/hashposter2.png" alt="The Witcher" class="show-image">
+                    <p class="show-title">Hash Vault</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                var navbar = document.querySelector('.navbar');
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Tab functionality
+            var tabItems = document.querySelectorAll('.tab-item');
+            var tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+
+                    tabItems.forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    tabPanes.forEach(function(pane) {
+                        pane.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

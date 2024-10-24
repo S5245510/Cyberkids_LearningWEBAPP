@@ -1,0 +1,40 @@
+/Below is my suggested project structure(Not applied yet):
+├── index.html
+├── chapterList.html
+├── styles/
+│   ├── main.css
+│   ├── chapterList.css
+│   └── story.css
+├── scripts/
+│   ├── main.js
+│   ├── chapterList.js
+│   └── story.js
+├── content/
+│   ├── lecture.html
+│   ├── demonstration.html
+│   └── puzzle.html
+├── stories/
+│   ├── vig/
+│   │   ├── story.html
+│   │   ├── puzzle.html
+│   │   └── map.html
+│   └── roma/
+│       ├── story.html
+│       ├── puzzle.html
+│       └── map.html
+└── images/
+    ├── vig/
+    └── roma/
+
+
+
+index.html: This will be your main landing page.
+chapterList.html: This page will list all available chapters or stories (Vig and Roma).
+content/: This folder contains common content pages that might be shared across stories:
+lecture.html: For educational content about ciphers.
+demonstration.html: To demonstrate how ciphers work.
+puzzle.html: A general puzzle page that might be customized for each story.
+stories/: This folder contains subfolders for each story (Vig and Roma):
+Each story has its own story.html, puzzle.html, and map.html.
+styles/ and scripts/: These folders contain CSS and JavaScript files respectively.
+images/: This folder contains subfolders for images specific to each story.

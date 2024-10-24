@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Chapter Selection </title>
+
+</head>
+<style>
+
+:root {
+		--carousel-transition-duration: 250ms;
+		--carousel-transition-ease: ease-out;
+		--carousel-bg-color-rgb: 0, 0, 0;
+		--carousel-shadow-color-rgb: 128, 128, 128;
+		--carousel-item-width: 15rem; 
+		--carousel-item-height: 30rem; 
+		--carousel-item-hover-effect: 1.05; 
+		--carousel-item-reflection-blur: 0.25rem;
+		--carousel-item-empty-color-rgb: 255, 255, 255;
+		--carousel-item-glow-color-rgb: 255, 255, 255;
+		--carousel-item-glow-size: 5rem;
+		--carousel-diameter: 45rem;   
+		--carousel-3d-perspective: 1000px;
+		--carousel-3d-perspective-origin: 50% 20%;
+		--carousel-control-button-width: 1.25rem;
+		--carousel-control-button-height: 4rem;
+		--carousel-control-color-rgb: 255, 255, 255;
+		--carousel-animation-duration: 25s;
+		--carousel-animation-play-state: running;
+		--carousel-direction-animation-play-state: paused;
+}
+
+/*
+global
+*/
+*, *::before, *::after {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		box-sizing: border-box;
+}
+
+*:focus {
+		outline: none;
+}
+
+@font-face {
+    font-family: 'Anurati';
+    src: url('fonts/Anurati-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.futuristic-heading {
+    font-family: 'Anurati', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: rgba(252, 253, 255, 0.8);
+    text-align: center;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    position: relative;
+    text-shadow: 
+        0 0 5px rgba(232, 219, 219, 0.3),
+        0 0 10px rgba(9, 193, 89, 0.2),
+        0 0 15px rgba(65, 21, 160, 0.1);
+}
+
+.futuristic-heading::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(241, 241, 241, 0.573) 50%, transparent 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: light-pipe 5s linear infinite;
+}
+
+@keyframes light-pipe {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: rgb(var(--carousel-bg-color-rgb));
+    overflow: hidden;
+    padding: 2rem;
+}
+
+a {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		-webkit-tap-highlight-color: transparent;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+}
+
+body {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		background-color: rgb(var(--carousel-bg-color-rgb));
+		overflow: hidden;
+}
+
+/*
+carousel
+*/
+.carousel {
+		--_diameter: var(--carousel-diameter);
+		--_radius: calc(var(--_diameter) / 2);
+		--_item-width: var(--carousel-item-width);
+		--_item-height: var(--carousel-item-height);
+		perspective: var(--carousel-3d-perspective);
+		perspective-origin: var(--carousel-3d-perspective-origin);
+		width: var(--_diameter);
+		height: var(--_diameter);
+		position: relative; /* Add this line */
+}
+
+@media only screen and (max-width: 48rem) {
+		.carousel {
+				--_diameter: calc(var(--carousel-diameter) * 0.75);
+				--_item-width: calc(var(--carousel-item-width) * 0.75);
+				--_item-height: calc(var(--carousel-item-height) * 0.75);
+		}
+}
+
+@media only screen and (max-width: 32rem) {
+		.carousel {
+				--_diameter: calc(var(--carousel-diameter) * 0.6);
+				--_item-width: calc(var(--carousel-item-width) * 0.6);
+				--_item-height: calc(var(--carousel-item-height) * 0.6);
+		}
+}
+
+@media only screen and (max-width: 16rem) {
+		.carousel {
+				--_diameter: calc(var(--carousel-diameter) * 0.25);
+				--_item-width: calc(var(--carousel-item-width) * 0.25);
+				--_item-height: calc(var(--carousel-item-height) * 0.25);
+		}
+}
+
+.carousel .carousel-control-button {
+		--_width: var(--carousel-control-button-width);
+		--_height: var(--carousel-control-button-height);
+		z-index: 1;
+		width: var(--_width);
+		height: var(--_height);
+		background-color: rgb(var(--carousel-control-color-rgb));
+		opacity: 0.2;
+		transition: opacity var(--carousel-transition-duration) var(--carousel-transition-ease);
+		position: absolute;
+}
+.carousel .carousel-control-button:hover {
+		opacity: 0.4;
+}
+.carousel .carousel-control-button:has(input:checked) {
+		opacity: 0.8;
+}
+
+.carousel .carousel-control-button input {
+		-webkit-appearance: none;
+		appearance: none;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+}
+
+.carousel .carousel-control-button.left {
+		clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+		top: calc(var(--_radius) - var(--_height) / 2);
+		left: 0;
+}
+.carousel:has(.carousel-control-button.left input:checked) {
+		--carousel-direction-animation-play-state: running;
+}
+
+.carousel .carousel-control-button.right {
+		clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+		top: calc(var(--_radius) - var(--_height) / 2);
+		right: 0;
+}
+.carousel:has(.carousel-control-button.right input:checked) {
+		--carousel-direction-animation-play-state: paused;
+}
+
+.carousel .carousel-rotation-direction {
+		--_direction-animation-play-state: var(--carousel-direction-animation-play-state);
+		--_z: calc(var(--_radius) * -1);
+		position: absolute; 
+		left: 50%; 
+		top: 50%; 
+		transform: translate(-50%, -50%) translateZ(var(--_z)); 
+		transform-style: preserve-3d;
+		animation: carousel-rotation-reverse calc(var(--carousel-animation-duration) / 2) reverse linear infinite var(--_direction-animation-play-state);
+		transition: all var(--carousel-transition-duration) var(--carousel-transition-ease);
+}
+
+@keyframes carousel-rotation-reverse {
+		from {transform: translateZ(var(--_z)) rotateY(0deg);}
+		to {transform: translateZ(var(--_z)) rotateY(360deg);}
+}
+
+@keyframes carousel-rotation-normal {
+		from {transform: rotateY(0deg);}
+		to {transform: rotateY(360deg);}
+}
+
+.carousel .carousel-item-wrapper {
+		transform-style: inherit;
+		width: inherit;
+		height: inherit;
+		list-style-type: none;
+		position: relative;
+		animation: carousel-rotation-normal var(--carousel-animation-duration) normal linear infinite var(--carousel-animation-play-state);
+		transition: all var(--carousel-transition-duration) var(--carousel-transition-ease);
+}
+
+.carousel .carousel-rotation-direction:has(.carousel-item:hover) {
+		--carousel-animation-play-state: paused;
+		--_direction-animation-play-state: paused;
+}
+
+.carousel .carousel-item {
+		--_width: var(--_item-width);
+		--_height: var(--_item-height);
+		--_rotation: calc(360deg / var(--_num-elements) * var(--_index));
+		--_radius: calc(var(--carousel-diameter) * 0.4); /* Adjusted to keep items closer to center */
+		left: 50%; /* Change this line */
+		top: 50%; /* Change this line */
+		transform: translate(-50%, -50%) rotateY(var(--_rotation)) translateZ(var(--_radius)); /* Modify this line */
+		transform-style: preserve-3d;
+		width: var(--_width);
+		height: var(--_height);
+		position: absolute;
+		transition: all var(--carousel-transition-duration) var(--carousel-transition-ease);
+		box-shadow: 0 0 var(--carousel-item-glow-size) transparent;
+}
+
+.carousel .carousel-item:hover {
+		box-shadow: 0 0 var(--carousel-item-glow-size) rgb(var(--carousel-item-glow-color-rgb));
+		transform: translate(-50%, -50%) rotateY(var(--_rotation)) translateZ(calc(var(--_radius) * var(--carousel-item-hover-effect))); /* Modify this line */
+}
+
+.carousel .carousel-item a {
+		display: block;
+		width: inherit;
+		height: inherit;
+		text-indent: -9999px;
+		background-color: rgba(var(--carousel-item-empty-color-rgb), 0.5);
+		background-image: var(--_image-url);
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		transition: filter var(--carousel-transition-duration) var(--carousel-transition-ease);
+		filter: grayscale(100%);
+}
+
+.carousel .carousel-item:hover a {
+		filter: grayscale(0%);
+}
+
+.carousel .carousel-item::before {
+		content: '';
+		width: inherit;
+		height: inherit;
+		background-color: rgba(var(--carousel-item-empty-color-rgb), 0.5);
+		background-image: 
+				linear-gradient(to top, rgba(var(--carousel-bg-color-rgb), 0.25) 0%, rgba(var(--carousel-bg-color-rgb), 1.0) 75%), 
+				var(--_image-url);
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		pointer-events: none;
+		filter: blur(var(--carousel-item-reflection-blur)) grayscale(100%);
+		transition: filter var(--carousel-transition-duration) var(--carousel-transition-ease);
+		transform-style: inherit;
+		transform-origin: center bottom;
+		transform: rotateX(90deg) rotateZ(180deg) rotateY(180deg);
+		position: absolute;
+}
+
+.carousel .carousel-item:hover::before {
+		filter: blur(var(--carousel-item-reflection-blur)) grayscale(0%);
+}
+
+.carousel .carousel-ground {
+		--_width: calc(var(--carousel-diameter) * 0.9); /* Adjusted to match new carousel size */
+		--_height: calc(var(--carousel-diameter) * 0.9);
+		--_rotation: 90deg;
+		left: calc(var(--_radius) - var(--_width) / 2);
+		top: calc(var(--_radius) - var(--_height) / 2);
+		transform: rotateX(var(--_rotation)) translateZ(calc(var(--_item-height) / -2));
+		width: var(--_width);
+		height: var(--_height);
+		border-radius: 50%;
+		background: radial-gradient(rgba(var(--carousel-shadow-color-rgb), 0.75) 15% , rgba(var(--carousel-bg-color-rgb), 0) 60%);
+		opacity: 0.5;
+		transition: opacity var(--carousel-transition-duration) var(--carousel-transition-ease);
+		position: absolute;
+		z-index: -1; /* Add this line to ensure the ground is below the carousel items */
+}
+
+.carousel .carousel-item-wrapper:has(.carousel-item:hover) .carousel-ground {
+		opacity: 0.75;
+}
+
+ .carousel-item {
+            opacity: 0.5; /* Make all items appear disabled by default */
+            pointer-events: none; /* Disable clicking by default */
+            transition: opacity 0.3s ease, pointer-events 0.3s ease;
+        }
+
+        .carousel-item.active {
+            opacity: 1; /* Active items are fully visible */
+            pointer-events: auto; /* Active items are clickable */
+        }
+
+        /* Add a visual indicator for locked chapters */
+        .carousel-item:not(.active)::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #fff;
+        }
+
+		        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 255, 170, 0.2);
+            color: #00ffaa;
+            border: 2px solid #00ffaa;
+            padding: 10px 20px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-button:hover {
+            background-color: rgba(0, 255, 170, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #0a192f;
+            margin: 15% auto;
+            padding: 20px;
+            border: 2px solid #00ffaa;
+            width: 300px;
+            color: #00ffaa;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .modal input, .modal button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .modal button {
+            background-color: #00ffaa;
+            color: #0a192f;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #00cc88;
+        }
+
+		        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+		.placeholder-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+#placeholder-input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #00ffaa;
+    color: #00ffaa;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1rem;
+    padding: 5px 10px;
+    margin-right: 10px;
+    width: 200px;
+}
+
+#placeholder-input::placeholder {
+    color: rgba(0, 255, 170, 0.5);
+}
+
+#placeholder-button {
+    background-color: transparent;
+    border: 2px solid #00ffaa;
+    color: #00ffaa;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1rem;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#placeholder-button:hover {
+    background-color: rgba(0, 255, 170, 0.2);
+}
+
+
+.message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: rgba(0, 255, 170, 0.2);
+    border: 2px solid #00ffaa;
+    padding: 20px;
+    border-radius: 10px;
+    color: #00ffaa;
+    font-family: 'Exo 2', sans-serif;
+    text-align: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.message-box.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.message-content {
+    font-size: 1.2em;
+}
+
+    </style>
+<body>
+    <h1 class="futuristic-heading">Pick your mission to start journey</h1>
+	<div class="placeholder-container">
+		<input type="text" id="placeholder-input" placeholder="Enter TimeTravel code">
+		<button id="placeholder-button">Submit</button>
+	</div>
+    <div class="carousel">
+        <label class="carousel-control-button left">
+            <input type="radio" name="carousel-control" checked>
+        </label>
+        <label class="carousel-control-button right">
+            <input type="radio" name="carousel-control">
+        </label>
+        <div class="carousel-ground"></div>
+        <div class="carousel-rotation-direction">
+            <ul class="carousel-item-wrapper">
+                <li class="carousel-item active" style="--_index: 0; --_image-url: url('images/RomaBig.png');">
+                    <a href="transition.html?dest=content1.html">Chapter 1</a>
+                </li>
+                <li class="carousel-item" style="--_index: 1; --_image-url: url('images/vigposter2.png');">
+                    <a href="transition.html?dest=content2.html">Chapter 2</a>
+                </li>
+                <li class="carousel-item" style="--_index: 2; --_image-url: url('images/binaryposter2.png');">
+                    <a href="transition.html?dest=content3.html">Chapter 3</a>
+                </li>
+                <li class="carousel-item" style="--_index: 3; --_image-url: url('images/hashposter1.png');">
+                    <a href="transition.html?dest=content4.html">Chapter 4</a>
+                </li>
+                <li class="carousel-item" style="--_index: 4; --_image-url: url('images/morecoming.jpg');">
+                    <a href="">Chapter 5</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <button class="admin-button" onclick="showPasswordPrompt()">Admin Unlock</button>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button onclick="checkPassword()">Submit</button>
+        </div>
+    </div>
+
+    <div id="unlockModal" class="modal">
+        <div class="modal-content">
+            <h2>Select Chapters to Unlock</h2>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="vigCheckbox"> Vigenère Cipher (Chapter 2) code: BELLASO
+                </label>
+                <label>
+                    <input type="checkbox" id="binaryCheckbox"> Binary Code (Chapter 3) code: BOOLE
+                </label>
+                <label>
+                    <input type="checkbox" id="hashCheckbox"> Hash Functions (Chapter 4) code: MERKLE
+                </label>
+            </div>
+            <button onclick="updateChapters()">Update</button>
+        </div>
+    </div>
+	<div id="message-box" class="message-box">
+		<div class="message-content">
+			<p id="message-text"></p>
+		</div>
+	</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.style.setProperty('--_num-elements', '5');
+            document.documentElement.style.setProperty('--carousel-diameter', '40rem');
+            document.querySelector('.futuristic-heading').setAttribute('data-text', 'Pick your mission to start journey');
+
+			// Initialize localStorage items if they don't exist
+			if (localStorage.getItem('storyvig_locked') === null) {
+				localStorage.setItem('storyvig_locked', 'true');
+			}
+			if (localStorage.getItem('storybinary_locked') === null) {
+				localStorage.setItem('storybinary_locked', 'true');
+			}
+			if (localStorage.getItem('storyhash_locked') === null) {
+				localStorage.setItem('storyhash_locked', 'true');
+			}
+
+			// Check localStorage and unlock chapters accordingly
+			const chapters = document.querySelectorAll('.carousel-item');
+			
+			// Chapter 1 is always unlocked
+			chapters[0].classList.add('active');
+
+			// Check and unlock other chapters
+			if (localStorage.getItem('storyvig_locked') === 'false') {
+				chapters[1].classList.add('active');
+			}
+			if (localStorage.getItem('storybinary_locked') === 'false') {
+				chapters[2].classList.add('active');
+			}
+			if (localStorage.getItem('storyhash_locked') === 'false') {
+				chapters[3].classList.add('active');
+			}
+
+            // Add click event listeners to all chapters
+            chapters.forEach((chapter, index) => {
+                chapter.addEventListener('click', function(e) {
+                    if (!this.classList.contains('active')) {
+                        e.preventDefault();
+                        alert('This chapter is locked. Complete the previous chapters to unlock it.');
+                    }
+                });
+            });
+			function showMessage(message) {
+				const messageBox = document.getElementById('message-box');
+				const messageText = document.getElementById('message-text');
+				messageText.textContent = message;
+				messageBox.classList.add('show');
+				
+				console.log('Showing message:', message); 
+				
+				setTimeout(() => {
+					messageBox.classList.remove('show');
+					console.log('Hiding message'); // debugging
+					location.reload();
+				}, 5000); // time showing message 5 seconds
+			}
+
+		const placeholderInput = document.getElementById('placeholder-input');
+        const placeholderButton = document.getElementById('placeholder-button');
+
+        placeholderButton.addEventListener('click', function() {
+            const enteredCode = placeholderInput.value.trim().toUpperCase();
+            
+			switch(enteredCode) {
+				case 'BELLASO':
+					localStorage.setItem('storyvig_locked', 'false');
+					showMessage("Agent, your clearance for the Vigenère Gate has been approved. Prepare to enter the timestream. Your mission awaits in Renaissance Italy.");
+					break;
+				case 'BOOLE':
+					localStorage.setItem('storybinary_locked', 'false');
+					showMessage("Operative, access granted to the Binary Portal. Stand by for temporal shift. Your assignment: safeguard the foundations of modern computing.");
+					break;
+				case 'MERKLE':
+					localStorage.setItem('storyhash_locked', 'false');
+					showMessage("Time Agent, you are cleared for the Hash Continuum. Brace for chronological jump. Objective: secure the future of cryptographic integrity.");
+					break;
+				default:
+				showMessage("Access denied. Incorrect passcode. Temporal gateway remains sealed.");
+			}
+
+            
+         
+        });
+    });
+        
+
+		function showPasswordPrompt() {
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'tutor') {
+                document.getElementById('passwordModal').style.display = 'none';
+                showUnlockOptions();
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+
+
+		function showUnlockOptions() {
+			const vigCheckbox = document.getElementById('vigCheckbox');
+			const binaryCheckbox = document.getElementById('binaryCheckbox');
+			const hashCheckbox = document.getElementById('hashCheckbox');
+
+			vigCheckbox.checked = localStorage.getItem('storyvig_locked') === 'false';
+			binaryCheckbox.checked = localStorage.getItem('storybinary_locked') === 'false';
+			hashCheckbox.checked = localStorage.getItem('storyhash_locked') === 'false';
+
+			document.getElementById('unlockModal').style.display = 'block';
+		}
+
+        function updateChapters() {
+            const vigCheckbox = document.getElementById('vigCheckbox');
+            const binaryCheckbox = document.getElementById('binaryCheckbox');
+            const hashCheckbox = document.getElementById('hashCheckbox');
+
+            localStorage.setItem('storyvig_locked', vigCheckbox.checked ? 'false' : 'true');
+            localStorage.setItem('storybinary_locked', binaryCheckbox.checked ? 'false' : 'true');
+            localStorage.setItem('storyhash_locked', hashCheckbox.checked ? 'false' : 'true');
+
+            const chapters = document.querySelectorAll('.carousel-item');
+            chapters[1].classList.toggle('active', vigCheckbox.checked);
+            chapters[2].classList.toggle('active', binaryCheckbox.checked);
+            chapters[3].classList.toggle('active', hashCheckbox.checked);
+
+            document.getElementById('unlockModal').style.display = 'none';
+            alert('Chapter unlock status has been updated!');
+        }
+
+        // Close the modals if clicked outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+			document.getElementById('passwordInput').value = ''; // Clear the password input
+        }
+    </script>
+	<div id="message-box" class="message-box">
+		<div class="message-content">
+			<p id="message-text"></p>
+		</div>
+	</div>
+	
+</body>
+</html>

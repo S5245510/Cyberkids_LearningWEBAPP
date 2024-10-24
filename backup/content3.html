@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"Digital Man" - CyberFlix</title>
+    <link rel="stylesheet" href="style/content.css">
+    <style>
+                  .hero {
+        position: relative;
+        height: 80vh;
+        background-image: url('images/binary1.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="../images/cyberlogo.png" alt="CyberFlix" class="logo">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="chapterlist.html">Series</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">New & Popular</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <input type="text" placeholder="Search" class="search-input">
+            <img src="images/avatar.png" alt="User Avatar" class="user-avatar">
+        </div>
+    </nav>
+    <main>
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">"Digital-Man : Into the Binary-verse"</h1>
+                <div class="metadata">
+                    <span class="age-rating">10+</span>
+                    <span class="duration">5 Episodes</span>
+                    <span class="year">2023</span>
+                    <span class="quality">2K Ultra HD</span>
+                </div>
+                <div class="genres">
+                    <span class="genre">Pixel</span>
+                    <span class="genre">Cartoon</span>
+                    <span class="genre">Tech</span>
+                </div>
+                <p class="hero-description">"Embark on an extraordinary journey with Alex, a young coder who accidentally stumbles upon a hidden digital realm. Trapped in a world made entirely of binary numbers, Alex must solve intricate puzzles and overcome digital challenges to find his way back home. Prepare to explore a universe where knowledge and courage unlock the path to freedom."</p>
+                <a href="../binary/Binary_Lecture.html" class="btn btn-play">▶ Play</a>
+                <a href="#" class="btn btn-info">ⓘ More Info</a>
+            </div>
+        </div>
+        <section class="content-details">
+            <div class="details-tabs">
+                <ul class="tabs-list">
+                    <li class="tab-item active" data-tab="episodes">Episodes</li>
+                    <li class="tab-item" data-tab="trailers">Trailers & More</li>
+                    <li class="tab-item" data-tab="similar">More Like This</li>
+                    <li class="tab-item" data-tab="details">Details</li>
+                </ul>
+                <div class="tab-content">
+                    <div id="episodes" class="tab-pane active">
+                        <div class="episode-list">
+                            <div class="episode">
+                                <img src="images/BEP1.png" alt="Episode 1" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>1. The Code Awakens</h4>
+                                    
+
+                                    <p>"A young coder, Alex, discovers a mysterious code that pulls him into a digital world."</p>
+                                    <span class="duration">55m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/BEP2.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>2. The Binary Realm</h4>
+                                    <p>Alex awakens in a world made of binary numbers, bewildered and searching for answers.</p>
+                                    <span class="duration">52m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/BEP3.png" alt="Episode 3" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>3. Gate of Codes</h4>
+                                    <p>Alex faces his first challenge: decode a binary puzzle to unlock the door ahead.</p>
+                                    <span class="duration">58m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trailers" class="tab-pane">
+                        <h3>Trailers & More</h3>
+                        <p>Coming soon...</p>
+                    </div>
+                    <div id="similar" class="tab-pane">
+                        <h3>More Like This</h3>
+                        <p>Explore similar series and movies...</p>
+                    </div>
+                    <div id="details" class="tab-pane">
+                        <h3>Details</h3>
+                        <p>Cast, crew, and production details...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="popular-shows">
+            <h2>Popular on CyberFlix</h2>
+            <div class="shows-grid">
+                <div class="show-item">
+                    <img src="images/money-heist.png" alt="Money Heist" class="show-image">
+                    <p class="show-title">Money Heist</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/Certicate4.png" alt="Certificate, Please" class="show-image" onclick="window.location.href='content2.html';">
+                    <p class="show-title">Certificate, Please</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/binary2.png" alt="Binary" class="show-image" onclick="window.location.href='content3.html';">
+                    <p class="show-title">Binary</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/ComfyUI_00226_.png" alt="Stranger Things" class="show-image" onclick="window.location.href='content1.html';">
+                    <p class="show-title">Stranger Things</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/testroma.jpeg" alt="The Witcher" class="show-image">
+                    <p class="show-title">The Witcher</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                var navbar = document.querySelector('.navbar');
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Tab functionality
+            var tabItems = document.querySelectorAll('.tab-item');
+            var tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+
+                    tabItems.forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    tabPanes.forEach(function(pane) {
+                        pane.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

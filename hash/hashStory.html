@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hash Cracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="achievements.js" defer></script> <!-- Reference to achievements.js -->
+
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+
+    <!-- Include CryptoJS library -->
+    <script src="../style/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="../style/css/all.min.css">
+
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+
+    <style>
+       /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #CBCDCD; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Dark sidebar */
+            color: #FFFFFF; /* Text color for sidebar */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #ffffff; /* Accent color for border */
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #ffffff; /* Accent color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #EA5C1F; /* Hover color */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 270px; /* Sidebar width + some spacing */
+            padding: 50px 80px;
+            flex: 1;
+            background-color: #FFFFFF; /* White background for main content */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: margin-left 0.3s ease, padding 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #4F5D75; /* Darker text color */
+            text-align: center;
+            text-transform: uppercase; /* Added for emphasis */
+            letter-spacing: 2px; /* Added for spacing */
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #EA5C1F; /* Accent color */
+            text-align: center;
+            font-weight: bold; /* Emphasized text */
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px 40px;
+            }
+
+            .main-content h1 {
+                font-size: 30px;
+            }
+
+            .main-content h2 {
+                font-size: 24px;
+                padding: 12px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+       
+
+        /* Chapter List Styles */
+        .chapter-list {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .chapter-card {
+            background-color: #ad3224;
+            border: 2px solid #a82315;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            color: #e6d2b5;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .chapter-card:hover {
+            transform: translateY(-10px);
+            background-color: #a82315;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        .chapter-card i {
+            font-size: 2em;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        .chapter-card:hover i {
+            transform: rotate(20deg);
+        }
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-45deg);
+            transition: left 0.3s;
+        }
+        .chapter-card:hover::before {
+            left: 100%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+                padding: 15px;
+            }
+            .chapter-card {
+                padding: 20px 15px;
+            }
+            .chapter-card i {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+            .chapter-card {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>The Secret of the Hash: Protecting the Digital World</h1>
+        <div class="chapter-list">
+            <a href="hashchapter1.html" class="chapter-card">
+                <i class="fas fa-book-open" aria-hidden="true"></i>
+                <div>Chapter 1: The Vault Distress</div>
+            </a>
+            <a href="hashchapter2.html" class="chapter-card">
+                <i class="fas fa-bolt" aria-hidden="true"></i>
+                <div>Chapter 2: The Collision Challenge</div>
+            </a>
+            <a href="hashchapter3.html" class="chapter-card">
+                <i class="fas fa-key" aria-hidden="true"></i>
+                <div>Chapter 3: Decrypt or Defeat: The Final Firewall Challenge</div>
+            </a>
+            <!-- <a href="hashchapter4.html" class="chapter-card">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                <div>Chapter 4: The Final Code</div>
+            </a> -->
+            <!-- Add more chapters as needed -->
+        </div>
+    </div>
+    <script></script>
+</body>
+
+</html>

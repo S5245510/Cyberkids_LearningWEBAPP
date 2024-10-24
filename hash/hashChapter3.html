@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hash Cracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="achievements.js" defer></script> <!-- Reference to achievements.js -->
+
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="style/all.min.css">
+    <!-- Include CryptoJS library -->
+    <script src="../style/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="../style/css/all.min.css">
+        <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+
+    <style>
+       /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #CBCDCD; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Dark sidebar */
+            color: #FFFFFF; /* Text color for sidebar */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #F29269; /* Accent color for border */
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #F29269; /* Accent color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #EA5C1F; /* Hover color */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 270px; /* Sidebar width + some spacing */
+            padding: 50px 80px;
+            flex: 1;
+            background-color: #FFFFFF; /* White background for main content */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: margin-left 0.3s ease, padding 0.3s ease;
+        }
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #4F5D75; /* Darker text color */
+            text-align: center;
+            text-transform: uppercase; /* Added for emphasis */
+            letter-spacing: 2px; /* Added for spacing */
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #EA5C1F; /* Accent color */
+            text-align: center;
+            font-weight: bold; /* Emphasized text */
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px 40px;
+            }
+
+            .main-content h1 {
+                font-size: 30px;
+            }
+
+            .main-content h2 {
+                font-size: 24px;
+                padding: 12px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Container for Hash Cracker Tool */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #CBCDCD, #FFFFFF); /* Gradient background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        /* Styled input, select, and button */
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #4F5D75; /* Use a darker border */
+            font-size: 16px;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #F29269; /* Button background color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        button:hover {
+            background-color: #EA5C1F; /* Button hover color */
+        }
+
+        /* Output and Error Styles */
+        .output {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .error {
+            color: red;
+        }
+
+        /* Dialogue Styles */
+        .dialogue {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e7f3ff;
+            border-left: 6px solid #F29269; /* Accent color for dialogue */
+            display: none;
+            border-radius: 4px;
+            animation: fadeIn 1s forwards;
+        }
+
+        .dialogue strong {
+            color: #EA5C1F; /* Accent color for dialogue text */
+        }
+
+        /* Animation for Dialogues */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Enhanced Message Container for Additional Animations (if needed) */
+        .msg-container {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .msg-send, .msg-receive {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+            position: relative;
+            animation-fill-mode: forwards;
+            animation-timing-function: ease-in-out;
+            display: none; /* Initially hidden */
+        }
+
+        /* Send and Receive Message Styles */
+        .msg-send {
+            background-color: #F29269; /* Send message background color */
+            color: #fff;
+            align-self: flex-end;
+            animation-duration: 1s;
+            animation-name: slideInRight;
+            margin-left: auto;
+        }
+
+        .msg-receive {
+            background-color: #4F5D75; /* Receive message background color */
+            color: #fff;
+            align-self: flex-start;
+            animation-duration: 1s;
+            animation-name: slideInLeft;
+            margin-right: auto;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Puzzle Button Styles */
+        .puzzle-button {
+            display: block;
+            width: 30%;
+            padding: 15px;
+            text-align: center;
+            background-color: #EA5C1F; /* Button color */
+            color: #FFFFFF; /* Button text color */
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite; /* Adding pulse animation */
+        }
+
+        .puzzle-button:hover {
+            background-color: #CBCDCD; /* Change to lighter color on hover */
+            transform: translateY(-3px);
+        }
+
+        /* Icon Styles */
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #EA5C1F; /* Accent color for icon border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            float: left;
+            align-self: flex-start;
+        }
+
+        .icon2 {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #EA5C1F; /* Accent color for icon border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            float: right; 
+            margin-left: auto; 
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            position: fixed; /* Cover the whole screen */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75); /* Darker semi-transparent background */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it appears above other content */
+            font-family: 'Arial', sans-serif; /* Change font for overlay */
+        }
+
+        .overlay-content {
+            text-align: center; /* Center the text */
+            padding: 30px; /* Increased padding */
+            background-color: rgba(50, 50, 50, 0.9); /* Darker background for content */
+            border-radius: 15px;
+            max-width: 800px; /* Limit width for better readability */
+        }
+
+        /* Pulse Animation for Puzzle Button */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        
+        
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <!-- Scene Setting Overlay -->
+    <div class="overlay" id="sceneSettingOverlay">
+        <div class="overlay-content">
+            <h2>Mission!!</h2>
+            <p>In a dimly lit, high-tech lab, the team gathers around a glowing console, screens flashing with encrypted data. Alerts blare as they race against time, fingers flying across holographic keyboards. The air is tense—every second counts. Their mission: decrypt the files before the hacker locks them out forever. </p>
+            <button id="gotItButton">Got It</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>The Secret of the Hash: Protecting the Digital World</h1>
+        <h2>The Decrypt or Defeat: The Final Firewall Challenge</h2>
+
+
+        <!-- Animated Dialogue Container -->
+        <div class="container">
+            <div class="msg-container">
+                <div class="msg-container pv4 ph4 br3 center bg-white shadow-6">
+                    <div class="msg-content w-100 relative">
+                        <div id="msg1" class="msg-receive"><img src="avatar.png" alt="User Avatar" class="icon"> <strong>Nova:</strong> "We've been hacked! We need to decrypt these files before they fall into the wrong hands!"</div>
+                        <div id="msg2" class="msg-send"><img src="avatar2.png" alt="User Avatar" class="icon2"> <strong>Zoe:</strong> "Let's run a brute-force attack! We can try different combinations until we find the right password."</div>
+                        <div id="msg3" class="msg-receive"><img src="avatar.png" alt="User Avatar" class="icon"><strong>Nova:</strong> "What about using rainbow tables? They can help us quickly find the hashed passwords."</div>
+                        <div id="msg4" class="msg-send"> <img src="avatar2.png" alt="User Avatar" class="icon"><strong>Zoe:</strong> "Good idea! We can simulate how these attacks work with our hash cracker tool."</div> 
+                        <!-- <div id="msg5" class="msg-receive"><img src="images/avatar.png" alt="User Avatar" class="icon"><strong>Nova:</strong> "Think of it as finding the ultimate glitch in the system. It’s almost impossible, but if anyone can crack this, it’s you."</div> -->
+                        
+                    </div>
+                </div>
+            </div>
+        <div class="container" style="display: none;" id="trainingButtonContainer">
+            <a href="hashpuzzle3.html" class="puzzle-button">Ready for next Mission!</a>
+        </div>
+        </div>
+    
+        
+    </div>
+
+    
+            
+
+    <script>
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sceneSettingOverlay = document.getElementById('sceneSettingOverlay');
+            const mainContent = document.querySelector('.main-content');
+            const gotItButton = document.getElementById('gotItButton');
+
+            gotItButton.addEventListener('click', () => {
+                sceneSettingOverlay.style.display = 'none'; // Hide overlay
+                mainContent.style.display = 'block'; // Show main content
+                showMessages(); // Start showing messages
+            });
+        });
+
+        function showMessages() {
+            const delayTimes = [1000, 3000, 5000, 7000]; // Delays in milliseconds (1s, 3s, 5s, 7s, 9s)
+            const messages = [
+                document.getElementById('msg1'),
+                document.getElementById('msg2'),
+                document.getElementById('msg3'),
+                document.getElementById('msg4'),
+                
+            ];
+
+            // Show each message with a delay
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    message.style.display = 'block'; // Display message after specified delay
+                    // Show the button only after the last message has been displayed
+                    if (index === messages.length - 1) {
+                        // Additional delay before showing the button (optional)
+                        setTimeout(() => {
+                            const buttonContainer = document.getElementById('trainingButtonContainer');
+                            buttonContainer.style.display = 'block'; // Show the button container
+                            buttonContainer.classList.add('show'); // Add class to trigger transition
+                        }, 1000); // 1 second delay before showing the button after the last message
+                    }
+                }, delayTimes[index]);
+            });
+        }
+
+    </script>
+</body>
+</html>

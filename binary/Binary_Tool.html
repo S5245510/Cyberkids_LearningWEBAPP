@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🃏 The Shade Converter</title>
+    <link rel="stylesheet" href="../style/css/all.min.css">
+
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0b0b44; /* Light blue background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Flex layout for sidebar and content */
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #0277bd; /* Dark blue sidebar */
+            color: white;
+            padding: 20px;
+            height: 100vh; /* Full viewport height */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #ffeb3b; /* Yellow heading */
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li a:hover {
+            color: #ffeb3b; /* Yellow on hover */
+        }
+
+        .sidebar ul li a .emoji {
+            margin-right: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(11, 11, 68, 0.1); /* Semi-transparent background */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 245, 0.2);
+            backdrop-filter: blur(5px); /* This adds a blur effect to the background */
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 80%);
+            animation: shimmer 15s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container h1,
+        .container p,
+        .container .result {
+            color: #ffffff;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0277bd; /* Darker blue for the header */
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: #0b0b44;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 0 1 auto;
+            text-align: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            color: #b3e5fc;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin: 5px;
+            background-color: #393f7c;
+        }
+
+        .tab:hover {
+            background-color: #8f97cd;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 255, 245, 0.2);
+        }
+
+        .tab.active {
+            background-color: #00fff5;
+            color: #0b0b44;
+            box-shadow: 0 2px 4px rgba(0, 255, 245, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+     input[type="text"] {
+            width: 80%;
+            display: block;
+            margin: 0 auto;
+
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 25px;
+            background-color: #1a237e;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            input[type="text"]::placeholder {
+                color: #b3e5fc;
+            }
+
+            input[type="text"]:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #4fc3f7;
+            }
+
+                    button {
+                width: 50%;
+                display: block;
+                margin: 0 auto;
+                padding: 12px 20px;
+                background-color: #00fff5;
+                color: #0b0b44;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            button:hover {
+                background-color: #4fc3f7;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            button:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .hint {
+                color: #fca311;
+                font-style: italic;
+                margin-bottom: 15px;
+                text-shadow: 1px 1px 2px rgba(252, 163, 17, 0.5);
+                text-align: center;
+                font-size: 0.9em;
+            }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .binary-char {
+            position: absolute;
+            font-size: 24px;
+            color: #71f77a;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+
+    
+</head>
+<body>
+    <div class="matrix-bg" id="matrix-bg"></div>
+    <div class="sidebar">
+        <h3>🎮 Binary Quest</h3>
+        <ul>
+            <li><a href="Binary_Lecture.html"><span class="emoji">📚</span><span>Lecture</span></a></li>
+            <li><a href="Binary_Puzzle.html"><span class="emoji">🧩</span><span>Puzzle</span></a></li>
+            <li><a href="Binary_Tool.html"><span class="emoji">🔧</span><span>Decode Tool</span></a></li>
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>🃏 The Shade Converter</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('binaryToDecimal')">Binary to Decimal</div>
+            <div class="tab" onclick="showTab('decimalToBinary')">Decimal to Binary</div>
+            <div class="tab" onclick="showTab('hexToText')">Hex to Text</div>
+            <div class="tab" onclick="showTab('textToHex')">Text to Hex</div>
+            <div class="tab" onclick="showTab('hexToDecimal')">Hex to Decimal</div>
+            <div class="tab" onclick="showTab('decimalToHex')">Decimal to Hex</div>
+        </div>
+
+        <div id="binaryToDecimal" class="tab-content active">
+            <input type="text" id="binaryInput" placeholder="Enter binary number" />
+            <button onclick="convertToDecimal()">Convert</button>
+            <p class="hint">Please enter a binary number without spaces. Example: 10011111.</p>
+            <div class="result" id="result"></div>
+     
+        </div>
+
+        <div id="decimalToBinary" class="tab-content">
+            <input type="text" id="decimalInput" placeholder="Enter decimal number" />
+            <button onclick="convertToBinary()">Convert</button>
+            <p class="hint">Please enter a decimal number without spaces. Example: 159.</p>
+            <div class="result" id="binaryResult"></div>
+       
+        </div>
+
+        <div id="hexToText" class="tab-content">
+            <input type="text" id="hexInput" placeholder="Enter hexadecimal number" />
+            <button onclick="convertHexToText()">Convert</button>
+            <p class="hint">Please enter a hexadecimal number without spaces. Example: 48656c6c6f.</p>
+            <div class="result" id="hexResult"></div>
+
+        </div>
+
+        <div id="textToHex" class="tab-content">
+            <input type="text" id="textInput" placeholder="Enter text" />
+            <button onclick="convertTextToHex()">Convert</button>
+            <p class="hint">Please enter a text without spaces. Example: Hello.</p>
+            <div class="result" id="textResult"></div>
+     
+        </div>
+
+
+        <div id="hexToDecimal" class="tab-content">
+            <input type="text" id="hexDecInput" placeholder="Enter hexadecimal number" />
+            <button onclick="convertHexToDecimal()">Convert</button>
+            <p class="hint">Please enter a hexadecimal number without spaces. Example: 1A.</p>
+            <div class="result" id="hexDecResult"></div>
+        </div>
+        
+        <div id="decimalToHex" class="tab-content">
+            <input type="text" id="decHexInput" placeholder="Enter decimal number" />
+            <button onclick="convertDecimalToHex()">Convert</button>
+            <p class="hint">Please enter a decimal number. Example: 26.</p>
+            <div class="result" id="decHexResult"></div>
+        </div>
+    </div>
+
+    <script>
+        let previousTab = '';
+
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            previousTab = tabName; // Store the current tab
+            event.target.classList.add('active');
+        }
+
+        function convertToDecimal() {
+            const binaryInput = document.getElementById('binaryInput').value;
+            const result = document.getElementById('result');
+            
+            // Validate binary input
+            if (!/^[01]+$/.test(binaryInput)) {
+                result.innerHTML = "Please enter a valid binary number.";
+                return;
+            }
+
+            // Convert binary to decimal
+            const decimalValue = parseInt(binaryInput, 2);
+            result.innerHTML = `Decimal Value: ${decimalValue}`;
+        }
+
+        function convertToBinary() {
+            const decimalInput = document.getElementById('decimalInput').value;
+            const binaryResult = document.getElementById('binaryResult');
+            
+            // Validate decimal input
+            if (!/^\d+$/.test(decimalInput)) {
+                binaryResult.innerHTML = "Please enter a valid decimal number.";
+                return;
+            }
+
+            // Convert decimal to binary
+            const binaryValue = Number(decimalInput).toString(2);
+            binaryResult.innerHTML = `Binary Value: ${binaryValue}`;
+        }
+
+        function convertHexToText() {
+            const hexInput = document.getElementById('hexInput').value;
+            const hexResult = document.getElementById('hexResult');
+
+            // Validate hexadecimal input
+            if (!/^[0-9A-Fa-f]+$/.test(hexInput)) {
+                hexResult.innerHTML = "Please enter a valid hexadecimal number.";
+                return;
+            }
+
+            // Convert hex to text
+            let textValue = '';
+            for (let i = 0; i < hexInput.length; i += 2) {
+                textValue += String.fromCharCode(parseInt(hexInput.substr(i, 2), 16));
+            }
+            hexResult.innerHTML = `Text Value: ${textValue}`;
+        }
+
+        function convertTextToHex() {
+            const textInput = document.getElementById('textInput').value;
+            const textResult = document.getElementById('textResult');
+
+            // Convert text to hex
+            let hexValue = '';
+            for (let i = 0; i < textInput.length; i++) {
+                hexValue += textInput.charCodeAt(i).toString(16).padStart(2, '0');
+            }
+            textResult.innerHTML = `Hexadecimal Value: ${hexValue}`;
+        }
+
+        function convertHexToDecimal() {
+                const hexInput = document.getElementById('hexDecInput').value;
+                const result = document.getElementById('hexDecResult');
+                
+                // Validate hexadecimal input
+                if (!/^[0-9A-Fa-f]+$/.test(hexInput)) {
+                    result.innerHTML = "Please enter a valid hexadecimal number.";
+                    return;
+                }
+
+                // Convert hex to decimal
+                const decimalValue = parseInt(hexInput, 16);
+                result.innerHTML = `Decimal Value: ${decimalValue}`;
+            }
+
+            function convertDecimalToHex() {
+                const decInput = document.getElementById('decHexInput').value;
+                const result = document.getElementById('decHexResult');
+                
+                // Validate decimal input
+                if (!/^\d+$/.test(decInput)) {
+                    result.innerHTML = "Please enter a valid decimal number.";
+                    return;
+                }
+
+                // Convert decimal to hex
+                const hexValue = Number(decInput).toString(16).toUpperCase();
+                result.innerHTML = `Hexadecimal Value: ${hexValue}`;
+            }
+
+             function createBinaryRain() {
+                const matrixBg = document.getElementById('matrix-bg');
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const columns = Math.floor(width / 20);
+
+                for (let i = 0; i < columns; i++) {
+                    const char = document.createElement('div');
+                    char.className = 'binary-char';
+                    char.style.left = `${i * 20}px`;
+                    char.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                    char.style.animationDelay = `${Math.random() * 2}s`;
+                    matrixBg.appendChild(char);
+
+                    animateChar(char);
+                }
+            }
+
+    function animateChar(char) {
+        char.textContent = Math.random() < 0.5 ? '0' : '1';
+        char.style.opacity = 0;
+        char.style.transform = 'translateY(-100%)';
+
+        setTimeout(() => {
+            char.style.opacity = 0.5;
+            char.style.transform = 'translateY(100vh)';
+            
+            char.addEventListener('transitionend', () => {
+                animateChar(char);
+            }, { once: true });
+        }, 50);
+    }
+
+    createBinaryRain();
+    window.addEventListener('resize', createBinaryRain);
+    </script>
+
+</body>
+</html>

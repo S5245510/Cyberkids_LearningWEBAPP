@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Briefing: Hacker's Toolkit</title>
+    <link rel="stylesheet" href="../style/missionbrief.css">
+    <link rel="stylesheet" href="../style/all.min.css">
+    <style>
+       
+    </style>
+</head>
+<body>
+
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1 class="mission-title">Mission Briefing</h1>
+        <div class="content-wrapper">
+            <!-- Left column -->
+            <div class="left-column">
+                <!-- Character display area -->
+                <!-- This div can be used to display a large character, icon, or visual representation -->
+                <div class="character-display" id="character-display">
+                    <video width="100%" height="100%" autoplay loop muted playsinline>
+                        <source src="../images/missionbriefing.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="futuristic-element">
+                    <div class="agent-status">
+                        <div class="status-item">
+                            <div class="status-label">Agent ID</div>
+                            <div class="status-value">VIG-007</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Clearance Level</div>
+                            <div class="status-value">Alpha</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Mission Status</div>
+                            <div class="status-value">Active</div>
+                        </div>
+                    </div>
+                    <div class="mission-timer" id="mission-timer">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="right-column">
+                <!-- Terminal-like explanation container -->
+                <div class="explanation-container">
+                    <!-- Terminal header with title and control buttons -->
+                    <div class="terminal-header">
+                        <div class="terminal-title">Mission Details</div>
+                        <div class="terminal-controls">
+                            <span class="terminal-minimize"></span>
+                            <span class="terminal-maximize"></span>
+                            <span class="terminal-close"></span>
+                        </div>
+                    </div>
+                    <!-- Area for new things to add -->
+                    <div id="explanation"></div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="window.location.href='RomaStory.html'">Accept Mission</button>
+                        <button class="action-button">Review Intel</button>
+                        <button class="action-button">Equipment Check</button>
+                    </div>
+                </div>
+                <div class="equipment-block">
+                    <h3 class="equipment-title">Mission Equipment: Cryptographic Techniques</h3>
+                    <div class="technique">
+                        <h4>Caesar Cipher</h4>
+                        <p>A polyalphabetic substitution cipher using a keyword to shift the alphabet for each letter in the plaintext.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Resistant to frequency analysis</li>
+                                    <li>Multiple alphabets make it harder to crack</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Key management can be challenging</li>
+                                    <li>Vulnerable to known-plaintext attacks</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="technique">
+                        <h4>Alpherbet Table</h4>
+                        <p>A square table of alphabets that is essential for using the Vigenère cipher.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Visual aid for encryption/decryption</li>
+                                    <li>Easy to memorize and recreate</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Can be time-consuming for long messages</li>
+                                    <li>Requires the table to be present or memorized</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const explanation = document.getElementById('explanation');
+            const briefing = [
+                "Agent, your mission is critical. We're sending you back in time.",
+                "Your target: Assist the renowned cryptographer, Sam, A Roma solider, in 280–275 BC",
+                "Objective: Help Sam deliver the secret scroll to the emperor.",
+                "Warning: Your actions may alter the course of cryptographic history.",
+                "Technique: Use the Caesar cipher to decode thescroll.",
+                "Reward: Upon success, you'll unlock Caesar's secret treasure.",
+                "Remember, the future of secure communication depends on your success.",
+                "Good luck, Agent. The fate of cryptography is in your hands."
+            ];
+
+            function typeWriter(text, i) {
+                if (i < text.length) {
+                    explanation.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(function() {
+                        typeWriter(text, i);
+                    }, 50);
+                } else {
+                    explanation.innerHTML += '<br><br>';
+                    showNextLine();
+                }
+            }
+
+            function showNextLine() {
+                if (briefing.length > 0) {
+                    const line = briefing.shift();
+                    typeWriter(line, 0);
+                }
+            }
+
+            showNextLine();
+
+            // Mission timer
+            let seconds = 0;
+            setInterval(function() {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                document.getElementById('mission-timer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+            }, 1000);
+
+            // Add this to your existing DOMContentLoaded event listener
+            const typingEffect = document.createElement('div');
+            typingEffect.className = 'typing-effect';
+            typingEffect.textContent = 'Initializing mission parameters...';
+            document.querySelector('.futuristic-element').appendChild(typingEffect);
+        });
+    </script>
+        <script defer src="../style/all.min.js"></script>
+</body>
+</html>

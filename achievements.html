@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography Quest Achievements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+        <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0a0e17;
+            color: #e6f1ff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+
+        
+        .title-container {
+            position: relative;
+            text-align: center;
+            margin-bottom: 60px;
+            background-color: rgba(0, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .subtitle::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .story-blocks {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 60px;
+        }
+        .story-block {
+            background-color: #1a2634;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px;
+            width: 22%;
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .story-block::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, #00ffff);
+            animation: rotate 4s linear infinite;
+        }
+        .story-block::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: #1a2634;
+            border-radius: 12px;
+        }
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .story-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+        }
+        .story-block h3 {
+            margin: 0 0 15px 0;
+            color: #b7efef;
+            font-size: 1.4em;
+            position: relative;
+            z-index: 1;
+        }
+        .star-container {
+            background-color: #0a0e17;
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .star {
+            font-size: 24px;
+            color: #4d4d4d;
+            margin-right: 5px;
+            transition: color 0.3s ease;
+        }
+        .star.earned {
+            color: #ebed6a;
+        }
+        .star-count {
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 15px;
+            color: #7f8c8d;
+            position: relative;
+            z-index: 1;
+        }
+        .trophy-board-container {
+        background-color: #0a0e17;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+        margin-top: 60px;
+    }
+
+    .trophy-board-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(0, 255, 0, 0.2);
+    }
+
+    .trophy-board-header h2 {
+        font-family: 'Orbitron', sans-serif;
+        color: #00ff00;
+        font-size: 2em;
+        margin: 0;
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .progress-container {
+        width: 200px;
+        height: 20px;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background-color: #eaecea;
+        width: 0;
+        transition: width 0.5s ease;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    }
+
+    .trophy-board {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+    }
+        .achievement {
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .achievement.locked {
+            filter: grayscale(100%);
+            opacity: 0.7;
+        }
+        .achievement.unlocked {
+            background: linear-gradient(145deg, #1e3a8a, #dce0e7);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .achievement.unlocked::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle,
+                rgba(59, 130, 246, 0.2) 0%,
+                transparent 70%
+            );
+            animation: pulse 4s linear infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+        }
+        .achievement-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #2a2a2a;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        .achievement.unlocked .achievement-icon {
+            background: linear-gradient(145deg, #60a5fa, #3b82f6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .achievement-icon img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .achievement.unlocked .achievement-icon img {
+           
+        }
+        .achievement-title {
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #60a5fa;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        .achievement.unlocked .achievement-title {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+        }
+        .achievement-description {
+            font-size: 0.9em;
+            color: #888888;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        .achievement.unlocked .achievement-description {
+            color: #e0e7ff;
+        }
+        .achievement:hover {
+            transform: translateY(-5px);
+        }
+        .achievement.unlocked:hover {
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+        }
+        .character-container {
+            display: flex;
+            height: 50%;
+            align-items: center;  /* This vertically centers the items */
+            justify-content: space-between;  /* This distributes space between items */
+            margin-bottom: 60px;
+        }
+
+        .character-display {
+            width: 30%; /* Adjust this width as necessary */
+            height: 50%;
+            max-width: 150px; /* Set a maximum width to prevent it from growing too large */
+            border: 2px solid #000000;
+            border-radius: 60px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .terminal-dialogue {
+            width: 65%;  /* Adjust the width to make sure it fits well with the character display */
+            height: auto; /* Auto height for flexibility */
+            background-color: #0a0e17;
+            border: 2px solid #214121;
+            border-radius: 10px;
+            margin-left: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #dfe4df;
+            font-size: 1.2em;
+            overflow: hidden;
+        }
+
+        .character-display video {
+            width: 100%;
+            border-radius: 60px;
+            height: auto; /* This maintains the video's aspect ratio */
+            display: block; /* Removes any extra space below the video */
+        }
+
+
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: #00ff00;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .back-button {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background-color: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        border: 2px solid #00ffff;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+
+    .chapter-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        border: 2px solid #00ffff;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .chapter-button:hover {
+        background-color: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .score-button {
+        position: absolute;
+        bottom: 0%;
+        right: 45%;
+        background-color: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        border: 2px solid #00ffff;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .score-button:hover {
+        background-color: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="title-container">
+            <h1>Cyber Plex: Agent Dashboard</h1>
+            <div class="subtitle">Temporal Cryptography Mission Progress</div>
+            <div class="subtitle"></div>
+            <div class="subtitle"></div>
+            <button id="backButton" class="back-button">
+                &lt; Back
+            </button>
+            <button id="scoreboard" class="score-button" onclick="window.location.href='scoreboard.html'">
+                [ ScoreBoard ]
+             </button>
+            <button id="chapterlistbutton" class="chapter-button" onclick="window.location.href='chapterlist.html'">
+               Chapter List >
+            </button>
+        </div>
+        
+        <div class="character-container">
+            <div class="character-display" id="character-display">
+                <video width="100%" height="100%" autoplay loop muted playsinline>
+                    <source src="../images/achievmentbrief.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        
+            <div class="terminal-dialogue" id="terminal-dialogue">
+                Agent, here is your mission progress. Keep trying and unlock all your targets.
+            </div>
+        </div>
+    
+
+        <div class="story-blocks">
+            <div class="story-block" id="romaStoryBlock">
+                <h3>Ancient Rome</h3>
+                <div class="star-container" id="romaStarContainer"></div>
+                <p class="star-count" id="romaStarCount"></p>
+            </div>
+            <div class="story-block" id="vigStoryBlock">
+                <h3>Modern Age</h3>
+                <div class="star-container" id="vigStarContainer"></div>
+                <p class="star-count" id="vigStarCount"></p>
+            </div>
+            <div class="story-block" id="binaryStoryBlock">
+                <h3>Digital Age</h3>
+                <div class="star-container" id="binaryStarContainer"></div>
+                <p class="star-count" id="binaryStarCount"></p>
+            </div>
+            <div class="story-block" id="hashStoryBlock">
+                <h3>Quantum Future</h3>
+                <div class="star-container" id="hashStarContainer"></div>
+                <p class="star-count" id="hashStarCount"></p>
+            </div>
+        </div>
+
+        <div class="trophy-board-container">
+            <div class="trophy-board-header">
+                <h2>Agent Achievements</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="achievementProgress"></div>
+                    <span class="progress-text" id="achievementProgressText"></span>
+                </div>
+            </div>
+            <div class="trophy-board" id="trophyBoard"></div>
+        </div>
+    </div>
+
+
+    <script src="achievements.js"></script>
+    <script src="progressTracker.js"></script>
+    <script>
+        const TOTAL_STARS = {
+            roma: 18,
+            vig: 15,
+            binary: 30,
+            hash: 9
+        };
+
+        const stories = ['roma', 'vig', 'binary', 'hash'];
+
+        function updateStoryStars(storyKey) {
+            let earnedStars = ProgressTracker.getTotalStars(storyKey) || 0;
+            const totalStars = TOTAL_STARS[storyKey];
+            const starContainer = document.getElementById(`${storyKey}StarContainer`);
+            const starCount = document.getElementById(`${storyKey}StarCount`);
+
+            if (starContainer && starCount) {
+                starContainer.innerHTML = '';
+                for (let i = 0; i < totalStars; i++) {
+                    const starIcon = document.createElement('i');
+                    starIcon.className = `fas fa-star star ${i < earnedStars ? 'earned' : ''}`;
+                    starContainer.appendChild(starIcon);
+                }
+                starCount.textContent = `${earnedStars} / ${totalStars} stars`;
+            }
+        }
+
+        function updateAllStoryStars() {
+            stories.forEach(updateStoryStars);
+        }
+
+         function typeWriter(text, elementId, speed = 50) {
+        const element = document.getElementById(elementId);
+        let i = 0;
+        element.innerHTML = '';
+        
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.innerHTML += '<span class="cursor"></span>';
+            }
+        }
+        
+        type();
+    }
+
+
+        function updateAchievements() {
+            const trophyBoard = document.getElementById('trophyBoard');
+            trophyBoard.innerHTML = '';
+
+            let unlockedCount = 0;
+            const totalAchievements = Object.keys(AchievementSystem.achievements).length;
+
+            Object.entries(AchievementSystem.achievements).forEach(([key, achievement]) => {
+                const isUnlocked = localStorage.getItem(key) === 'true';
+                if (isUnlocked) unlockedCount++;
+
+                const div = document.createElement('div');
+                div.className = `achievement ${isUnlocked ? 'unlocked' : 'locked'}`;
+                div.innerHTML = `
+                    <div class="achievement-icon">
+                        <img src="images/${achievement.logo}" alt="${achievement.title} logo">
+                    </div>
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-description">${achievement.description}</div>
+                `;
+                trophyBoard.appendChild(div);
+            });
+
+            // Update progress bar
+            const progressBar = document.getElementById('achievementProgress');
+            const progressText = document.getElementById('achievementProgressText');
+            const progressPercentage = (unlockedCount / totalAchievements) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressText.textContent = `${unlockedCount} / ${totalAchievements}`;
+        }
+
+
+
+        window.addEventListener('load', () => {
+            updateAllStoryStars();
+            updateAchievements();
+            AchievementSystem.initializeUser();
+        });
+
+        const dialogueText = "Agent, Here is your Mission progress. Keep trying and unlock all your targets.";
+        typeWriter(dialogueText, 'terminal-dialogue');
+
+        function onStarsUpdated(storyKey, level, stars) {
+            ProgressTracker.setStars(storyKey, level, stars);
+            updateStoryStars(storyKey);
+            AchievementSystem.checkAchievements();
+            updateAchievements();
+        }
+
+        document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+    });
+    </script>
+</body>
+</html>

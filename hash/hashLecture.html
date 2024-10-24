@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSafe: Emergency Protocol Training</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style/all.min.css">
+
+    
+    <!-- CryptoJS for SHA-256 Hashing -->
+
+    <script src="../style/crypto-js.min.js"></script>
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    
+    <!-- Inline CSS Styles -->
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #FFFFFF; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Darker color for sidebar */
+            color: #FFFFFF; /* Light text color */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+        .sidebar h1 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            color: #FFFFFF;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #CBCDCD; /* Lighter text color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #F29269; /* Accent color on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+        .main-content {
+            margin-left: 270px; /* Sidebar width + spacing */
+            flex-grow: 1;
+            padding: 50px 80px;
+            overflow-y: auto;
+            background-image: url('path/to/parchment-texture.jpg');
+            background-repeat: repeat;
+            background-size: 300px;
+        }
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #3A3F55; /* Darker heading color */
+            text-align: center;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #4F5D75; /* Secondary heading color */
+            text-align: center;
+        }
+
+        .main-content h3 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #7F8C8D;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .section {
+            background-color: rgba(231, 227, 226, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .image-placeholder {
+        background-color: rgba(231, 227, 226, 0.7);
+        border: 2px rgba(231, 227, 226, 0.7);
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        max-width: 280px;
+        max-height: 190px;
+        align-items: center;
+        margin-bottom: 20px;
+        overflow: hidden; /* This prevents the image from spilling out */
+    }
+
+    .image-placeholder img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* This ensures the image maintains its aspect ratio */
+    }
+        .video-placeholder {
+            background-color: rgba(231, 227, 226, 0.7);
+            border: 2px solid rgba(231, 227, 226, 0.7);
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .interactive-element {
+            background-color: rgba(231, 227, 226, 0.7);
+            border: 2px solid rgba(231, 227, 226, 0.7);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+
+        
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+
+
+        #startButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        #startButton:hover {
+            background-color: #0056b3;
+        }
+
+        #hashList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        #hashList li {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            margin-bottom: 15px;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        
+        .mission-briefing {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.briefing-content {
+    background-color: #0a192f;
+    color: #64ffda;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #64ffda;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    font-family: 'Courier New', monospace;
+    border-radius: 10px;
+}
+
+.briefing-content h2 {
+    color: #ccd6f6;
+    text-align: center;
+    margin-top: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#acknowledge-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 10px;
+    background-color: #64ffda;
+    color: #0a192f;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Courier New', monospace;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#acknowledge-btn:hover {
+    background-color: #ccd6f6;
+    color: #0a192f;
+}
+
+.alternative-hashes {
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.alternative-hashes h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.introduction {
+    background-color: #f8f9fa;
+    border-left: 5px solid #3498db;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.introduction h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.introduction p {
+    color: #34495e;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.hash-types {
+    background-color: #e8f4f8;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.hash-types h3 {
+    color: #2980b9;
+    margin-bottom: 10px;
+}
+
+.hash-types ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.hash-types li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.hash-types li:before {
+    content: '•';
+    color: #3498db;
+    font-size: 1.2em;
+    position: absolute;
+    left: 0;
+    top: -2px;
+}
+
+.hash-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.hash-visualization {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.hash-diagram {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-caption {
+    font-style: italic;
+    color: #7f8c8d;
+    margin-top: 10px;
+}
+
+.hash-alternative {
+    background-color: #ffffff;
+    border-left: 4px solid #3498db;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hash-alternative h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.hash-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.advantages, .considerations {
+    flex-basis: 48%;
+}
+
+.hash-details h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.hash-details ul {
+    padding-left: 20px;
+}
+
+.hash-details li {
+    margin-bottom: 5px;
+    color: #34495e;
+}
+
+.cracking-methods {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.cracking-methods h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.method-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.method-card {
+    background-color: #ffffff;
+    border-left: 4px solid #3498db;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.method-card:hover {
+    transform: translateY(-5px);
+}
+
+.method-card h3 {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.method-card p {
+    color: #34495e;
+    font-size: 0.9em;
+}
+
+.strengths-weaknesses-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.strengths, .weaknesses {
+    width: 48%;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.strengths {
+    background-color: #e6f7ff;
+    border-left: 4px solid #1890ff;
+}
+
+.weaknesses {
+    background-color: #fff2e8;
+    border-left: 4px solid #fa541c;
+}
+
+.strengths h3, .weaknesses h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.strengths ul, .weaknesses ul {
+    padding-left: 20px;
+}
+
+.strengths li, .weaknesses li {
+    margin-bottom: 10px;
+}
+
+.strengths i, .weaknesses i {
+    margin-right: 10px;
+}
+
+.hash-function-explanation {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.visual-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hash-diagram {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.interactive-demo {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.interactive-demo h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+#hashInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+#hashButton {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#hashButton:hover {
+    background-color: #2980b9;
+}
+
+#hashOutput {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    word-break: break-all;
+}
+.hash-process {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.hash-process h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.process-list, .properties-list {
+    padding-left: 20px;
+}
+
+.process-list li, .properties-list li {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.process-list li::before {
+    content: counter(list-item);
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 50%;
+    position: absolute;
+    left: -30px;
+    top: 0;
+}
+
+.properties-list li::before {
+    content: '•';
+    color: #3498db;
+    font-weight: bold;
+    font-size: 1.5em;
+    position: absolute;
+    left: -20px;
+    top: -5px;
+}
+
+.step-name, .property-name {
+    font-weight: bold;
+    color: #3498db;
+}
+
+figcaption {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+    </style>
+</head>
+<body>
+    <div id="mission-briefing" class="mission-briefing">
+        <div class="briefing-content">
+            <h2>Mission Briefing</h2>
+            <p id="briefing-message"></p>
+            <button id="acknowledge-btn">Acknowledge</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+       
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1 style="text-align: center; color: #1681ec; margin-bottom: 20px;">Unlock the secrets of Hash Fuctions</h1>
+
+        <!-- Introduction Section -->
+        <div class="section introduction">
+            <h2>Introduction to Hash Functions</h2>
+            <p>A hash function is a cornerstone of modern cryptography and computer science. It transforms an input (or "message") into a fixed-size string of characters, typically a sequence of letters and numbers. This output is known as a hash value or digest.</p>
+            <div class="hash-types">
+                <h3>Common Hash Functions:</h3>
+                <ul>
+                    <li><span class="hash-name">SHA (Secure Hash Algorithm):</span> SHA-1, SHA-256, SHA-512</li>
+                    <li><span class="hash-name">MD5 (Message Digest Algorithm 5)</span></li>
+                    <li><span class="hash-name">RIPEMD (RACE Integrity Primitives Evaluation Message Digest)</span></li>
+                </ul>
+            </div>
+            <div class="hash-visualization">
+                <img src="../images/hashgenerate.png" alt="Hash Function Visualization" class="hash-diagram" style="width: 60%; height: 40%; display: block; margin-left: 20% ; margin-right: 20px;">
+                <p class="image-caption">Visualization of a Hash Function Process</p>
+            </div>
+        </div>
+
+        <!-- Historical Context -->
+        <div class="section">
+            <h2>Historical Context</h2>
+            <!-- Add historical information about Caesar cipher here -->
+            <p>The concept of hashing dates back to the 1950s, but modern cryptographic hash functions emerged in the 1970s. They have since become a cornerstone of computer science and cybersecurity.</p>
+            <!-- Placeholder for an image of Julius Caesar or ancient Roman communication -->
+            <div class="image-placeholder">
+                <img src="Hans Peter Luhn.png" alt="Hans Peter Luhn">
+               <!-- [Place an image of Julius Caesar or ancient Roman communication here] -->
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="section hash-function-explanation">
+            <h2>How Hash Functions Work</h2>
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <p class="hints">Hash functions are fundamental to modern cryptography and data integrity. They work by following these key steps:</p>
+                    <div class="hash-process">
+                        <h3>Key Steps in Hash Function Process:</h3>
+                        <ol class="process-list">
+                            <li><span class="step-name">Input Reception:</span> The function receives data of any size as input.</li>
+                            <li><span class="step-name">Processing:</span> The input undergoes a series of complex mathematical operations.</li>
+                            <li><span class="step-name">Compression:</span> The processed data is compressed into a fixed-size output.</li>
+                            <li><span class="step-name">Output Generation:</span> A unique hash value (digest) is produced.</li>
+                        </ol>
+                        <h3>Important Properties of Hash Values:</h3>
+                        <ul class="properties-list">
+                            <li><span class="property-name">Fixed Length:</span> Regardless of input size, the output is always the same length.</li>
+                            <li><span class="property-name">Deterministic:</span> The same input always produces the same hash.</li>
+                            <li><span class="property-name">Avalanche Effect:</span> A small change in input results in a significantly different hash.</li>
+                            <li><span class="property-name">One-Way Function:</span> It's computationally infeasible to reverse the hash to obtain the original input.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="visual-content">
+                    <img src="../images/crypto.png" alt="Hash Function Process" class="hash-diagram" style="width: 80%; height: 50%; display: block; margin-bottom: 20 auto;">
+                    <figcaption>** Hash algorithm supported by jakubzapletal/ crypto-js</figcaption>
+                    <div class="interactive-demo">
+                        <h3>Try it yourself!</h3>
+                        <input type="text" id="hashInput" placeholder="Enter text to hash">
+                        <button id="hashButton">Generate Hash</button>
+                        <div id="hashOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example -->
+        <div class="conatiner">
+            <h2>Example of Hash Fucntions</h2>
+            <!-- Provide a clear example of encoding and decoding -->
+            <button id="startButton">Reveal Example</button>
+            <ul id="hashList">
+                <li>You provide some data to the hash function: - Input: "Hello, world!"</li>
+                <li>Processing: The hash function applies a series of mathematical operations to the input.</li>
+                <li>Now, the input has been converted into a smaller, fixed-size output.</li>
+                <li>Fixed-Length Output: No matter how long or short the input is, the output from a hash function is always of a fixed size.</li>
+                <li>Output hash (SHA-256): 64ec88ca00b268e5ba1a35678a1b5316d212f4f36631c72b5e258fede24eac15</li>
+                <li>Use the Hashing Tool from the menu bar to generate more hashes.</li>
+            </ul>
+            
+        </div>
+
+        <!-- Strengths and Weaknesses -->
+
+        <div class="section">
+            <h2>Strengths and Weaknesses of Hash Functions</h2>
+            <div class="strengths-weaknesses-container">
+                <div class="strengths">
+                    <h3><i class="fas fa-shield-alt"></i> Strengths:</h3>
+                    <ul>
+                        <li><strong>Deterministic:</strong> The same input always produces the same hash output, ensuring consistency.</li>
+                        <li><strong>Fixed-Length Output:</strong> Regardless of input size, the output length is constant, facilitating easy handling and storage.</li>
+                        <li><strong>Fast Computation:</strong> Hash functions are designed for quick processing, making them efficient for various applications.</li>
+                        <li><strong>Non-reversibility:</strong> It's computationally infeasible to reverse-engineer the original input from the hash output, providing security through pre-image resistance.</li>
+                    </ul>
+                </div>
+                <div class="weaknesses">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Weaknesses:</h3>
+                    <ul>
+                        <li><strong>Collision Vulnerability:</strong> Over time, weaknesses may be discovered, potentially allowing different inputs to produce the same hash.</li>
+                        <li><strong>Performance Trade-offs:</strong> Some cryptographic applications require computationally intensive hash functions for security, which can impact overall system performance.</li>
+                        <li><strong>Key Management Challenges:</strong> In scenarios where hash functions are used with cryptographic systems, secure key management becomes crucial and can be complex.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Uses -->
+        <div class="section">
+            <h2>Historical Uses of Hash Functions</h2>
+            <h3>Hashing in Computer Science(1950s-1970s)</h3>
+            <!-- Add information about how Caesar cipher was used throughout history -->
+            <p>One of the earliest uses of hash functions was in data structures, particularly hash tables, which were invented in the 1950s. Hash tables are used to store and retrieve data efficiently by mapping keys (like names) to specific values (like phone numbers) using a hash function.</p>
+            <h3>Checksums and Data Integrity (1960s - Present)</h3>
+            <p>In Unix systems, hash functions like the Fletcher checksum were used to verify that files had not been tampered with or corrupted, a primitive form of data integrity checks used today.</p>
+            <h3>Password Hashing (1960s - Present)</h3>
+            <p>Unix Password Hashing (1970s): The use of hashing to secure passwords was further developed in Unix systems. Instead of storing plaintext passwords, Unix used hashing algorithms like DES and later cryptographic hash functions to store secure, hashed versions of user passwords.</p>
+        </div>
+
+        <!-- Breaking the Cipher -->
+        <div class="section cracking-methods">
+            <h2>Cracking Hash Functions (MD5)</h2>
+            <p>MD5, once widely used, is now considered vulnerable. Here are common methods to crack MD5 hashes:</p>
+            <div class="method-grid">
+                <div class="method-card">
+                    <h3>Brute Force Attack</h3>
+                    <p>Systematically trying every possible combination until the correct one is found.</p>
+                </div>
+                <div class="method-card">
+                    <h3>Dictionary Attacks</h3>
+                    <p>Using a pre-compiled list of likely passwords or common words to crack the hash.</p>
+                </div>
+                <div class="method-card">
+                    <h3>Rainbow Tables</h3>
+                    <p>Using precomputed tables to reverse cryptographic hash functions.</p>
+                </div>
+                <div class="method-card">
+                    <h3>Collision Attacks</h3>
+                    <p>Finding two different inputs that produce the same hash output.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2> Real-World Examples of MD5 Being Cracked</h2>
+            <h3>SSL/TLS Certificate Forgery</h3>
+            <!-- Add information about how Caesar cipher was used throughout history -->
+            <p style="text-align: center;">In 2008, researchers demonstrated how MD5 collisions could be used to forge SSL/TLS certificates, which are essential for secure communication on the internet. They created a rogue Certificate Authority (CA) certificate using an MD5 collision, allowing them to issue fake digital certificates.</p>
+            <img src="../images/CA.png" alt="MD5 SSL/TLS Certificate Forgery" style="width: 50%; height: auto; display: block; margin: 20px auto; ">
+            <h3>Password Cracking</h3>
+            <p style="text-align: center;">MD5 was commonly used to hash passwords in databases, but its weaknesses (speed and unsalted hashes) allowed attackers to crack passwords easily using rainbow tables or brute force. Today, many systems have moved away from MD5 to more secure hashing techniques.</p>
+            <img src="../images/md5crack.jpg" alt="MD5 SSL/TLS Certificate Forgery" style="width: 50%; height: auto; display: block; margin: 0 auto;">
+        </div>
+
+        <div class="section alternative-hashes">
+            <h2>Secure Alternatives to MD5</h2>
+            
+            <div class="hash-alternative">
+                <h3>SHA-2 Family (SHA-256, SHA-512)</h3>
+                <div class="hash-details">
+                    <div class="advantages">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Far more secure and resistant to collision attacks</li>
+                            <li>Industry standard for secure hashing</li>
+                            <li>Slower computation beneficial for security (deters brute-force attacks)</li>
+                        </ul>
+                    </div>
+                    <div class="considerations">
+                        <h4>Considerations</h4>
+                        <ul>
+                            <li>Slower than MD5 (a security feature, not a weakness)</li>
+                            <li>Requires more computational resources</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="hash-alternative">
+                <h3>Bcrypt</h3>
+                <div class="hash-details">
+                    <div class="advantages">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Designed specifically for password hashing</li>
+                            <li>Incorporates a salt to prevent rainbow table attacks</li>
+                            <li>Adaptive function: can be made slower over time as hardware gets faster</li>
+                        </ul>
+                    </div>
+                    <div class="considerations">
+                        <h4>Considerations</h4>
+                        <ul>
+                            <li>Slower than general-purpose hash functions (intentional design)</li>
+                            <li>Limited to 72 bytes of input (can be mitigated)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    
+
+        <div class="section">
+            <h2>Test Your Knowledge</h2>
+            <div class="interactive-element">
+                <form id="quizForm" action="#" method="POST">
+                    <p><b>1. What is a hash function?</b></p>
+                    <input type="radio" id="q1a1" name="q1" value="A">
+                    <label for="q1a1">A method to encrypt data using a private key</label><br>
+                    <input type="radio" id="q1a2" name="q1" value="B">
+                    <label for="q1a2">A function that converts input into a fixed-length string of characters</label><br>
+                    <input type="radio" id="q1a3" name="q1" value="C">
+                    <label for="q1a3">A decryption algorithm for secured communication</label><br><br>
+                    
+                    <p><b>2. Which hash function is considered insecure due to collision attacks?</b></p>
+                    <input type="radio" id="q2a1" name="q2" value="A">
+                    <label for="q2a1">SHA-512</label><br>
+                    <input type="radio" id="q2a2" name="q2" value="B">
+                    <label for="q2a2">MD5</label><br>
+                    <input type="radio" id="q2a3" name="q2" value="C">
+                    <label for="q2a3">SHA-256</label><br><br>
+    
+                    <p><b>3. What method can crack MD5?</b></p>
+                    <input type="radio" id="q3a1" name="q3" value="A">
+                    <label for="q3a1">Brute force</label><br>
+                    <input type="radio" id="q3a2" name="q3" value="B">
+                    <label for="q3a2">Dictionary attacks</label><br>
+                    <input type="radio" id="q3a3" name="q3" value="C">
+                    <label for="q3a3">Both A and B</label><br><br>
+    
+                    <input type="submit" value="Submit">
+                </form>
+                <div id="result"></div> <!-- Result display -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+                    const briefingBox = document.getElementById('mission-briefing');
+                    const briefingMessage = document.getElementById('briefing-message');
+                    const acknowledgeBtn = document.getElementById('acknowledge-btn');
+
+                    const message = "Agent, pay close attention. The world of cryptography hinges on the power of hash functions. Master the art of hashing, and you'll uncover the hidden fingerprints of data, where even the slightest change can expose critical information.";
+
+                    briefingMessage.textContent = message;
+
+                    // Show the briefing box
+                    briefingBox.style.display = 'block';
+
+                    // Hide the briefing box when acknowledged
+                    acknowledgeBtn.addEventListener('click', function() {
+                        briefingBox.style.display = 'none';
+                    });
+                });
+
+
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form from refreshing the page
+
+            // Correct answers
+            const correctAnswers = {
+                q1: 'B',  // The value for the correct answer
+                q2: 'B',
+                q3: 'C'
+            };
+
+            // Get user answers
+            const userAnswers = {
+                q1: document.querySelector('input[name="q1"]:checked')?.value,
+                q2: document.querySelector('input[name="q2"]:checked')?.value,
+                q3: document.querySelector('input[name="q3"]:checked')?.value
+            };
+
+            // Calculate score
+            let score = 0;
+            for (const question in correctAnswers) {
+                if (correctAnswers[question] === userAnswers[question]) {
+                    score++;
+                }
+            }
+
+            // Display result
+            const totalQuestions = Object.keys(correctAnswers).length;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `You got ${score} out of ${totalQuestions} correct!`;
+        });
+
+        document.getElementById('hashButton').addEventListener('click', function() {
+                const input = document.getElementById('hashInput').value;
+                const hash = CryptoJS.SHA256(input).toString();
+                document.getElementById('hashOutput').textContent = hash;
+            });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('startButton');
+            const listItems = document.querySelectorAll('#hashList li');
+            let currentItem = 0;
+            let interval;
+
+            startButton.addEventListener('click', () => {
+                startButton.disabled = true; // Disable the button after clicking
+                interval = setInterval(() => {
+                    if (currentItem < listItems.length) {
+                        listItems[currentItem].style.opacity = '1';
+                        listItems[currentItem].style.transform = 'translateY(0)';
+                        currentItem++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 1200); 
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+       
+
+

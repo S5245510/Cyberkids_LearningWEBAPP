@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Cipher: Lecture</title>
+    <link rel="stylesheet" href="style/vig_Lecture.css">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+</head>
+<body>
+    <div id="mission-briefing" class="mission-briefing">
+        <div class="briefing-content">
+            <h2>Mission Briefing</h2>
+            <p id="briefing-message"></p>
+            <button id="acknowledge-btn">Acknowledge</button>
+        </div>
+    </div>
+
+
+    <div class="sidebar">
+        <h2>Treasure Hunter's Guide</h2>
+        <ul>
+            <li><a href="Vig_Lecture.html"><i class="fas fa-book"></i><span>Lecture</span></a></li>
+            <li><a href="vig.html"><i class="fas fa-key"></i><span>Demonstration</span></a></li>
+            <li><a href="Vig_Story.html"><i class="fas fa-scroll"></i><span>Story</span></a></li>
+            <li><a href="vig_Puzzle copy.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            <li><a href="Vig_Map.html"><i class="fas fa-map-marked-alt"></i><span>Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Vigenère Cipher: A Treasure of Cryptography</h1>
+        
+        <div class="section fade-in">
+            <h2>Introduction to Vigenère Cipher</h2>
+            <p>The Vigenère cipher is a polyalphabetic substitution cipher that uses a keyword to encrypt plaintext. It was considered unbreakable for centuries and is often called the "le chiffre indéchiffrable" (the indecipherable cipher).</p>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Historical Context</h2>
+            <p>Although named after Blaise de Vigenère, who described it in 1586, the cipher was actually invented by Giovan Battista Bellaso in 1553. It gained popularity during the American Civil War and remained in use well into the 20th century.</p>
+            <div class="image-placeholder">
+                <img src="images\vig\blaiseimage.jpeg" alt="Blaise de Vigenere" width="300px" height="200px">
+                
+            </div>
+        </div>
+
+        <div class="section fade-in">
+            <h2>How Vigenère Cipher Works</h2>
+            <p>The Vigenère cipher uses a series of interwoven Caesar ciphers based on the letters of a keyword. Each letter of the keyword determines the shift amount for the corresponding letter in the plaintext.</p>
+            <p>In vigenere cipher we have plain text and a key. Here key is a word and each alphabet is repeated till it covers each alphabet of plaintext.</p>
+            
+            
+                <img src="images\vig\vigleceg.JPG" alt="Vigenere cipher example" width="600" height="300">
+            
+        </div>
+
+        <div class="section fade-in">
+            <h2>Example of Vigenère Cipher</h2>
+            <h3>ENCRYPTION</h3>
+            <p>Let's encrypt "MEETME" using the key "WAR".</p>
+            <p>To make cipher text, we will use plain text 
+             alphabet to see which column we will go to. We will use key alphabet </p>
+                    <p>to see which row we will go. </p>
+            <ul>
+                <li>First Alphabet - From above example M shows column in above table, we will go to column M. 
+                    <p> We will see value of alphabet from W row as it is first alphabet of key. </p>
+                    <p> Try to find which alphabet in W row belongs to column M. </p> 
+                    <b>It is I which is first alphabet of cipher text.</b></li>
+                    <video width="800" height="450" controls preload="metadata">
+                        <source src="images\vig\demo1.mp4" type="video/mp4" >
+                        Your browser does not support the video tag.
+                    </video>
+                <p> </p>
+                <div class="divider"></div>
+                <li>Second Alphabet- For second alphabet E in plain text, 
+                    <p>we will find column E in above table.</p>
+                    <p>Key alphabet is A, we will find which value of alphabet </p>
+                    <p>from A row which matches to column E which comes out E.</p>
+                    <b>E is the second alphabet of cipher text.</b></li>
+                    <video width="800" height="450" controls>
+                        <source src="images\vig\encodelectureexample\encodesecondalphabet.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </li>
+                
+                <p> </p>
+      
+
+                    <div class="divider"></div>
+                    <p><strong>Let's try this one yourself!</strong></p>
+                    <img src="images/vig/encode3_blank.png" alt="Encryption exercise" width="800" height="600">
+                    <p class="try-yourself">Can you figure out what the third alphabet of the cipher text will be?</p>
+                    <p></p> 
+                    <p></p>
+                    <button class="reveal-answer" onclick="revealAnswer('answer3')">Reveal the Answer</button>
+                    <p></p> 
+                    <p></p>
+                    <div id="answer3" class="answer-reveal">
+                        
+                        Third Alphabet- E in plain text, we will find column E in above table. 
+                            <p>Key alphabet is R, we will find which value of alphabet from R row</p>
+                            <p>which matches to column E.</p>
+
+                            <p><b>V is the third alphabet of cipher text.</b></p>
+                        <video width="800" height="400" controls>
+                            <source src="images\vig\encodelectureexample\encodethirdalphabet.mp4" type="video/mp4" autoplay>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="divider"></div>
+               
+                    <p><strong>Your turn again!</strong></p>
+                    <img src="images/vig/encode4_blank.png" alt="Encryption exercise" width="800" height="600">
+                    <p class="try-yourself">What do you think the fourth alphabet of the cipher text will be?</p>
+                    <button class="reveal-answer" onclick="revealAnswer('answer4')">Reveal the Answer</button>
+                    <div id="answer4" class="answer-reveal">
+                       
+                        <li>Fourth Alphabet- T in plain text, we will find column T in above table.
+                            <p>Key alphabet is W, we will find which value of alphabet from W row which</p>
+                            <p>matches to column T.</p>
+
+                            <p><b>P is the fourth alphabet of cipher text.</b></p>
+                        <video width="800" height="400" controls>
+                            <source src="images\vig\demo4.mp4" type="video/mp4" autoplay>
+                            Your browser does not support the video tag.
+                        </video>
+                        <p> </p>
+                        <h2>The encrypted message is  "IEVP".</h2>
+                        <p> </p>
+                    </div>
+                </li>
+                
+            </ul>
+
+        </div>
+
+
+        <div class="section fade-in">
+            <h2>DECRYPTION</h2>
+            <p>Let's decrypt "YVRD" using key "GREAT".</p>
+            <ul>
+                <li>First alphabet Y in cipher text, key alphabet is G. 
+                    <p>We go to row G and find alphabet Y, </p>
+                    <p> then we see which column it belongs to. It belongs to column S. </p>
+                    <p>This gives us first alphabet of plain text which is S.</p>
+                    <video width="800" height="450" controls preload="metadata">
+                        <source src="images\vig\decodeexample\decodefirstalphabet.mp4" type="video/mp4" >
+                        Your browser does not support the video tag.
+                    </video>
+                </li>
+                <div class="divider"></div>
+
+              
+
+                <li>Second alphabet V in cipher text, key alphabet is R.
+                    <p> We go to row R and find alphabet V, then we see which column it belongs to. </p>
+                        <p> It belongs to column E. </p>
+                        <p> gives us second alphabet of plain text which is E.</p>
+                    <video width="800" height="450" controls preload="metadata">
+                            <source src="images\vig\decodeexample\decodesecondalphabet.mp4" type="video/mp4" >
+                            Your browser does not support the video tag.
+                    </video>
+                </li>        
+                <div class="divider"></div>
+
+
+                <li>Third alphabet R in cipher text, key alphabet is E. 
+                    <p> We go to row E and find alphabet R, then we see which column it belongs to.</p>
+                    <p> It belongs to column N. <b>This gives us third alphabet of plain text which is N.</p></li>
+                    <video width="800" height="450" controls preload="metadata">
+                            <source src="images\vig\decodeexample\decodethirdalphabet.mp4" type="video/mp4" >
+                            Your browser does not support the video tag.
+                    </video>            
+                </li>    
+                <div class="divider"></div>
+
+                <li>Fourth alphabet D in cipher text, key alphabet is A. 
+                    <p> We go to row A and find alphabet D, then we see which column it belongs to. </p>
+                        <p> It belongs to column D. </p>
+                        <p> This gives us fourth alphabet of plain text which is D.</p></li>
+                        <video width="800" height="450" controls preload="metadata">
+                            <source src="images\vig\decodeexample\decodefourthalphabet.mp4" type="video/mp4" >
+                            Your browser does not support the video tag.
+                        </video>
+                </li>   
+                <div class="divider"></div>      
+            </ul>
+            <p><b>The decrypted message is "SEND"</b></p>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Strengths and Weaknesses</h2>
+            <h3>Strengths:</h3>
+            <ul>
+                <li>Much stronger than simple substitution ciphers</li>
+                <li>Resistant to frequency analysis</li>
+                <li>Large key space compared to Caesar cipher</li>
+            </ul>
+            <h3>Weaknesses:</h3>
+            <ul>
+                <li>Vulnerable to known-plaintext attacks</li>
+                <li>Key length can be determined through statistical analysis</li>
+                <li>Repeating key pattern can be exploited</li>
+            </ul>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Historical Uses of Vigenère Cipher</h2>
+            <p>The Vigenère cipher was used extensively by Confederate forces during the American Civil War. It was also employed by various secret societies and in diplomatic communications throughout the 19th century.</p>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Breaking the Vigenère Cipher</h2>
+            <p>The Vigenère cipher can be broken using several methods, including:</p>
+            <ul>
+                <li>Kasiski examination (finding repeated sequences)</li>
+                <li>Friedman test (calculating the index of coincidence)</li>
+                <li>Frequency analysis (once the key length is known)</li>
+            </ul>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Video Tutorial</h2>
+            <p>ENCRYPTION</p>
+            <div class="video-placeholder">
+                <video width="500 px" height="300 px" controls>
+                    <source src="images\vig\Vigenere CIpheréncryption.mp4" type="video/mp4">
+                Your browser do not support video tag.
+                </video>
+                
+            </div>
+            <p>DECRYPTION</p>
+            <div class="video-placeholder">
+                <video width="500 px" height="300 px" controls>
+                    <source src="images\vig\Vigenere Cipher decryption.mp4" type="video/mp4">
+                Your browser do not support video tag.
+                </video>
+            </div>
+        </div>
+
+        <div class="section fade-in">
+            <h2>Test Your Knowledge</h2>
+
+                <form id="quizForm" action="#" method="POST">
+                    <p><b>1. What type of cipher is the Vigenère cipher?</b></p>
+                    <input type="radio" id="q1a1" name="q1" value="A">
+                    <label for="q1a1">Substitution Cipher</label><br>
+                    <input type="radio" id="q1a2" name="q1" value="B">
+                    <label for="q1a2">Polyalphabetic Cipher</label><br>
+                    <input type="radio" id="q1a3" name="q1" value="C">
+                    <label for="q1a3">Symmetric Key Cipher</label><br>
+                    <input type="radio" id="q1a4" name="q1" value="D">
+                    <label for="q1a4">Transposition Cipher</label><br><br>
+                    
+                    <p><b>2. Who is credited with inventing the Vigenère cipher?</b></p>
+                    <input type="radio" id="q2a1" name="q2" value="A">
+                    <label for="q2a1">Julius Caesar</label><br>
+                    <input type="radio" id="q2a2" name="q2" value="B">
+                    <label for="q2a2">Blaise de Vigenère</label><br>
+                    <input type="radio" id="q2a3" name="q2" value="C">
+                    <label for="q2a3">Alan Turing</label><br>
+                    <input type="radio" id="q2a4" name="q2" value="D">
+                    <label for="q2a4">Leon Battista Alberti</label><br><br>
+
+                    <p><b>3. What is the primary weakness of the Caesar cipher that the Vigenère cipher overcomes?</b></p>
+                    <input type="radio" id="q3a1" name="q3" value="A">
+                    <label for="q3a1">Frequency analysis</label><br>
+                    <input type="radio" id="q3a2" name="q3" value="B">
+                    <label for="q3a2">Key length</label><br>
+                    <input type="radio" id="q3a3" name="q3" value="C">
+                    <label for="q3a3">Public Key Usage</label><br>
+                    <input type="radio" id="q3a4" name="q3" value="D">
+                    <label for="q3a4">Limited character set</label><br><br>
+
+                    <p><b>4. Encrypt the letter 'E' using the key 'L' in the Vigenère cipher.</b></p>
+                    <input type="radio" id="q4a1" name="q4" value="A">
+                    <label for="q4a1">P</label><br>
+                    <input type="radio" id="q4a2" name="q4" value="B">
+                    <label for="q4a2">J</label><br>
+                    <input type="radio" id="q4a3" name="q4" value="C">
+                    <label for="q4a3">Q</label><br>
+                    <input type="radio" id="q4a4" name="q4" value="D">
+                    <label for="q4a4">Z</label><br><br>
+
+                    <p><b>5. Decrypt the letter 'W' using the key 'C' in the Vigenère cipher.</b></p>
+                    <input type="radio" id="q5a1" name="q5" value="A">
+                    <label for="q5a1">A</label><br>
+                    <input type="radio" id="q5a2" name="q5" value="B">
+                    <label for="q5a2">U</label><br>
+                    <input type="radio" id="q5a3" name="q5" value="C">
+                    <label for="q5a3">V</label><br>
+                    <input type="radio" id="q5a4" name="q5" value="D">
+                    <label for="q5a4">T</label><br><br>
+
+                    <input type="submit" value="Submit" class="submit-btn">
+                </form>
+                <div id="result"></div> <!-- Result display -->
+  
+        </div>
+
+        <div class="section fade-in">
+            <h2>Further Reading</h2>
+            <ul>
+                <li><a href="#">The History of Polyalphabetic Ciphers</a></li>
+                <li><a href="#">Advanced Encryption Methods</a></li>
+                <li><a href="#">Vigenère Cipher in Modern Cryptography</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const briefingBox = document.getElementById('mission-briefing');
+            const briefingMessage = document.getElementById('briefing-message');
+            const acknowledgeBtn = document.getElementById('acknowledge-btn');
+
+            const message = "Agent, pay attention. The Vigenère cipher was once called 'le chiffre indéchiffrable'. Master it, and you'll unlock secrets that have baffled cryptanalysts for centuries.";
+
+            briefingMessage.textContent = message;
+
+            // Show the briefing box
+            briefingBox.style.display = 'block';
+
+            // Hide the briefing box when acknowledged
+            acknowledgeBtn.addEventListener('click', function() {
+                briefingBox.style.display = 'none';
+            });
+        });
+
+
+
+
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form from refreshing the page
+
+            // Correct answers
+            const correctAnswers = {
+                q1: 'B',  // Polyalphabetic Cipher
+                q2: 'B',  // Blaise de Vigenère
+                q3: 'A',  // Frequency analysis
+                q4: 'C',  // Q
+                q5: 'B'   // U
+            };
+
+            // Get user answers
+            const userAnswers = {
+                q1: document.querySelector('input[name="q1"]:checked')?.value,
+                q2: document.querySelector('input[name="q2"]:checked')?.value,
+                q3: document.querySelector('input[name="q3"]:checked')?.value,
+                q4: document.querySelector('input[name="q4"]:checked')?.value,
+                q5: document.querySelector('input[name="q5"]:checked')?.value
+            };
+
+            // Calculate score
+            let score = 0;
+            for (const question in correctAnswers) {
+                if (correctAnswers[question] === userAnswers[question]) {
+                    score++;
+                }
+            }
+
+            // Display result
+            const totalQuestions = Object.keys(correctAnswers).length;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `You got ${score} out of ${totalQuestions} correct!`;
+        });
+
+
+        function revealAnswer(answerId) {
+            const answerElement = document.getElementById(answerId);
+            if (answerElement.style.display === 'none' || answerElement.style.display === '') {
+                answerElement.style.display = 'block';
+                event.target.textContent = 'Hide Answer';
+            } else {
+                answerElement.style.display = 'none';
+                event.target.textContent = 'Reveal the Answer';
+            }
+        }
+    </script>
+
+</body>
+</html>

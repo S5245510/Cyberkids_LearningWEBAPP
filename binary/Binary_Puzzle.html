@@ -1,0 +1,722 @@
+<head>
+    <!-- Prevent browser caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+</head>
+<link rel="stylesheet" href="../style/css/all.min.css">
+
+<script src="../progressTracker.js"></script>
+<script src="../achievements.js"></script>
+
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hacker's Labyrinth</title>
+    <style> 
+        body {
+            background-color: #1e1e1e; /* Dark background */
+            color: #00ffcc; /* Cyan text */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font for a hacker feel */
+        }
+
+        h1, h2 {
+            color: #00bfff; /* Light blue for headings */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .puzzle {
+            width: 80%;
+            margin-bottom: 20px;
+            border: 1px solid #00bfff; /* Light blue border */
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #2a2a2a; /* Slightly lighter background for puzzles */
+        }
+
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            background-color: #2a2a2a; /* Input background */
+            color: #00ffcc; /* Input text color */
+            border: 1px solid #00bfff; /* Input border color */
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #00bfff; /* Button background color */
+            color: #ffffff; /* Button text color */
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0099cc; /* Darker blue on hover */
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+    
+
+        .sidebar {
+    position: fixed; /* Fixed on the left side */
+    left: 0; /* Align to the left */
+    top: 0; /* Align to the top */
+    width: 200px; /* Set width for sidebar */
+    height: 100%; /* Full height of the page */
+    background-color: #03466d; /* Dark blue sidebar */
+            color: black;
+    padding: 20px; /* Add some padding */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.5); /* Slight shadow to separate from content */
+}
+
+.sidebar h3 {
+    color: #00ffcc; /* Sidebar title color */
+}
+
+.sidebar ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a:hover {
+    color: #ffeb3b; /* Yellow on hover */
+}
+
+.sidebar ul li a .emoji {
+    margin-right: 10px;
+}
+
+.content {
+    margin-left: 220px; /* Add space to the left for the sidebar */
+    padding: 20px;
+}
+
+
+        .back-button {
+            margin-top: 15px;
+            background-color: #ff3333; /* Red back button */
+            color: #ffffff;
+        }
+
+        .answer-input button[type="submit"]:disabled {
+        display: none;
+    }
+
+    /* Optional: Add a class to show completion status */
+    .answer-input.completed::after {
+        content: "✓ Completed";
+        color: #00ff00;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    .congrats-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2a2a2a;
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+    z-index: 1000;
+}
+
+.congrats-box h2 {
+    color: #00ffcc;
+    margin-bottom: 15px;
+}
+
+.congrats-box p {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.congrats-box button {
+    background-color: #00bfff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.congrats-box button:hover {
+    background-color: #0099cc;
+}
+
+    .hint {
+        display: block;
+        color: #fca311;
+        font-style: italic;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 2px rgba(252, 163, 17, 0.5);
+        text-align: left;
+        font-size: 0.9em;
+    }
+
+
+
+    .puzzle-header {
+        width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.puzzle-header h2 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.puzzle-header .tool-container {
+    display: flex;
+    align-items: center;
+}
+
+        .puzzle-header .tooltext {
+            margin-right: 10px;
+            margin-bottom: 0;
+            font-size: 1.2em;
+            color: #d4e447;
+        }
+
+            .puzzle-header .tool-button {
+                position: static;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .tool-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #00fff5;
+            color: #0b0b44;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 255, 245, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: pulse 2s infinite, rotate 20s linear infinite;
+        }
+
+        .tool-button:hover {
+            background-color: #4fc3f7;
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 6px 15px rgba(79, 195, 247, 0.4);
+        }
+
+        .tool-button:active {
+            transform: scale(0.95) rotate(180deg);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 245, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 245, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 245, 0);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+    
+    </style>
+
+</head>
+<body>
+    <div class="sidebar">
+        <h3>🎮 Binary Quest</h3>
+        <ul>
+            <li><a href="Binary_Lecture.html"><span class="emoji">📚</span><span>Lecture</span></a></li>
+            <li><a href="Binary_Puzzle.html"><span class="emoji">🧩</span><span>Puzzle</span></a></li>
+            <li><a href="Binary_Tool.html"><span class="emoji">🔧</span><span>Decode Tool</span></a></li>
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <div class="content">
+    <h1>🃏 The Hacker's Labyrinth</h1>
+    <p style="width: 80%;">Welcome to The Hacker's Labyrinth. You are a hacker working for a mysterious figure known as "The Shade," on a mission to expose the opposing corporations’ dark secrets. Navigate through a series of puzzles, retrieve crucial data, and escape without getting caught.</p>
+        
+    <!-- Puzzle 1 -->
+    <div class="puzzle" id="puzzle1">
+        <div class="puzzle-header">
+            <h2>Puzzle 1: The First Barrier</h2>
+            <p class="tooltext"> tool here >>></p>
+            <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+                🔧
+            </button>
+        </div>
+        <p>The First Barrier appears before you: a binary code flashing on the monitor. The system awaits your response. To proceed, you must decode the binary sequence to its decimal equivalent to unlock the gateway.</p>
+
+        <p><strong>Binary Code:</strong> 1101</p>
+            
+        <p class="result" id="result1"></p>
+        <form id="form1" class="answer-input">
+            <label for="answer1">Your Answer:</label>
+            <input type="text" id="answer1" required>
+            <button type="submit">Submit</button>
+    
+        </form>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <video src="1.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+       <!-- <img src="1.png" alt="Description of the image"> -->
+        <p class="hidden story" id="story1">You quickly decode the binary sequence, and the gateway unlocks. The data you retrieve is small but crucial. You save it onto a USB drive marked with a red "X" and swiftly move deeper into the network. The screen flickers as you proceed to the next challenge.</p>
+ 
+    </div>
+ 
+    <!-- Puzzle 2 -->
+    <div class="puzzle hidden" id="puzzle2">
+        <div class="puzzle-header">
+            <h2>Puzzle 2: The Corporate Firewall</h2>
+            <p class="tooltext"> tool here >>></p>
+            <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+                🔧
+            </button>
+        </div>
+        <p>You encounter a sophisticated firewall. To bypass it, convert this decimal number into its binary form and send the correct code.</p>
+        <p><strong>Decimal Number:</strong> 9</p>
+        <p class="result" id="result2"></p>
+        <form id="form2" class="answer-input">
+            <label for="answer2">Your Answer:</label>
+            <input type="text" id="answer2" required>
+            <button type="submit">Submit</button>
+        </form>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <video src="2.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+        <!-- <img src="2.png" alt="Description of the image"> -->
+        <p class="hidden story" id="story2">You bypass the firewall and secure a copy of the decrypted firewall protocol. Storing it on the same USB drive, you hear distant footsteps in the hallway outside your hideout. You quickly unplug your laptop and slip into the shadows, narrowly avoiding a patrolling security guard.</p>
+    </div>
+ 
+  <!-- Puzzle 3 -->
+<div class="puzzle hidden" id="puzzle3">
+    <div class="puzzle-header">
+        <h2>Puzzle 3: Data Stream Hijack</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>When the guard leaves, you open your laptop and a stream of encrypted data flows through the system. Decode the binary code to decimal and reveal the hidden message and gain access to the next node.</p>
+    <p><strong>Binary Code:</strong> 10110</p>
+    <p class="hint">Hint  2^4 + 0 ⋅ 2^3 + 1 ⋅ 2^2 + 1 ⋅ 2^1 + 0 ⋅ 2^0</p>
+   
+    <p class="result" id="result3"></p>
+    <form id="form3" class="answer-input">
+        <label for="answer3">Your Answer:</label>
+        <input type="text" id="answer3" required>
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <video src="3.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+    <!-- <img src="3.png" alt="Description of the image"> -->
+    <p class="hidden story" id="story3">As you decrypt the message, you realize it contains confidential information about a secret corporate project. You store the file on your USB drive and glance at the clock. You’re running out of time. You slip out of there and into a room nearby avoiding the surveillance cameras.</p>
+        </div>
+ 
+<!-- Puzzle 4 -->
+<div class="puzzle hidden" id="puzzle4">
+    <div class="puzzle-header">
+        <h2>Puzzle 4: Security Drone Override</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>A security drone spots you and blocks your path. Quickly convert this decimal number into binary to disable it and avoid detection.</p>
+    <p><strong>Decimal Number:</strong> 12</p>
+    <p class="result" id="result4"></p>
+    <form id="form4" class="answer-input">
+        <label for="answer4">Your Answer:</label>
+        <input type="text" id="answer4" required>
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <video src="4.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+    <!-- <img src="4.png" alt="Description of the image"> -->
+    <p class="hidden story" id="story4">With a few quick keystrokes, you disable the drone’s security protocol. The drone powers down, and you sneak past it, reaching a hidden stairway. You use the stairs to descend to the lower levels, where security is less tight.</p>
+</div>
+ 
+<!-- Puzzle 5 -->
+<div class="puzzle hidden" id="puzzle5">
+    <div class="puzzle-header">
+        <h2>Puzzle 5: Encrypted Communication</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>Oh No! You tripped the sensor! Convert the binary code into decimal to stop it!</p>
+    <p><strong>Binary Code:</strong> 10011</p>
+    <p class="result" id="result5"></p>
+    <form id="form5" class="answer-input">
+        <label for="answer5">Your Answer:</label>
+        <input type="text" id="answer5" required>
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <video src="5.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+    <!-- <img src="5.png" alt="Description of the image"> -->
+    <p class="hidden story" id="story5">It is too late, you hear footsteps approaching. You stash the USB drive in your jacket and quickly duck behind a pillar. A group of security guards passes by, talking about a suspicious activity alert. You wait for them to leave before sneaking into the main server room to continue your mission.</p>
+</div>
+ 
+<!-- Puzzle 6 -->
+<div class="puzzle hidden" id="puzzle6">
+    <div class="puzzle-header">
+        <h2>Puzzle 6: Code Lock</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>You need a decryption key to unlock a high-end code lock. Convert the hexadecimal code to text to gain access to the secured area.</p>
+    <p><strong>Hexadecimal Code:</strong> 48 65 6c 6c 6f</p>
+    <p class="hint">Beaware of the Case Sensitivity.</p>
+    <p class="result" id="result6"></p>
+    <form id="form6" class="answer-input">
+        <label for="answer6">Your Answer:</label>
+        <input type="text" id="answer6" required>
+        <button type="submit">Submit</button>
+       
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <video src="6.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+        <!-- <img src="6.png" alt="Description of the image"> -->
+    <p class="hidden story" id="story6">You successfully enter the server room. Rows of servers line the walls, humming softly. You quickly locate the right terminal and transfer the data onto your USB drive. Suddenly, the room’s lights flicker, and an alarm starts blaring. You need to move fast.</p>
+</div>
+ 
+<!-- Puzzle 7 -->
+<div class="puzzle hidden" id="puzzle7">
+    <div class="puzzle-header">
+        <h2>Puzzle 7: Hidden Terminal</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>You've found an air vent to sneak into. To access the transferred files on your laptop, convert the hexadecimal code to text and decrypt the system.</p>
+    <p><strong>Hexadecimal Code:</strong> 57 6f 72 6c 64</p>
+    <p class="hint">Beaware of the Case Sensitivity.</p>
+    <p class="result" id="result7"></p>
+    <form id="form7" class="answer-input">
+        <label for="answer7">Your Answer:</label>
+        <input type="text" id="answer7" required>
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <img src="7.png" alt="Description of the image">
+    <p class="hidden story" id="story7">You access the terminal, and the screen floods with secret documents. You copy everything onto your USB drive.</p>
+</div>
+ 
+    
+    <!-- Puzzle 8 -->
+<div class="puzzle hidden" id="puzzle8">
+    <div class="puzzle-header">
+        <h2>Puzzle 8: Secret Message I</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>You suddenly get a crypted message on your phone. It's from The Shade, Convert the following special characters (hexadecimal symbols) into binary. (You are welcome to use the Ascii table in the lecture section as well as the decode tool provided by The Shade. Please put a space in between each one.)</p>
+    <p><strong>Hexadecimal Symbols:</strong> . ? )</p>
+    <p class="hint">You may need couple tools to solve this. Firstly, symbols are also type of text(Text to Hexadecimal). Try other convert tools as well.</p>
+    
+    <img src="ascii.png" alt="Description of the image" style="width: 50%;"></img>
+    <p class="hint" style="color: #ff3333;">!!! Please keep the format of 8bits for every binary number and space between each binary number. Example: 00100001 10101011 01001000</p>   
+    <p class="result" id="result8"></p>
+    <form id="form8" class="answer-input">
+        <label for="answer8">Your Answer:</label>
+        <input type="text" id="answer8" required placeholder="Enter binary codes">
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <img src="8.png" alt="Description of the image">
+    <p class="hidden story" id="story8">You correctly decode the symbols, and the message is from the SHADE. It says: This is all we need. Now GET OUT!</p>
+</div>
+ 
+<!-- Puzzle 9 -->
+<div class="puzzle hidden" id="puzzle9">
+    <div class="puzzle-header">
+        <h2>Puzzle 9: Secret Message II</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>You recieve a second message. Convert the following special characters (hexadecimal symbols) into binary. </p>
+    <p>(You are welcome to use the Ascii table in the lecture section as well as the decode tool provided by The Shade. Please put a space in between each one.)
+        Solve this to proceed.</p>
+    <p><strong>Hexadecimal Symbols:</strong> ! # @</p>
+    <p class="hint">You may need couple tools to lead to the final solution. </p>
+    <p class="hint" style="color: #ff3333;">!!! Please keep the format of 8bits for every binary number and space between each binary number. Example: 00100001 10101011 01001000</p>   
+
+    <p class="result" id="result9"></p>
+    <form id="form9" class="answer-input">
+        <label for="answer9">Your Answer:</label>
+        <input type="text" id="answer9" required placeholder="Enter binary codes">
+        <button type="submit">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <video src="9.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+    <!-- <img src="9.png" alt="Description of the image"> -->
+    <p class="hidden story" id="story9">The Shade find out the guards have hacked your laptop and are telling you to destroy it, and get out with the USB. Thank God, you copied everything on the USB. You smash the laptop and run to the final door. Freedom is within your grasp!</p>
+</div>
+
+<!-- Puzzle 10 -->
+<div class="puzzle hidden" id="puzzle10">
+    <div class="puzzle-header">
+        <h2>Puzzle 10: The final lock</h2>
+        <p class="tooltext"> tool here >>></p>
+        <button class="tool-button" onclick="openToolWindow()" title="Open Binary Tool">
+            🔧
+        </button>
+    </div>
+    <p>You've reached the final door. Convert the following text into hexadecimal to unlock the final door.</p>
+    <p><strong>Text:</strong> "FINISH"</p>
+    <p class="result" id="result10"></p>
+    <form id="form10" class="answer-input">
+        <label for="answer10">Your Answer:</label>
+        <input type="text" id="answer10" required placeholder="Enter hexadecimal code">
+        <button type="submit" id="submit10">Submit</button>
+    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <img src="10.png" alt="Description of the image">
+    <p class="hidden story" id="story10">The door creaks open, you quickly dash out, clutching the USB drive tight. You've escaped with valuable information that could change everything! You've completed your mission successfully, and the world will know the truth thanks to your efforts. Congratulations, hacker!</p>
+</div>
+
+<script>
+            // Clear all input fields when the page is loaded or refreshed
+            window.onload = function() {
+            document.querySelectorAll('.answer-input input[type="text"]').forEach(input => {
+                input.value = ''; // Clear input value
+            });
+        };
+        const answers = [
+            { answer: "13", storyId: "story1", nextPuzzle: "puzzle2" },
+            { answer: "1001", storyId: "story2", nextPuzzle: "puzzle3" },
+            { answer: "22", storyId: "story3", nextPuzzle: "puzzle4" },
+            { answer: "1100", storyId: "story4", nextPuzzle: "puzzle5" },
+            { answer: "19", storyId: "story5", nextPuzzle: "puzzle6" },
+            { answer: "Hello", storyId: "story6", nextPuzzle: "puzzle7" },
+            { answer: "World", storyId: "story7", nextPuzzle: "puzzle8" },
+            { answer: "00101110 00111111 00101001", storyId: "story8", nextPuzzle: "puzzle9" },
+            { answer: "00100001 00100011 01000000", storyId: "story9", nextPuzzle: "puzzle10" },
+            { answer: "46494e495348", storyId: "story10" }
+        ];
+
+        // Show next puzzle
+        function showNextPuzzle(puzzleId) {
+            const nextPuzzle = document.getElementById(puzzleId);
+            if (nextPuzzle) {
+                nextPuzzle.classList.remove('hidden');
+            }
+        }
+
+        function goBack() {
+            window.history.back(); // Go back to the previous page in history
+        }
+
+        // Function to set the completed level in localStorage
+        function setCompletedLevel(level) {
+            localStorage.setItem('binaryPuzzleCompletedLevel', level);
+        }
+
+        // Function to get the completed level from localStorage
+        function getCompletedLevel() {
+            return parseInt(localStorage.getItem('binaryPuzzleCompletedLevel') || '0');
+        }
+
+        // Function to show puzzle based on completed level
+        function showPuzzleBasedOnProgress() {
+            const completedLevel = getCompletedLevel();
+            for (let i = 1; i <= answers.length; i++) {
+                const puzzleElement = document.getElementById(`puzzle${i}`);
+                const storyElement = document.getElementById(`story${i}`);
+                const form = document.getElementById(`form${i}`);
+                const stars = localStorage.getItem(`binary_stars_level${i}`);
+
+                if (puzzleElement) {
+                    puzzleElement.classList.remove('hidden');
+                }
+
+                if (stars !== null) {
+                    // Level is completed
+                    if (storyElement) {
+                        storyElement.classList.remove('hidden');
+                    }
+                    if (form) {
+                        const submitButton = form.querySelector('button[type="submit"]');
+                        submitButton.disabled = true;
+                        form.classList.add('completed');
+                        document.getElementById(`result${i}`).textContent = "Correct!";
+                    }
+                } else if (i > completedLevel + 1) {
+                    // Hide puzzles that are more than one level ahead
+                    if (puzzleElement) {
+                        puzzleElement.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        // Modify the existing form submission handler
+        document.querySelectorAll('.answer-input').forEach((form, index) => {
+            form.onsubmit = function(event) {
+                event.preventDefault();
+                const answerInput = form.querySelector('input[type="text"]');
+                const submitButton = form.querySelector('button[type="submit"]');
+                const userAnswer = answerInput.value.trim();
+
+                if (userAnswer === answers[index].answer) {
+                    const resultElement = document.getElementById(`result${index + 1}`);
+                    const storyElement = document.getElementById(answers[index].storyId);
+
+                    resultElement.textContent = "Correct!";
+                    storyElement.classList.remove('hidden');
+                    answerInput.value = "";
+                    submitButton.disabled = true;
+                    form.classList.add('completed');
+
+                    // Set the completed level in localStorage
+                    setCompletedLevel(Math.max(getCompletedLevel(), index + 1));
+
+                    const storyKey = 'binary';
+                    ProgressTracker.recordAttempt(storyKey, index+1);
+                    const stars = ProgressTracker.calculateStars(storyKey, index+1);
+                    console.log(`Earned ${stars} stars for level ${index+1}`);
+
+                    // Show next puzzle if it exists
+                    if (index < answers.length - 1) {
+                        showNextPuzzle(answers[index].nextPuzzle);
+                    } else {
+                        showCongratulations();
+                    }
+                } else {
+                    const resultElement = document.getElementById(`result${index + 1}`);
+                    resultElement.textContent = "Incorrect. Try again!";
+                }
+            };
+        });
+
+        function isLevelCompleted(levelIndex) {
+        return localStorage.getItem(`binaryLevel${levelIndex}Completed`) === 'true';
+    }
+
+    function openToolWindow() {
+    var toolWindow = window.open('Binary_Tool.html', 'BinaryTool', 'width=800,height=600');
+    if (toolWindow) {
+        toolWindow.resizeTo(800, 600);
+        toolWindow.focus();
+    } else {
+        alert('Please allow popups for this website');
+    }
+}
+
+    // Function to disable submit buttons for completed levels
+    function disableCompletedLevels() {
+        document.querySelectorAll('.answer-input').forEach((form, index) => {
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (isLevelCompleted(index + 1)) {
+                submitButton.disabled = true;
+                form.classList.add('completed');
+            }
+        });
+    }
+
+    function showCongratulations() {
+    const congratsBox = document.createElement('div');
+    congratsBox.className = 'congrats-box';
+    congratsBox.innerHTML = `
+        <h2>Mission Accomplished, Agent!</h2>
+        <p>You've successfully navigated the Binary Labyrinth and secured vital data for the future of computing. Your mastery of binary code has altered the course of history!</p>
+        <p>The Temporal Agency commends your exceptional skills.</p>
+        <button onclick="goToChapterList()">Obtain the final passcode</button>
+    `;
+            document.body.appendChild(congratsBox);
+        }
+
+        function goToChapterList() {
+            window.location.href = '../transitionEndMission3.html'; // Adjust this path as needed
+        }
+
+    
+        function scrollToBottom() {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+
+    // Call this function when the page loads
+    window.addEventListener('load', function() {
+        disableCompletedLevels();
+        showPuzzleBasedOnProgress();
+        scrollToBottom();
+    });
+    </script>
+</body>
+</html>

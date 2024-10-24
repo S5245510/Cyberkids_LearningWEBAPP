@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Cipher: Treasure Hunt Puzzle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2c1e0f;
+            color: #d4b483;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #4a2511;
+            color: #d4b483;
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #8b4513;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar h2 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            margin-top: 0;
+            border-bottom: 2px solid #d4b483;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar a {
+            color: #d4b483;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar a:hover {
+            color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* background-image: url('path/to/parchment-texture.jpg'); */
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+
+        h1 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            color: #8b4513;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .puzzle-container {
+            background-color: rgba(139, 69, 19, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .puzzle-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f8f1e3;
+            color: #3d2e1b;
+            font-family: 'Cinzel', serif;
+        }
+
+        button {
+            background-color: #8b4513;
+            color: #d4b483;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-container {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(139, 69, 19, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #8b4513;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .treasure-map {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            background-color: rgba(139, 69, 19, 0.2);
+            position: relative;
+        }
+
+        .map-icon {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            background-color: #8b4513;
+            border-radius: 50%;
+        }
+
+
+.hint-content {
+    padding: 15px;
+    background-color: rgba(95, 158, 160, 0.2); /* Muted teal background */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    font-size: 18px;
+    line-height: 1.5;
+    color: #d4b483;
+    width: 100%;
+    overflow-y: auto;
+    border: 2px solid #5F9EA0; /* Muted teal border */
+    display: none;
+}
+
+.hint-question {
+    margin-bottom: 15px;
+    color: #d4b483;
+}
+
+.hint-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.hint-option {
+    background-color: #5F9EA0; /* Muted teal */
+    color: #2c1e0f;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.hint-option:hover {
+    background-color: #4A777B; /* Darker muted teal */
+}
+
+.hint-result {
+    font-weight: bold;
+    color: #ffd700; /* Gold color for result */
+}
+
+.hint-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .sidebar h2, .sidebar a span {
+                display: none;
+            }
+
+            .sidebar a {
+                justify-content: center;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.5em;
+            }
+
+            .main-content {
+                margin-left: 60px;
+            }
+        }
+
+        .dev-controls {
+            margin-bottom: 20px;
+        }
+
+        .dev-controls label {
+            margin-right: 10px;
+        }
+
+        .dev-controls input {
+            padding: 5px;
+            width: 50px;
+        }
+
+
+  
+
+        .level-progress {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+
+
+
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: #2c1a1a;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #8c1c13;
+    width: 60%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: slideDown 0.5s;
+}
+
+#feedback-message {
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.success-message {
+    background-color: rgba(76, 175, 80, 0.3);
+    color: #4CAF50;
+}
+
+.error-message {
+    background-color: rgba(244, 67, 54, 0.3);
+    color: #F44336;
+}
+
+
+.stars-container {
+        /* Remove background color */
+        background-color: transparent;
+        border: none;
+        padding: 20px;
+        margin-top: 30px;
+        box-shadow: none;
+    }
+
+    .stars-container h2 {
+        color: #e3e0d5; /* Change to match the theme color */
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: 'Trajan Pro', 'Cinzel', serif;
+    }
+
+    .levels-grid {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .level-stars {
+        background-color: transparent;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .level-stars:hover {
+        transform: scale(1.05);
+    }
+
+    .level-number {
+        display: block;
+        font-size: 18px;
+        color: #ffb86b; /* Change to match the theme color */
+        margin-bottom: 5px;
+        font-family: 'Cinzel', serif;
+    }
+
+    .stars {
+        font-size: 24px;
+    }
+
+    .stars i {
+        color: #f6f3db;
+        margin: 0 2px;
+        opacity: 0.3;
+        transition: all 0.5s ease;
+    }
+
+    .stars i.active {
+        opacity: 1;
+        color: #f1c40f;
+    }
+
+    @keyframes starPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
+
+    .stars i.pop {
+        animation: starPop 0.3s ease;
+    }
+
+    @keyframes trollShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.troll-message {
+    background-color: #FF6B6B;
+    color: #4A4A4A;
+    font-weight: bold;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+    font-size: 1.2em;
+    border: 3px dashed #4A4A4A;
+}
+
+#stars-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#stars-container i {
+    font-size: 2rem;
+    color: gold;
+    margin: 0 5px;
+}
+
+.fa-star {
+    animation: bounce-in 0.5s ease-out forwards;
+}
+
+@keyframes bounce-in {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.key-info {
+    margin-left: 50px; /* Adjust this value to increase or decrease spacing */
+}
+
+.encrypted-word {
+    color: #ff6b6b;
+    font-size: 1.2em;
+    background-color: #f1f3f5;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Treasure Hunter's Guide</h2>
+        <ul>
+            <li><a href="vig_Lecture.html"><i class="fas fa-book"></i><span>Lecture</span></a></li>
+            <li><a href="vig.html"><i class="fas fa-key"></i><span>Demonstration</span></a></li>
+            <li><a href="vig_Story.html"><i class="fas fa-scroll"></i><span>Story</span></a></li>
+            <li><a href="vig_Puzzle.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            <li><a href="vig_Map.html"><i class="fas fa-map-marked-alt"></i><span>Map</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Decipher the Secret Message</h1>
+        <div class="star-rating-c2ontainer">
+            <div class="level-progress">
+                <!-- This will be populated dynamically -->
+            </div>
+        </div>
+        <div class="dev-controls">
+            <label for="devVigStoryLevel">Dev Story Level:</label>
+            <input type="number" id="devVigStoryLevel" min="1" max="11" value="1">
+            <button id="resetPuzzleButton" onclick="resetPuzzles()">Reset Puzzles</button>
+            <button class="action-btn reset-progress-btn" onclick="resetProgress('vig')">Reset Progress</button>
+
+        </div>
+
+
+
+        <div class="stars-container">
+            <h2>Level Progress</h2>
+            <div class="levels-grid">
+                <!-- Repeat this block for each level -->
+                <div class="level-stars">
+                    <span class="level-number">Level 1</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <!-- End of level block -->
+                <div class="level-stars">
+                    <span class="level-number">Level 2</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="level-stars">
+                    <span class="level-number">Level 3</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="level-stars">
+                    <span class="level-number">Level 4</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="level-stars">
+                    <span class="level-number">Level 5</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+
+                </div>
+                <!-- Add more level blocks as needed -->
+            </div>
+        </div>
+
+
+        <div id="puzzle-area" class="puzzle-container">
+            <h2 id="puzzle-title">Puzzle 1 of X Key: Lake</h2>
+            <p id="puzzle-question">What is the key used to encrypt the message?</p>
+            <input type="text" class="puzzle-input" id="puzzle-input" placeholder="Enter your answer">
+        </div>
+        <div id="puzzle-area" class="puzzle-container">
+             <button id="submitPuzzle" onclick="checkSolution()">Submit Answer</button>
+             <button class="hint-button" onclick="openHintsPage()">Decode Tool?</button>
+        </div>
+        <div class="hint-section">
+            <button class="hint-button" onclick="toggleHint()">Need a hint?</button>
+            <div class="hint-content" id="hint-content">
+                <div class="hint-question" id="hint-question"></div>
+                <div class="hint-options" id="hint-options"></div>
+                <div class="hint-result" id="hint-result"></div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div id="progress-text"></div>
+        </div>
+    </div>
+    <script src="achievements.js"></script>
+    <script>
+    let storyProgress = 1;
+    
+
+
+   let currentLevel = parseInt(localStorage.getItem('vigCurrentLevel')) || 1;
+    console.log(`Current level loaded from localStorage: ${currentLevel}`);
+
+    // Function to load the current puzzle
+    function loadCurrentPuzzle() {
+        const puzzle = puzzles[currentLevel - 1];
+        if (puzzle) {
+            document.getElementById('puzzle-title').innerHTML = `Puzzle ${currentLevel} of ${puzzles.length} <span class="key-info">Key: Lake</span>`;            document.getElementById('puzzle-question').textContent = puzzle.question;
+            document.getElementById('puzzle-question').innerHTML = puzzle.question;
+            console.log(`Loaded puzzle for level ${currentLevel}`);
+            ProgressTracker.startTimer('vig', currentLevel); // Start the timer here
+        } else {
+            console.error(`No puzzle found for level ${currentLevel}`);
+        }
+    }
+        
+    const puzzles = [
+
+    {
+        question: "Clue: Your third stop brings you to a towering presence that once stored life's most essential element. Remember the challenge of climbing higher?<br><br><strong class='encrypted-word'>Encrypted Word: Hsxfehxgl</strong>",
+        answer: "WaterTank",
+        hint: "The answer is related to a structure that holds a liquid necessary for life."
+    },
+    {
+        question: "Clue: Next, return to where you once soared through the air, chasing the clouds. The wind still whispers, even as the rust settles. What's the name of this place?<br><br><strong class='encrypted-word'>Encrypted Word: Dgpqc</strong>",
+        answer: "Swing",
+        hint: "The answer is related to a playground equipment that moves back and forth."
+    },
+    {
+        question: "Clue: Venture to where things were once planted, where patience grew alongside life. What's the name of this place, now overgrown with time?<br><br><strong class='encrypted-word'>Encrypted Word: Xkjkit</strong>",
+        answer: "Veggie",
+        hint: "The answer is related to a place where edible plants were grown."
+    },
+    {
+        question: "Clue: ““Your next stop is a place of creation, where broken things were mended and ideas were built. What is the name of this workshop where you learned the art of patience?”<br><br><strong class='encrypted-word'>Encrypted Word: Wpjd</strong>",
+        answer: "Shed",
+        hint: "Think about what you might find near a lake that you can ride on."
+    },
+    {
+        question: "Clue: Your journey nears its end, where the sun sets and the rocking chair waits. This is where reflections become clearer, and the memories rest. What is the name of this peaceful final stop?<br><br><strong class='encrypted-word'>Encrypted Word: Ksyol</strong>",
+        answer: "Porch",
+        hint: "The answer is related to a container often used to store liquids."
+    }
+];
+
+
+        // Define a single object for both alert messages and dialogue texts
+        const levelMessages = {
+            1: {
+                alert: "You are a hidden Roma spy. Go help Sam to escape.",
+                dialogue: "There's no time to explain. You have to trust me. Take it to the secret rendezvous point, and do not open it. Understand?"
+            },
+            2: {
+                alert: "The unreadable message on the wall must be the way to leave this tunnel to the outside of the city.",
+                dialogue: "Great job on the first message! This one looks trickier. Can you crack it?"
+            },
+            3: {
+                alert: "Quickly solve the encrypted message on the scroll. It must be a safe path to the Roman Camp.",
+                dialogue: "You're getting better! This scroll holds crucial information. Decipher it carefully."
+            }
+        };
+
+        const hintQuestions = [
+            { 
+                question: `
+            <p>Step 1: Find the Row L which is the first key alphabet.</p>
+            <p>Step 2: Find the cell C in Row L.</p>
+            <p>Step 3: Check the TOPPEST letter of the cell C to find the Plain Text.</p>
+            <img src="images/vig/hint1.png" alt="Encryption hint" width="500" height="400">
+        `,
+                  options: ["A", "L", "R", "X"],
+                answer: "R"
+            },
+            {
+                question: `
+            <p>Step 1: Find the Row L which is the first key alphabet.</p>
+            <p>Step 2: Find the cell C in Row L.</p>
+            <p>Step 3: Check the TOPPEST letter of the cell C to find the Plain Text.</p>
+            <img src="images/vig/hint1.png" alt="Encryption hint" width="500" height="400">
+        `,
+                  options: ["A", "L", "R", "X"],
+                answer: "R"
+            },
+            {
+                question: `
+            <p>Step 1: Find the Row L which is the first key alphabet.</p>
+            <p>Step 2: Find the cell C in Row L.</p>
+            <p>Step 3: Check the TOPPEST letter of the cell C to find the Plain Text.</p>
+            <img src="images/vig/hint1.png" alt="Encryption hint" width="500" height="400">
+        `,
+                  options: ["A", "L", "R", "X"],
+                answer: "R"
+            },
+            {
+                question: `
+            <p>Step 1: Find the Row L which is the first key alphabet.</p>
+            <p>Step 2: Find the cell C in Row L.</p>
+            <p>Step 3: Check the TOPPEST letter of the cell C to find the Plain Text.</p>
+            <img src="images/vig/hint1.png" alt="Encryption hint" width="500" height="400">
+        `,
+                  options: ["A", "L", "R", "X"],
+                answer: "R"
+                
+            },
+            
+            {
+                question: `
+            <p>Step 1: Find the Row L which is the first key alphabet.</p>
+            <p>Step 2: Find the cell C in Row L.</p>
+            <p>Step 3: Check the TOPPEST letter of the cell C to find the Plain Text.</p>
+            <img src="images/vig/hint1.png" alt="Encryption hint" width="500" height="400">
+        `,
+                  options: ["A", "L", "R", "X"],
+                answer: "R"
+            }
+
+        ];
+
+
+        function showLevelAlert(level) {
+            const messages = levelMessages[level] || {
+                alert: "Solve the puzzle to progress in the story!",
+                dialogue: "Keep working on deciphering these messages. You're doing great!"
+            };
+
+            const modal = document.getElementById('level-alert-modal');
+            const messageElement = document.getElementById('level-alert-message');
+            const closeBtn = document.getElementById('level-alert-close-btn');
+
+            messageElement.textContent = messages.alert;
+            modal.style.display = 'block';
+
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+                playCharacterVideo(messages.dialogue, true);
+            };
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                    playCharacterVideo(messages.dialogue, true);
+                }
+            };
+        }
+
+        function playCharacterVideo(message, playOnce = false) {
+            const characterContainer = document.querySelector('.character-container');
+            const video = document.getElementById('characterVideo');
+            const dialogueText = document.getElementById('dialogueText');
+            
+            characterContainer.style.display = 'block';
+            dialogueText.textContent = message;
+            video.currentTime = 0;
+            
+            if (playOnce) {
+                video.muted = false;
+                video.loop = false;
+            } else {
+                video.muted = true;
+                video.loop = true;
+            }
+            
+            video.play();
+
+            video.onended = function() {
+                if (!playOnce) {
+                    video.currentTime = 0;
+                    video.play();
+                }
+            };
+
+            // Ensure the puzzle is visible
+            document.querySelector('.puzzle-container').style.display = 'block';
+        }
+
+        function initializePuzzle(level) {
+            const puzzle = puzzles[level - 1];
+            if (puzzle) {
+                document.getElementById('encryptedMessage').textContent = puzzle.encryptedMessage;
+                document.getElementById('keyDisplay').textContent = `Key: ${puzzle.key}`;
+                document.getElementById('characterVideo').src = puzzle.videoSrc;
+                createAlphabetTable();
+                createDecodeArea(puzzle.encryptedMessage);
+            }
+        }
+
+
+        function checkSolution() {
+            const userAnswer = document.getElementById('puzzle-input').value.trim().toLowerCase();
+            const currentPuzzle = puzzles[currentLevel - 1];
+            
+          
+
+
+            ProgressTracker.recordAttempt('vig', currentLevel);
+
+            const feedbackModal = document.getElementById('feedback-modal');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const starsContainer = document.getElementById('stars-container');
+
+            if (userAnswer === currentPuzzle.answer.toLowerCase()) {
+                console.log('Solution is correct!');
+                ProgressTracker.stopTimer('vig', currentLevel); // Stop the timer here
+                const stars = ProgressTracker.calculateStars('vig', currentLevel);
+                displayStars('vig');
+                console.log(`Stars earned: ${stars}`);
+                feedbackMessage.textContent = 'Congratulations! Find the next location';
+                feedbackMessage.className = 'success-message';
+                modalCloseBtn.textContent = 'Continue';
+                modalCloseBtn.onclick = function() {
+                    feedbackModal.style.display = 'none';
+                    redirectToStory(currentLevel);
+
+                };
+
+                if (starsContainer) {
+                    console.log("Stars container found, adding stars");
+                    starsContainer.innerHTML = '';
+                    
+                    for (let i = 0; i < stars; i++) {
+                        console.log(`Adding star ${i+1}`);
+                        const star = document.createElement('i');
+                        star.className = 'fas fa-star';
+                        star.style.animation = `bounce-in 0.5s ease-out ${i * 0.1}s forwards`;
+                        starsContainer.appendChild(star);
+                    }
+                } else {
+                    console.log("Stars container not found");
+                }
+
+
+
+            } else {
+            console.log('Solution is incorrect.');
+            feedbackMessage.textContent = 'Sorry, that\'s not correct. Please try again.';
+            feedbackMessage.className = 'error-message';
+            modalCloseBtn.textContent = 'Try Again';
+            modalCloseBtn.onclick = function() {
+                feedbackModal.style.display = 'none';
+            };
+        }
+
+        feedbackModal.style.display = 'block';
+    }
+
+
+
+    function redirectToStory(solvedLevel) {
+    // Update the story level
+    localStorage.setItem('vigStoryLevel', solvedLevel + 1);
+
+    // Update the current chapter
+    localStorage.setItem('vigCurrentChapter', solvedLevel + 1);
+
+    // Update the current puzzle level
+    localStorage.setItem('vigCurrentLevel', solvedLevel);
+
+    // Redirect to the story page
+    window.location.href = 'Vig_Story.html';
+}
+
+function resetPuzzles() {
+    currentLevel = 1;
+    localStorage.setItem('vigCurrentLevel', currentLevel);
+    localStorage.setItem('vigStoryLevel', currentLevel);
+    localStorage.setItem('vigCurrentChapter', currentLevel);
+    
+    loadCurrentPuzzle();
+    updateProgress();
+    displayStars('vig');
+    
+    console.log('Puzzles reset to level 1');
+    alert('Puzzles have been reset to level 1');
+}
+
+function updateProgress() {
+    const progressBar = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+    
+    if (progressBar && progressText) {
+        const totalPuzzles = puzzles.length;
+        const progressPercentage = (currentLevel / totalPuzzles) * 100;
+        
+        progressBar.style.width = `${progressPercentage}%`;
+        progressText.textContent = `Progress: ${currentLevel} / ${totalPuzzles}`;
+    } else {
+        console.error('Progress bar or text element not found');
+    }
+}
+
+
+function toggleHint() {
+    const hintContent = document.getElementById('hint-content');
+    if (hintContent.style.display === 'none' || hintContent.style.display === '') {
+        showHintQuestion();
+        hintContent.style.display = 'block';
+    } else {
+        hintContent.style.display = 'none';
+    }
+}
+
+function openHintsPage() {
+        const width = 800;
+        const height = 600;
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+        
+        const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
+        
+        window.open('vig_decode.html', 'vigDecode', features);
+    }
+
+function showHintQuestion() {
+    // Assuming currentLevel is a variable that keeps track of the current level
+    const questionIndex = currentLevel - 1; // Arrays are 0-indexed, so we subtract 1
+    const question = hintQuestions[questionIndex];
+    
+    if (question) {
+        document.getElementById('hint-question').innerHTML = question.question;
+        
+        const optionsContainer = document.getElementById('hint-options');
+        optionsContainer.innerHTML = '';
+        question.options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'hint-option';
+            button.textContent = option;
+            button.onclick = () => checkHintAnswer(option, question.answer);
+            optionsContainer.appendChild(button);
+        });
+
+        document.getElementById('hint-result').textContent = '';
+    } else {
+        document.getElementById('hint-question').innerHTML = "<p>No hint available for this level.</p>";
+        document.getElementById('hint-options').innerHTML = '';
+        document.getElementById('hint-result').textContent = '';
+    }
+}
+
+function checkHintAnswer(selectedOption, correctAnswer) {
+            const resultElement = document.getElementById('hint-result');
+            if (selectedOption === correctAnswer) {
+                const currentPuzzle = puzzles[currentLevel - 1];
+                resultElement.textContent = `Correct! Here's your hint: ${currentPuzzle.hint}`;
+                resultElement.style.color = '#4CAF50';
+                ProgressTracker.setHintUsed('vig', currentLevel, true);
+            } else {
+                resultElement.textContent = 'Incorrect. Try again!';
+                resultElement.style.color = '#F44336';
+            }
+        }
+
+
+    const devLevelInput = document.getElementById('devVigStoryLevel');
+        devLevelInput.addEventListener('input', function() {
+            const level = parseInt(this.value) || 1;
+            const newLevel = Math.min(Math.max(level, 1), puzzles.length);
+            currentPuzzle = newLevel - 1;
+            displayPuzzle(currentPuzzle);
+            updateProgress();
+        });
+
+        function checkLocalStorage() {
+    for (let i = 1; i <= 5; i++) {
+        console.log(`vig_stars_level${i}: ${localStorage.getItem(`vig_stars_level${i}`)}`);
+    }
+}
+
+    window.onload = function() {
+        loadCurrentPuzzle();
+        updateProgress();
+        displayStars('vig');
+        };
+
+
+    </script>
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <div id="feedback-message"></div>
+            <div id="stars-container"></div>
+            <button id="modal-close-btn" class="action-btn">Continue</button>
+        </div>
+    </div>
+
+</body>
+</html>

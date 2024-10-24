@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mission Debriefing</title>
+  <link rel="stylesheet" href="./end.css">
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<article class="starwars">
+  <audio preload="auto">
+    <!-- cant play audio in CyberRange-->
+    <!--<source src="https://s.cdpn.io/1202/Star_Wars_original_opening_crawl_1977.ogg" type="audio/ogg" />
+    <source src="https://s.cdpn.io/1202/Star_Wars_original_opening_crawl_1977.mp3" type="audio/mpeg" />-->
+  </audio>
+  
+  <section class="start">
+    <p>
+      Mission Complete <br> 
+    </p>
+  </section>
+   
+  <div class="animation">
+    
+  <section class="intro">
+    The year is 2377. Thanks to your efforts, the world of cryptography has been changed...
+  </section>
+    
+  <section class="titles">
+    <div id="missionSummary" contenteditable="false" spellcheck="false">  
+      <!-- This will be filled by JavaScript -->
+    </div>
+  </section>
+  
+  <section class="logo">
+    <img src="coollogo_com-4309433.png" alt="CYBERFLIX" class="cyberflix-logo">
+  </section>
+  </div>
+</article>
+<!-- partial -->
+<script src="./jquery-3.5.1.min.js"></script>
+<script src="./end.js"></script>
+<script>
+  const TOTAL_STARS = {
+    roma: 18,
+    vig: 15,
+    binary: 30,
+    hash: 9
+  };
+
+  function calculateTotalEarnedStars() {
+    let totalEarned = 0;
+    for (let story in TOTAL_STARS) {
+      totalEarned += parseInt(localStorage.getItem(`${story}_total_stars`) || 0);
+    }
+    return totalEarned;
+  }
+
+
+
+  function getPerformanceLevel(totalEarned, maxPossible) {
+    const percentage = (totalEarned / maxPossible) * 100;
+    if (percentage >= 80) return "Master Cryptographer";
+    if (percentage >= 50) return "Skilled Operative";
+    return "Novice Agent";
+  }
+
+  function generateEnding() {
+    const totalEarned = calculateTotalEarnedStars();
+    const maxPossible = Object.values(TOTAL_STARS).reduce((a, b) => a + b, 0);
+    const performanceLevel = getPerformanceLevel(totalEarned, maxPossible);
+
+    let endingHTML = `
+      <p>
+        Congratulations, Agent! Your temporal mission is complete. Let's review your performance:
+      </p>
+      <p>
+        Ancient Rome (Caesar Cipher): ${localStorage.getItem('roma_total_stars') || 0}/${TOTAL_STARS.roma} stars<br>
+        Modern Age (Vigenère Cipher): ${localStorage.getItem('vig_total_stars') || 0}/${TOTAL_STARS.vig} stars<br>
+        Digital Age (Binary Code): ${localStorage.getItem('binary_total_stars') || 0}/${TOTAL_STARS.binary} stars<br>
+        Quantum Future (Hash Functions): ${localStorage.getItem('hash_total_stars') || 0}/${TOTAL_STARS.hash} stars
+      </p>
+      <p>
+        Total Stars Earned: ${totalEarned}/${maxPossible}
+      </p>
+      <p>
+        Your Performance: ${performanceLevel}
+      </p>
+    `;
+
+    switch(performanceLevel) {
+      case "Master Cryptographer":
+        endingHTML += `
+          <p>
+            Exceptional work, Agent! Your heroic achievements in mastering cryptographic methods across multiple time periods have changed the course of history. Thanks to your unmatched skill, the future of 2377 is now secure, and the world owes you a tremendous debt. Your name will be forever remembered as a legend in cryptographic science, and your legacy will inspire future generations to protect data and uphold security.
+          </p>
+        `;
+        break;
+      case "Skilled Operative":
+        endingHTML += `
+          <p>
+            Well done, Agent. Although not all objectives have been achieved, your dedication and mastery of encryption techniques have brought the mission significantly closer to completion. The world of 2377 is no longer in immediate danger, but challenges remain. Your efforts have laid a solid foundation for future agents to build upon. Keep refining your skills, as the next mission will demand even greater precision and innovation.
+          </p>
+        `;
+        break;
+      case "Novice Agent":
+        endingHTML += `
+          <p>
+           Mission incomplete, Agent. Despite your best efforts, the world remains in crisis, and critical data has been compromised. You have been banished from future operations, and 2377's security continues to unravel. The future rests in the hands of new agents who must fix the mistakes and rebuild the system from scratch. Reflect on your failures, for the stakes remain higher than ever.
+          </p>
+        `;
+        break;
+    }
+
+    endingHTML += `
+      <p>
+        The knowledge you've gathered will be crucial in rebuilding the cryptographic defenses of 2377. Your time-traveling adventure may be over, but the impact of your mission will resonate through the ages. Thank you for your service, Agent.
+      </p>
+<h2>Credits</h2>
+  <div class="credits-section">
+    <h3>Development Team</h3>
+    <ul>
+      <li>TszHoi Leung </li>
+      <li>Beven Chundanga</li>
+      <li>Areej Zulfiqar </li>
+      <li>Tanish Dhir </li>
+      <li>Syam Punchal Sukumar </li>
+      <li> Harmol Kaur </li>
+    </ul>
+    
+    <h3>Special Thanks</h3>
+    <ul>
+      <li>Dr. Elizabeth Chang - Course Instructor</li>
+
+    </ul>
+    
+    <h3>References</h3>
+    <ul>
+      
+    </ul>
+  </div>
+  
+  <p>
+      Are there any unfinished targets on the mission dashboard?
+      Restart the mission?
+  </p>
+`;
+
+    const missionSummaryElement = document.getElementById('missionSummary');
+    if (missionSummaryElement) {
+      missionSummaryElement.innerHTML = endingHTML;
+    } else {
+      console.error('Element with id "missionSummary" not found');
+    }
+  }
+
+  function addNavigationLinks() {
+  const navLinksContainer = document.createElement('div');
+  navLinksContainer.className = 'navigation-links';
+  navLinksContainer.innerHTML = `
+    <a href="achievements.html" class="return-home" id="missionDashboardLink" disabled>Mission Dashboard</a>
+    <a href="index.html" class="return-home" id="returnHomeLink" disabled>Return to Home</a>
+  `;
+  document.body.appendChild(navLinksContainer);
+
+  // Disable the links initially
+  document.getElementById('missionDashboardLink').onclick = function(e) { e.preventDefault(); };
+  
+  document.getElementById('returnHomeLink').onclick = function(e) { e.preventDefault(); };
+
+  // Enable the links after 1 minute
+  setTimeout(enableLinks, 60000);
+}
+
+function enableLinks() {
+  const missionDashboardLink = document.getElementById('missionDashboardLink');
+  const returnHomeLink = document.getElementById('returnHomeLink');
+
+  missionDashboardLink.onclick = null;
+  returnHomeLink.onclick = null;
+
+  missionDashboardLink.classList.add('enabled');
+  returnHomeLink.classList.add('enabled');
+}
+
+
+  // Call this function when the page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const missionSummaryElement = document.getElementById('missionSummary');
+    if (missionSummaryElement) {
+      generateEnding();
+      addNavigationLinks();
+    } else {
+      console.error('Element with id "missionSummary" not found');
+    }
+
+    
+  });
+</script>
+</body>
+</html>

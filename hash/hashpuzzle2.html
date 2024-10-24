@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSafe: Emergency Protocol Training</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+
+    <link rel="stylesheet" href="../style/css/all.min.css">
+
+
+    
+    <!-- CryptoJS for SHA-256 Hashing -->
+    <script src="../style/crypto-js.min.js"></script>
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    
+    <!-- Inline CSS Styles -->
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #FFFFFF; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Darker color for sidebar */
+            color: #FFFFFF; /* Light text color */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #CBCDCD; /* Lighter text color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #F29269; /* Accent color on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 270px; /* Sidebar width + spacing */
+            padding: 50px 80px;
+            flex: 1;
+            background-color: #FFFFFF; /* Light background */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: margin-left 0.3s ease, padding 0.3s ease;
+        }
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #3A3F55; /* Darker heading color */
+            text-align: center;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #4F5D75; /* Secondary heading color */
+            text-align: center;
+        }
+
+        .main-content h3 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #7F8C8D;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        /* Input Section Styles */
+        .input-section,
+        .examples-section {
+            margin-bottom: 60px;
+            /* position: relative; */
+        }
+
+        .input-section label,
+        .examples-section label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #34495E;
+            font-size: 18px;
+        }
+
+        .input-section input {
+            padding: 15px 20px;
+            border: 2px solid #BDC3C7;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .input-section input:focus {
+            border-color: #1ABC9C;
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.4);
+            outline: none;
+        }
+
+        /* Output Section Styles */
+        .output-section {
+            background-color: #F9F9F9;
+            padding: 25px 30px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .output-section label {
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: block;
+            color: #34495E;
+            font-size: 18px;
+        }
+
+        .hash-output {
+            padding: 10px 15px;
+            background-color: #FFFFFF;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 300px;
+            word-break: break-all;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
+            color: #2C3E50;
+            font-size: 16px;
+        }
+
+        /* Animation Class for Hash Output */
+        .hash-output.animate {
+            animation: subtlePulse 1s ease;
+        }
+
+        @keyframes subtlePulse {
+            0% {
+                background-color: #EA5C1F;
+                transform: scale(1);
+            }
+            50% {
+                background-color: #F29269;
+                transform: scale(1.02);
+            }
+            100% {
+                background-color: #FFFFFF;
+                transform: scale(1);
+            }
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            background-color: rgba(44, 62, 80, 0.95);
+            color: #ECF0F1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: absolute;
+            z-index: 1000;
+            white-space: nowrap;
+            font-size: 16px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Tooltip Arrow */
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -12px; /* Position below the tooltip */
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0 12px;
+            border-style: solid;
+            border-color: rgba(44, 62, 80, 0.95) transparent transparent transparent;
+        }
+
+        /* Dialogue Bubble Styles */
+        .dialogue-bubble {
+            position: relative;
+            top: 10;
+            left: 10px;
+            background-color: #EA5C1F;
+            color: #FFFFFF;
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 270px;
+            text-align: center;
+            display: none; /* Hidden by default */
+            animation: slideIn 0.5s ease forwards;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 2px; /* Adjust this based on bubble height */
+            left: 50%;
+            margin-left: -10px;
+            border-width: 14px 14px 0 14px;
+            border-style: solid;
+            border-color: #EA5C1F transparent transparent transparent;
+        }
+
+        /* Character Icon Styles */
+        .character-icon {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 70px;
+            height: 70px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .character-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #F29269;
+            object-fit: cover;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #F29269; /* Primary button color */
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        button:hover {
+            background-color: #EA5C1F; /* Hover color */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background-color: #95A5A6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Examples Buttons */
+        .examples-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .examples-buttons button {
+            background-color: #4F5D75; /* Secondary button color */
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #FFFFFF;
+            border-radius: 8px;
+        }
+
+        .examples-buttons button:hover {
+            background-color: #3A3F55;
+            transform: translateY(-2px);
+        }
+
+        /* Dialogue Container */
+        .character-container {
+            position: absolute;
+            top: 1%; /* Adjust based on your design to position it near the input section */
+            left:1%;/* Adjust this value to align it with the input field */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px 40px;
+            }
+
+            .main-content h1 {
+                font-size: 30px;
+            }
+
+            .main-content h2 {
+                font-size: 24px;
+                padding: 12px;
+            }
+
+            .main-content h3 {
+                font-size: 16px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+
+            .character-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .dialogue-bubble {
+                position: relative;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+                padding: 10px;
+                width: 200px;
+                text-align: center;
+                font-size: 14px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 10px;
+                display: none; /* Initially hidden, shown dynamically */
+            }
+        }
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .character-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .dialogue-bubble {
+                max-width: 150px;
+                font-size: 12px;
+            }
+        }
+
+        /* Quiz Container Styles */
+        #quiz {
+            background-color: #F9F9F9;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Styles for each quiz question */
+        .question {
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        /* Styles for quiz question text */
+        .question p {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Label styles for radio options */
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .option label {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        /* Styles for radio buttons */
+        input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Label styles for radio options */
+        .question label {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        /* Hover effect for quiz options */
+        .question label:hover {
+            background-color: #F29269;
+        }
+
+        /* Checked state for selected radio buttons */
+        input[type="radio"]:checked + label {
+            background-color: #EA5C1F;
+            border-color: #EA5C1F;
+            color: #FFFFFF;
+        }
+
+        /* Styles for the submit quiz button */
+        #submitQuiz {
+            background-color: #1ABC9C;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover effect for the submit quiz button */
+        #submitQuiz:hover {
+            background-color: #16A085;
+        }
+
+        /* Styles for the quiz result text */
+        #quizResult {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #28A745;
+        }
+
+        /* Styles for the Complete button */
+        #completeButton {
+            background-color: #28A745; /* Green color */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #completeButton:hover {
+            background-color: #1E7E34;
+        }
+
+        .heading
+        {
+            border: #BDC3C7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            background-color: aliceblue;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+
+
+         /* Input Section Styles */
+        .input-section,
+        .challenge-section,
+        .examples-section {
+            margin-bottom: 20px;
+        }
+
+        .input-section label,
+        .examples-section label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #34495e;
+            font-size: 18px;
+        }
+
+        .input-section input,
+        .challenge-section input {
+           
+            padding: 15px 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-section input:focus,
+        .challenge-section input:focus {
+            border-color: #1abc9c;
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.4);
+            outline: none;
+        }
+
+        /* Output Section Styles */
+        .output-section,
+        .challenge-section .hash-output {
+            background-color: #ecf0f1;
+            padding: 25px 30px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .output-section label,
+        .challenge-section label {
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: block;
+            color: #34495e;
+            font-size: 18px;
+        }
+
+        .hash-output p {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
+        .hash-output span {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 300px;
+            word-break: break-all;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            background-color: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: absolute;
+            z-index: 1000;
+            white-space: nowrap;
+            font-size: 16px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Positioning for tooltips */
+        .output-section {
+            position: relative;
+        }
+
+        #hashTooltip {
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .challenge-section {
+            position: relative;
+        }
+
+        #completeButton {
+        /* ... other styles ... */
+        opacity: 0.5;
+        cursor: not-allowed;
+        transition: opacity 0.3s, cursor 0.3s;
+    }
+
+    #completeButton:not(:disabled) {
+        opacity: 1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>The Secret of the Hash: Protecting the Digital World</h1>
+        <h2>The Collision Challenge</h2>
+        <div class="heading">
+            <h3>The school's vault is secured by robust SHA-256 encryption.<br>
+            Hashes are incredibly sensitive to small modifications—whether it's a missing letter, a different digit, or even a subtle change in formatting, the resulting hash will be entirely different from the original.<br>
+            Try the activity below to see how these changes affect the hash, even with a minor alteration in the text. </h3>
+        </div>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+
+            <!-- Character Icon and Dialogue Bubble -->
+            <div class="character-container">
+                <div class="character-icon" id="characterIcon">
+                    <img src="avatar.png" alt="Character Image" />
+                </div>
+                <div class="dialogue-bubble" id="dialogueBubble">
+                    <p id="dialogueText">Zoe is ready to assist!</p>
+                </div>
+            </div>
+
+            <div class="challenge-section">
+                <h2>Challenge: Achieve a Hash Collision</h2>
+                <p>Enter two different strings and compare their SHA-256 hashes. Try to get as close as possible to a hash collision!</p>
+                
+                <!-- Input Fields -->
+                <div class="input-container">
+                    <input type="text" id="input1" placeholder="Enter first string" oninput="updateHash('input1', 'hashOutput1')">
+                    <input type="text" id="input2" placeholder="Enter second string" oninput="updateHash('input2', 'hashOutput2')">
+                </div>
+                
+                <!-- Hash Outputs -->
+                <div class="hash-output">
+                    <p>Hash 1: <span id="hashOutput1"></span></p>
+                    <p>Hash 2: <span id="hashOutput2"></span></p>
+                </div>
+    
+                <!-- Challenge Tooltip -->
+                <div id="challengeTooltip" class="tooltip">Attempt to find two different strings that produce the same hash.</div>
+            </div>
+            <div class="challenge-section">
+                <!-- Challenge Button -->
+            <button onclick="checkCollision()">Check for Collision</button>
+            </div>
+                
+                <!-- Challenge Result Output -->
+                <div id="challengeOutput" style="margin-top:20px; color:#34495e; margin-bottom: 20px;"></div>
+      
+       
+
+        <!-- Finish Button -->
+        <button id="completeButton" disabled onclick="finishPuzzle()">Finish</button>
+
+       
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const inputField = document.getElementById('inputString');
+            const hashOutput = document.getElementById('hashOutput');
+            const hashTooltip = document.getElementById('hashTooltip');
+            const dialogueText = document.getElementById('dialogueText');
+            const characterIcon = document.getElementById('characterIcon');
+            const dialogueBubble = document.getElementById('dialogueBubble');
+            const challengeOutput = document.getElementById('challengeOutput');
+            const collisionButton = document.querySelector('button[onclick="checkCollision()"]');
+            const challengeTooltip = document.getElementById('challengeTooltip');
+            const submitQuizButton = document.getElementById('submitQuiz');
+            const quizResult = document.getElementById('quizResult');
+            const completeButton = document.getElementById('completeButton');
+            const quizDiv = document.getElementById('quiz');
+            
+            let typingTimer; // Timer for detecting when the user stops typing
+            const typingInterval = 2000; // Time in ms before the icon disappears after stopping typing
+            let previousInput = '';
+            let collisionAttempts = 0;
+            const maxAttempts = 3; // Maximum allowed attempts before showing the note
+            
+            // Define ProgressTracker
+            const ProgressTracker = {
+                attempts: { 1: 0 }, // Track attempts for puzzle 1
+                incrementAttempt(puzzleId) {
+                    if (this.attempts[puzzleId] !== undefined) {
+                        this.attempts[puzzleId]++;
+                    } else {
+                        this.attempts[puzzleId] = 1;
+                    }
+                    console.log(`Attempts for puzzle ${puzzleId}: ${this.attempts[puzzleId]}`);
+                }
+            };
+            
+            // Define AchievementSystem
+            const AchievementSystem = {
+                achievements: {
+                    firstPuzzle: { unlocked: false, condition: () => ProgressTracker.attempts[1] === 1 },
+                    perfectScore: { unlocked: false, condition: () => starsEarned === 3 }
+                    // Add more achievements as needed
+                },
+            
+                initializeUser() {
+                    Object.keys(this.achievements).forEach(achievement => {
+                        localStorage.setItem(achievement, false);
+                    });
+                },
+            
+                checkAchievements() {
+                    Object.keys(this.achievements).forEach(achievement => {
+                        if (!this.achievements[achievement].unlocked && this.achievements[achievement].condition()) {
+                            this.unlockAchievement(achievement);
+                        }
+                    });
+                },
+            
+                unlockAchievement(achievement) {
+                    this.achievements[achievement].unlocked = true;
+                    localStorage.setItem(achievement, true);
+                    console.log(`Achievement Unlocked: ${achievement}`);
+                    // Display achievement UI or notification here
+                },
+            
+                updateStars(level, stars) {
+                    if (stars === 3) this.unlockAchievement('perfectScore');
+                }
+            };
+            
+            AchievementSystem.initializeUser();
+            
+            // Function to show the character icon and dialogue bubble
+            function showCharacter() {
+                characterIcon.style.display = 'flex';
+                dialogueBubble.style.display = 'block';
+            }
+
+            // Function to hide the character icon and dialogue bubble
+            function hideCharacter() {
+                characterIcon.style.display = 'none';
+                dialogueBubble.style.display = 'none';
+            }
+
+            // Function to update the dialogue text
+            function updateDialogue(message) {
+                dialogueText.innerText = message;
+                showCharacter();
+                positionCharacterAndDialogue();
+            }
+
+            // Function to position the character icon and dialogue bubble
+            function positionCharacterAndDialogue() {
+                const hashRect = hashOutput.getBoundingClientRect(); // Define hashRect
+                const mainContentRect = document.querySelector('.main-content').getBoundingClientRect();
+
+                // Calculate positions relative to the main-content container
+                const topPosition = hashRect.top + window.scrollY - characterIcon.offsetHeight - 20;
+                const leftPosition = hashRect.left + window.scrollX + hashOutput.offsetWidth + 20;
+
+                // Position character icon
+                characterIcon.style.position = 'absolute'; // Ensure absolute positioning
+                characterIcon.style.top = `${topPosition}px`;
+                characterIcon.style.left = `${leftPosition}px`;
+
+                // Position dialogue bubble relative to character icon
+                dialogueBubble.style.position = 'absolute'; // Ensure absolute positioning
+                dialogueBubble.style.top = `${topPosition - dialogueBubble.offsetHeight - 10}px`;
+                dialogueBubble.style.left = `${leftPosition + characterIcon.offsetWidth + 10}px`;
+            }
+
+            // Function to generate SHA-256 hash using CryptoJS
+            function generateHash(input) {
+                return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
+            }
+
+            // Function to calculate similarity between two strings
+            function calculateSimilarity(a, b) {
+                let same = 0;
+                const minLength = Math.min(a.length, b.length);
+                for (let i = 0; i < minLength; i++) {
+                    if (a[i] === b[i]) same++;
+                }
+                return (same / Math.max(a.length, b.length)) * 100;
+            }
+
+            // Function to show hash tooltip
+            function showHashTooltip() {
+                hashTooltip.style.opacity = 1;
+                hashTooltip.style.visibility = 'visible';
+            }
+
+            // Function to hide hash tooltip after a delay
+            function hideHashTooltip() {
+                setTimeout(() => {
+                    hashTooltip.style.opacity = 0;
+                    hashTooltip.style.visibility = 'hidden';
+                }, 3000); // Tooltip disappears after 3 seconds
+            }
+
+            // Function to show the challenge tooltip with specific text
+            function showChallengeTooltipText(text) {
+                challengeTooltip.innerText = text;
+                challengeTooltip.style.opacity = 1;
+                challengeTooltip.style.visibility = 'visible';
+
+                setTimeout(() => {
+                    challengeTooltip.style.opacity = 0;
+                    challengeTooltip.style.visibility = 'hidden';
+                }, 4000); // Tooltip disappears after 4 seconds
+            }
+
+            // Function to update hash and handle UI changes
+            function updateHashText() {
+                const currentInput = inputField.value.trim();
+                const currentHash = generateHash(currentInput);
+                hashOutput.innerText = currentHash || 'Hash will appear here...';
+
+                if (previousInput && currentInput !== previousInput) {
+                    showHashTooltip();
+                    hideHashTooltip();
+                }
+
+                // Visual Representation: Change border color based on input similarity
+                if (previousInput) {
+                    const similarity = calculateSimilarity(currentInput, previousInput);
+                    if (similarity > 80) {
+                        hashOutput.style.borderColor = '#27ae60'; // Green for high similarity
+                    } else if (similarity > 50) {
+                        hashOutput.style.borderColor = '#f1c40f'; // Yellow for medium similarity
+                    } else {
+                        hashOutput.style.borderColor = '#e74c3c'; // Red for low similarity
+                    }
+
+                    // Animate background to visualize change
+                    hashOutput.classList.add('animate-background');
+
+                    setTimeout(() => {
+                        hashOutput.classList.remove('animate-background');
+                    }, 3000);
+                }
+
+                previousInput = currentInput;
+            
+                // Increment progress for each hash update attempt
+                ProgressTracker.incrementAttempt(1);
+                AchievementSystem.checkAchievements(); // Check achievements after incrementing attempts
+            }
+
+            // Event listener for when the user starts typing in the main input field
+            if (inputField && hashOutput && hashTooltip) {
+                inputField.addEventListener('input', () => {
+                    clearTimeout(typingTimer); // Clear the previous timer
+
+                    // Update hash and UI
+                    updateHashText();
+
+                    // Set a timer to hide the character icon if no typing after a certain time
+                    typingTimer = setTimeout(() => {
+                        hideCharacter();
+                    }, typingInterval);
+                });
+            } else {
+                console.error('One or more required elements (inputField, hashOutput, hashTooltip) are missing.');
+            }
+
+            // Optionally, hide the character immediately when the input field loses focus
+            if (inputField) {
+                inputField.addEventListener('blur', () => {
+                    hideCharacter();
+                });
+            }
+
+            // Function to load examples
+            function loadExample(exampleText) {
+                if (inputField) {
+                    inputField.value = exampleText;
+                    // Trigger the input event to generate hash
+                    inputField.dispatchEvent(new Event('input'));
+                }
+            }
+
+            // Function to store progress, e.g., in local storage or database
+            function storeProgress(stars) {
+                console.log(`Progress stored: ${stars} stars earned.`);
+                // Example: store in localStorage
+                localStorage.setItem('quizStars', stars);
+            }
+
+            // Challenge Functionality
+            function startChallenge() {
+                if (challengeOutput) {
+                    challengeOutput.innerHTML = `
+                        <p><strong>Note:</strong> Finding an actual hash collision with SHA-256 is computationally infeasible. However, observe how even minor changes in input result in completely different hashes.</p>
+                        <p>Try modifying the input string slightly and see how the hash changes.</p>
+                    `;
+                } else {
+                    console.error('Element with ID "challengeOutput" not found.');
+                }
+            }
+
+            function updateHash(inputId, outputId) {
+                const inputElement = document.getElementById(inputId);
+                const outputElement = document.getElementById(outputId);
+                if (inputElement && outputElement) {
+                    const input = inputElement.value.trim();
+                    const hash = generateHash(input);
+                    outputElement.innerText = hash || 'Hash will appear here...';
+                } else {
+                    console.error(`Elements with IDs "${inputId}" or "${outputId}" not found.`);
+                }
+            }
+
+    function checkCollision() {
+        const input1 = document.getElementById('input1').value;
+        const input2 = document.getElementById('input2').value;
+        const hash1 = document.getElementById('hashOutput1')?.innerText;
+        const hash2 = document.getElementById('hashOutput2')?.innerText;
+
+        if (!hash1 || !hash2 || !challengeOutput) {
+            console.error('One or more required elements (hashOutput1, hashOutput2, challengeOutput) are missing.');
+            return;
+        }
+
+        // Check if inputs are identical
+        if (input1 === input2) {
+            challengeOutput.innerHTML = `<span style="color: #e74c3c; font-weight: bold;">The inputs are identical. Please enter different values.</span>`;
+            return;
+        }
+
+        // Increment the collision attempts counter
+        collisionAttempts += 1;
+
+        if (hash1 === hash2) {
+            challengeOutput.innerHTML = `<span style="color: #27ae60; font-weight: bold;">Collision Found! 🎉</span>`;
+            showChallengeTooltipText("Congratulations! You've found a hash collision.");
+            collisionAttempts = 0; // Resetting the counter
+        } else {
+            challengeOutput.innerHTML = `<span style="color: #e74c3c; font-weight: bold;">No Collision. Keep trying!</span>`;
+
+            // Tooltip logic for different attempts
+            if (collisionAttempts === 1) {
+                showChallengeTooltipText("Do you see that both hashes are different? Try different strings.");
+            } else if (collisionAttempts === 2) {
+                showChallengeTooltipText("Oh No, again the hashes are different. Try once more.");
+            } else if (collisionAttempts >= maxAttempts) {
+                showChallengeTooltipText("So, again it is different. That means it is not manually possible to find two strings that have matching hashes.");
+                
+                // Display explanation about difficulty of finding a collision
+                challengeOutput.innerHTML += `
+                    <p style="color: #c0392b; margin-top: 15px;">
+                        <strong>Why is finding a SHA-256 collision so hard?</strong><br>
+                        SHA-256 is designed to be a one-way cryptographic hash function, making it computationally infeasible to find two different inputs that produce the same hash. This property ensures data integrity and security in various applications.
+                    </p>
+                `;
+
+                // Disable the collision check button to prevent further attempts
+                if (collisionButton) {
+                    collisionButton.disabled = true;
+                    collisionButton.innerText = "Collision Attempt Limit Reached";
+                }
+                const finishButton = document.getElementById('completeButton');
+                if (finishButton) {
+                    finishButton.disabled = false;
+                    finishButton.style.opacity = '1';
+                    finishButton.style.cursor = 'pointer';
+                }
+            }
+
+        }
+
+        // Update button text with attempt count
+        if (collisionButton && collisionAttempts < maxAttempts) {
+            collisionButton.innerText = `Check for Collision (Attempt ${collisionAttempts}/${maxAttempts})`;
+        }
+    }
+
+
+    function finishPuzzle() {
+        const storyKey = 'hash';
+        const currentLevel = 2;
+
+        ProgressTracker.recordAttempt(storyKey, currentLevel);
+        console.log(`Attempts for puzzle ${currentLevel}: ${ProgressTracker.attempts[currentLevel]}`);
+        ProgressTracker.calculateStars('hash', 2);
+
+        const stars = ProgressTracker.calculateStars(storyKey, currentLevel);
+        console.log(`Earned ${stars} stars for level ${currentLevel}`);
+
+
+
+
+        alert(`Congratulations! You've completed the puzzle and earned ${stars} stars!`);
+
+    }
+
+            
+
+            // Function to show the quiz
+            function showQuiz() {
+                if (quizDiv) {
+                    quizDiv.style.display = 'block';
+                } else {
+                    console.error('Quiz div with ID "quiz" not found.');
+                }
+            }
+            showQuiz();
+
+            // Function to handle completion button click
+            function handleCompleteButtonClick() {
+                if (quizDiv && quizDiv.style.display === 'block') {
+                    window.location.href = 'hashstory.html#chapter2'; // Adjust as needed
+                } else {
+                    console.error('Quiz is not visible. Cannot complete activity.');
+                }
+            }
+
+            // Event listener for the completion button
+            if (completeButton) {
+                completeButton.addEventListener('click', handleCompleteButtonClick);
+            } else {
+                console.error('Complete button with ID "completeButton" not found.');
+            }
+
+            
+
+            // Expose functions to the global scope if needed
+            window.loadExample = loadExample;
+            window.startChallenge = startChallenge;
+            window.updateHash = updateHash;
+            window.checkCollision = checkCollision;
+            window.completeButton = completeButton;
+
+
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const completeButton = document.getElementById('completeButton');
+            const inputField = document.getElementById('inputString');
+            const hashOutput = document.getElementById('hashOutput');
+            const hashTooltip = document.getElementById('hashTooltip');
+            const characterIcon = document.getElementById('characterIcon');
+            const dialogueBubble = document.getElementById('dialogueBubble');
+            const dialogueText = document.getElementById('dialogueText');
+
+            // Initial Instructions
+            const initialInstructions = "Welcome, Agent! Your mission: Compare the hashes. One step closer to cracking the vault—every second counts!"
+;
+
+            // Display Initial Dialogue Bubble with Instructions
+            function showInitialDialogue() {
+                dialogueText.innerHTML = initialInstructions;
+                characterIcon.style.display = 'block';
+                dialogueBubble.style.display = 'block';
+
+                // Hide the dialogue bubble after some seconds
+                setTimeout(() => {
+                    hideCharacter();
+                }, 12000);
+            }
+
+            // Event listener for the completion button
+            if (completeButton) {
+                completeButton.addEventListener('click', () => {
+                    // Redirect to the specified URL on button click
+                    window.location.href = 'hashStory.html';
+                });
+            } else {
+                console.error('Complete button with ID "completeButton" not found.');
+            }
+
+            // Function to generate SHA-256 hash using CryptoJS
+            function generateHash(input) {
+                return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
+            }
+
+            // Function to update hash output with animation
+            function updateHashText() {
+                const currentInput = inputField.value.trim();
+                const currentHash = generateHash(currentInput);
+                hashOutput.innerText = currentHash || 'Hash will appear here...';
+
+                // Trigger tooltip if input has changed
+                if (currentInput) {
+                    showTooltip();
+                } else {
+                    hideTooltip();
+                }
+
+                // Trigger animation on hash change
+                triggerHashChangeAnimation();
+            }
+
+            // Function to trigger hash change animation
+            function triggerHashChangeAnimation() {
+                // Remove the animation class if it's already present to allow re-triggering
+                hashOutput.classList.remove('animate');
+                
+                // Trigger reflow to restart the animation
+                void hashOutput.offsetWidth;
+
+                // Add the animation class
+                hashOutput.classList.add('animate');
+            }
+
+            // Function to show tooltip
+            function showTooltip() {
+                hashTooltip.style.opacity = 1;
+                hashTooltip.style.visibility = 'visible';
+                // Hide tooltip after 3 seconds
+                setTimeout(() => {
+                    hashTooltip.style.opacity = 0;
+                    hashTooltip.style.visibility = 'hidden';
+                }, 3000);
+            }
+
+            // Function to hide tooltip
+            function hideTooltip() {
+                hashTooltip.style.opacity = 0;
+                hashTooltip.style.visibility = 'hidden';
+            }
+
+            // Function to load examples
+            function loadExample(exampleText) {
+                if (inputField) {
+                    inputField.value = exampleText;
+                    // Trigger the input event to generate hash
+                    inputField.dispatchEvent(new Event('input'));
+                } else {
+                    console.error('Input field with ID "inputString" not found.');
+                }
+            }
+
+            // Expose loadExample to the global scope for inline onclick handlers
+            window.loadExample = loadExample;
+
+            // Event listener for input changes
+            if (inputField) {
+                inputField.addEventListener('input', updateHashText);
+            } else {
+                console.error('Input field with ID "inputString" not found.');
+            }
+
+            // Function to show the character icon and dialogue bubble
+            function showCharacter() {
+                characterIcon.style.display = 'block';
+                dialogueBubble.style.display = 'block';
+            }
+
+            // Function to hide the character icon and dialogue bubble
+            function hideCharacter() {
+                characterIcon.style.display = 'none';
+                dialogueBubble.style.display = 'none';
+            }
+
+            // Function to update the dialogue text (not used in this version)
+            function updateDialogue(message) {
+                dialogueText.innerHTML = message;
+            }
+
+            // Trigger initial dialogue on page load
+            showInitialDialogue();
+
+            // Optional: Remove animation class after animation ends to allow re-triggering
+            hashOutput.addEventListener('animationend', () => {
+                hashOutput.classList.remove('animate');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+        

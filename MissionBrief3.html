@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Briefing:  Toolkit</title>
+    <link rel="stylesheet" href="../style/missionbrief.css">
+    <link rel="stylesheet" href="../style/all.min.css">
+    <style>
+       
+    </style>
+</head>
+<body>
+
+    <div id="custom-alert" class="custom-alert">
+        <div class="alert-content">
+            <h2>Urgent Mission Update</h2>
+            <p id="alert-message"></p>
+            <button id="alert-confirm">Accept Mission</button>
+        </div>
+    </div>
+
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1 class="mission-title">Mission Briefing</h1>
+        <div class="content-wrapper">
+            <!-- Left column -->
+            <div class="left-column">
+                <!-- Character display area -->
+                <!-- This div can be used to display a large character, icon, or visual representation -->
+                <div class="character-display" id="character-display">
+                    <video width="100%" height="100%" autoplay loop muted playsinline>
+                        <source src="../images/missionbriefing.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="futuristic-element">
+                    <div class="agent-status">
+                        <div class="status-item">
+                            <div class="status-label">Agent ID</div>
+                            <div class="status-value" id="agent-id-display">Not Set</div>                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Clearance Level</div>
+                            <div class="status-value">Gamma</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Mission Status</div>
+                            <div class="status-value">Active</div>
+                        </div>
+                    </div>
+                    <div class="mission-timer" id="mission-timer">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="right-column">
+                <!-- Terminal-like explanation container -->
+                <div class="explanation-container">
+                    <!-- Terminal header with title and control buttons -->
+                    <div class="terminal-header">
+                        <div class="terminal-title">Mission Details</div>
+                        <div class="terminal-controls">
+                            <span class="terminal-minimize"></span>
+                            <span class="terminal-maximize"></span>
+                            <span class="terminal-close"></span>
+                        </div>
+                    </div>
+                    <!-- Area for new things to add -->
+                    <div id="explanation"></div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="window.location.href='./binary/Binary_Lecture.html'">Accept Mission</button>
+                        <button class="action-button">Review Intel</button>
+                        <button class="action-button">Equipment Check</button>
+                    </div>
+                </div>
+                <div class="equipment-block">
+                    <h3 class="equipment-title">Mission Equipment: Binary and Cryptographic Techniques</h3>
+                    <div class="technique">
+                        <h4>Binary Decoding</h4>
+                        <p>Understand and decode binary sequences, transforming 1s and 0s into readable data.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Critical for data transmission and encryption</li>
+                                    <li>Foundation of modern computing</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Time-consuming for large data sets</li>
+                                    <li>Requires precision to avoid errors</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="technique">
+                        <h4>Hexadecimal Conversion</h4>
+                        <p>Translate between binary and hexadecimal to simplify complex data.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Reduces the complexity of long binary sequences</li>
+                                    <li>Widely used in digital systems and debugging</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Requires strong understanding of conversion methods</li>
+                                    <li>Not always intuitive for beginners</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+            function showMissionAlert() {
+                alert("You've been on this page for 3 minutes. Click 'Accept Mission' to start your adventure!");
+            }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const explanation = document.getElementById('explanation');
+            const briefing = [
+                "Agent, your mission is critical. We're sending you to the year 2177, where Alex, a hacker in The near future of the past, needs your help.",
+                "Your target: Assist Alex as they navigate a high-security network in 2177, filled with encrypted binary sequences and advanced security traps.",
+                "Objective: Work with Alex to decode binary and hexadecimal sequences, crack encrypted data streams, and uncover vital secrets hidden in the system.",
+                "Warning: In the future, security protocols are highly advanced. A single mistake could trigger a system-wide lockdown, putting Alex’s mission—and freedom—in jeopardy.",
+                "Technique: Use binary decoding to transform futuristic data streams into readable information, and hexadecimal conversion to simplify complex encryption patterns.",
+                "Reward: Every successful decryption brings Alex closer to obtaining critical secrets that hold the key to future communication systems.",
+                "Remember, Agent, the future of digital security rests in your hands. Help Alex outsmart the system and complete the mission.",
+                "Good luck. The Hacker's Labyrinth of 2177 awaits."
+            ];
+
+
+            function typeWriter(text, i) {
+                if (i < text.length) {
+                    explanation.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(function() {
+                        typeWriter(text, i);
+                    }, 50);
+                } else {
+                    explanation.innerHTML += '<br><br>';
+                    showNextLine();
+                }
+            }
+
+            function showNextLine() {
+                if (briefing.length > 0) {
+                    const line = briefing.shift();
+                    typeWriter(line, 0);
+                }
+            }
+
+            showNextLine();
+
+              const agentIDDisplay = document.getElementById('agent-id-display');
+            const storedAgentID = localStorage.getItem('UserID');
+            if (storedAgentID) {
+                agentIDDisplay.textContent = "Agent-" + storedAgentID;
+            } else {
+                agentIDDisplay.textContent = 'Not Set';
+            }
+
+            
+
+            // Mission timer
+            let seconds = 0;
+            const missionTimer = document.getElementById('mission-timer');
+            const timerInterval = setInterval(function() {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                missionTimer.textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+                
+                // Check if 5 minutes have passed
+                if (seconds === 180) { 
+                    showMissionAlert();
+                }
+            }, 1000);
+
+    // Function to show mission alert
+    function showMissionAlert() {
+    const customAlert = document.getElementById('custom-alert');
+    const alertMessage = document.getElementById('alert-message');
+    const alertConfirm = document.getElementById('alert-confirm');
+
+    alertMessage.textContent = "Agent, your expertise is urgently needed. The window of opportunity is closing. Accept the mission now to safeguard the future!";
+    customAlert.style.display = 'block';
+
+    alertConfirm.onclick = function() {
+        customAlert.style.display = 'none';
+        window.location.href = './binary/Binary_Lecture.html';
+    };
+}
+
+            const typingEffect = document.createElement('div');
+            typingEffect.className = 'typing-effect';
+            typingEffect.textContent = 'Initializing mission parameters...';
+            document.querySelector('.futuristic-element').appendChild(typingEffect);
+        });
+    </script>
+        <script defer src="../style/all.min.js"></script>
+</body>
+</html>

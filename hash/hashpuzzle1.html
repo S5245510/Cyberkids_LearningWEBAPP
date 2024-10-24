@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSafe: Emergency Protocol Training</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+
+    <script src="../style/crypto-js.min.js"></script>
+
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <!-- CryptoJS for SHA-256 Hashing 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>-->
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    
+    <!-- Inline CSS Styles -->
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #FFFFFF; /* Light background */
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Darker color for sidebar */
+            color: #FFFFFF; /* Light text color */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #CBCDCD; /* Lighter text color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #F29269; /* Accent color on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 270px; /* Sidebar width + spacing */
+            padding: 50px 80px;
+            flex: 1;
+            background-color: #FFFFFF; /* Light background */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: margin-left 0.3s ease, padding 0.3s ease;
+        }
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #3A3F55; /* Darker heading color */
+            text-align: center;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #4F5D75; /* Secondary heading color */
+            text-align: center;
+        }
+
+        .main-content h3 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #7F8C8D;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        /* Input Section Styles */
+        .input-section,
+        .examples-section {
+            margin-bottom: 60px;
+            /* position: relative; */
+        }
+
+        .input-section label,
+        .examples-section label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #34495E;
+            font-size: 18px;
+        }
+
+        .input-section input {
+            padding: 15px 20px;
+            border: 2px solid #BDC3C7;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .input-section input:focus {
+            border-color: #1ABC9C;
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.4);
+            outline: none;
+        }
+
+        /* Output Section Styles */
+        .output-section {
+            background-color: #F9F9F9;
+            padding: 25px 30px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .output-section label {
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: block;
+            color: #34495E;
+            font-size: 18px;
+        }
+
+        .hash-output {
+            padding: 10px 15px;
+            background-color: #FFFFFF;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 300px;
+            word-break: break-all;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
+            color: #2C3E50;
+            font-size: 16px;
+        }
+
+        /* Animation Class for Hash Output */
+        .hash-output.animate {
+            animation: subtlePulse 1s ease;
+        }
+
+        @keyframes subtlePulse {
+            0% {
+                background-color: #EA5C1F;
+                transform: scale(1);
+            }
+            50% {
+                background-color: #F29269;
+                transform: scale(1.02);
+            }
+            100% {
+                background-color: #FFFFFF;
+                transform: scale(1);
+            }
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            background-color: rgba(44, 62, 80, 0.95);
+            color: #ECF0F1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: absolute;
+            z-index: 1000;
+            white-space: nowrap;
+            font-size: 16px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Tooltip Arrow */
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -12px; /* Position below the tooltip */
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0 12px;
+            border-style: solid;
+            border-color: rgba(44, 62, 80, 0.95) transparent transparent transparent;
+        }
+
+        /* Dialogue Bubble Styles */
+        .dialogue-bubble {
+            position: relative;
+            top: 10;
+            left: 10px;
+            background-color: #EA5C1F;
+            color: #FFFFFF;
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 270px;
+            text-align: center;
+            display: none; /* Hidden by default */
+            animation: slideIn 0.5s ease forwards;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 2px; /* Adjust this based on bubble height */
+            left: 50%;
+            margin-left: -10px;
+            border-width: 14px 14px 0 14px;
+            border-style: solid;
+            border-color: #EA5C1F transparent transparent transparent;
+        }
+
+        /* Character Icon Styles */
+        .character-icon {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 70px;
+            height: 70px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .character-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #F29269;
+            object-fit: cover;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #F29269; /* Primary button color */
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        button:hover {
+            background-color: #EA5C1F; /* Hover color */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background-color: #95A5A6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Examples Buttons */
+        .examples-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .examples-buttons button {
+            background-color: #4F5D75; /* Secondary button color */
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #FFFFFF;
+            border-radius: 8px;
+        }
+
+        .examples-buttons button:hover {
+            background-color: #3A3F55;
+            transform: translateY(-2px);
+        }
+
+        /* Dialogue Container */
+        .character-container {
+            position: absolute;
+            top: 1%; /* Adjust based on your design to position it near the input section */
+            left:1%;/* Adjust this value to align it with the input field */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px 40px;
+            }
+
+            .main-content h1 {
+                font-size: 30px;
+            }
+
+            .main-content h2 {
+                font-size: 24px;
+                padding: 12px;
+            }
+
+            .main-content h3 {
+                font-size: 16px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+
+            .character-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .dialogue-bubble {
+                position: relative;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+                padding: 10px;
+                width: 200px;
+                text-align: center;
+                font-size: 14px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 10px;
+                display: none; /* Initially hidden, shown dynamically */
+            }
+        }
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .character-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .dialogue-bubble {
+                max-width: 150px;
+                font-size: 12px;
+            }
+        }
+
+        /* Quiz Container Styles */
+        #quiz {
+            background-color: #F9F9F9;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Styles for each quiz question */
+        .question {
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        /* Styles for quiz question text */
+        .question p {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Label styles for radio options */
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .option label {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        /* Styles for radio buttons */
+        input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Label styles for radio options */
+        .question label {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        /* Hover effect for quiz options */
+        .question label:hover {
+            background-color: #F29269;
+        }
+
+        /* Checked state for selected radio buttons */
+        input[type="radio"]:checked + label {
+            background-color: #EA5C1F;
+            border-color: #EA5C1F;
+            color: #FFFFFF;
+        }
+
+        /* Styles for the submit quiz button */
+        #submitQuiz {
+            background-color: #1ABC9C;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover effect for the submit quiz button */
+        #submitQuiz:hover {
+            background-color: #16A085;
+        }
+
+        /* Styles for the quiz result text */
+        #quizResult {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #28A745;
+        }
+
+        /* Styles for the Complete button */
+        #completeButton {
+            background-color: #28A745; /* Green color */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #completeButton:hover {
+            background-color: #1E7E34;
+        }
+
+        .heading
+        {
+            border: #BDC3C7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            background-color: aliceblue;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .custom-alert {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alert-content {
+        background-color: #0a0e17;
+        border: 2px solid #00ff00;
+        border-radius: 10px;
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+
+    .alert-content p {
+        color: #00ff00;
+        font-family: 'Courier New', monospace;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .alert-content button {
+        background-color: #00ff00;
+        color: #0a0e17;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .alert-content button:hover {
+        background-color: #00cc00;
+    }
+    </style>
+</head>
+<body>
+
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-content">
+            <p id="alertMessage"></p>
+            <button onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>CyberSafe: Emergency Protocol Training</h1>
+        <h2>Hash Function Simulator</h2>
+        <div class="heading">
+            <h3>The school's vault is secured by robust SHA-256 encryption.<br>
+            Hashes are incredibly sensitive to small modifications—whether it's a missing letter, a different digit, or even a subtle change in formatting, the resulting hash will be entirely different from the original.<br>
+            Try the activity below to see how these changes affect the hash, even with a minor alteration in the text. </h3>
+        </div>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+            <label for="inputString">Enter a string to hash (SHA-256):</label>
+            <input type="text" id="inputString" placeholder="Type here..." />
+
+            <!-- Character Icon and Dialogue Bubble -->
+            <div class="character-container">
+                <div class="character-icon" id="characterIcon">
+                    <img src="avatar.png" alt="Character Image" />
+                </div>
+                <div class="dialogue-bubble" id="dialogueBubble">
+                    <p id="dialogueText">Zoe is ready to assist!</p>
+                </div>
+            </div>
+      
+        <!-- Output Section -->
+        <div class="output-section">
+            <label for="hashOutput">Hash Output:</label>
+            <div id="hashOutput" class="hash-output">Hash will appear here...</div>
+            <div id="hashTooltip" class="tooltip">Notice how even a small change in letters or digits causes a different hash.</div>
+        </div>
+      
+        <!-- Examples Section -->
+        <div class="examples-section">
+            <label>Try Pre-Populated Examples:</label>
+            <div class="examples-buttons">
+              <button onclick="loadExample('password123')">Example 1: "password123"</button>
+              <button onclick="loadExample('password124')">Example 2: "password124"</button>
+              <button onclick="loadExample('ZoeIsAwesome')">Example 3: "ZoeIsAwesome"</button>
+              <button onclick="loadExample('ZoeIsAwesome!')">Example 4: "ZoeIsAwesome!"</button>
+            </div>
+        </div>
+
+        <!-- Finish Button -->
+        <button id="completeButton" >Finish</button>
+
+        <!-- Character Icon and Dialogue Bubble -->
+        <!-- <div class="character-container">
+            <div class="character-icon" id="characterIcon">
+                <img src="avatar3.png" alt="Character Image" />
+            </div>
+            <div class="dialogue-bubble" id="dialogueBubble">
+                <p id="dialogueText">Zoe is ready to assist!</p>
+            </div>
+        </div> -->
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const completeButton = document.getElementById('completeButton');
+            const inputField = document.getElementById('inputString');
+            const hashOutput = document.getElementById('hashOutput');
+            const hashTooltip = document.getElementById('hashTooltip');
+            const characterIcon = document.getElementById('characterIcon');
+            const dialogueBubble = document.getElementById('dialogueBubble');
+            const dialogueText = document.getElementById('dialogueText');
+            const alertMessage = document.getElementById('alertMessage');
+            const customAlert = document.getElementById('customAlert');
+
+
+
+            // Initial Instructions
+            const initialInstructions = "Welcome to the Hash Function Simulator!<br>Enter a string below to generate its SHA-256 hash. Observe how even a tiny change in the input drastically alters the hash.";
+
+            // Display Initial Dialogue Bubble with Instructions
+            function showInitialDialogue() {
+                dialogueText.innerHTML = initialInstructions;
+                characterIcon.style.display = 'block';
+                dialogueBubble.style.display = 'block';
+
+                // Hide the dialogue bubble after some seconds
+                setTimeout(() => {
+                    hideCharacter();
+                }, 12000);
+            }
+
+
+
+            // Function to generate SHA-256 hash using CryptoJS
+            function generateHash(input) {
+                return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
+            }
+
+            // Function to update hash output with animation
+            function updateHashText() {
+                const currentInput = inputField.value.trim();
+                const currentHash = generateHash(currentInput);
+                hashOutput.innerText = currentHash || 'Hash will appear here...';
+
+                // Trigger tooltip if input has changed
+                if (currentInput) {
+                    showTooltip();
+                } else {
+                    hideTooltip();
+                }
+
+                // Trigger animation on hash change
+                triggerHashChangeAnimation();
+            }
+
+            // Function to trigger hash change animation
+            function triggerHashChangeAnimation() {
+                // Remove the animation class if it's already present to allow re-triggering
+                hashOutput.classList.remove('animate');
+                
+                // Trigger reflow to restart the animation
+                void hashOutput.offsetWidth;
+
+                // Add the animation class
+                hashOutput.classList.add('animate');
+            }
+
+            // Function to show tooltip
+            function showTooltip() {
+                hashTooltip.style.opacity = 1;
+                hashTooltip.style.visibility = 'visible';
+                // Hide tooltip after 3 seconds
+                setTimeout(() => {
+                    hashTooltip.style.opacity = 0;
+                    hashTooltip.style.visibility = 'hidden';
+                }, 3000);
+            }
+
+            // Function to hide tooltip
+            function hideTooltip() {
+                hashTooltip.style.opacity = 0;
+                hashTooltip.style.visibility = 'hidden';
+            }
+
+            // Function to load examples
+            const examples = ['password123', 'password124', 'ZoeIsAwesome', 'ZoeIsAwesome!'];
+            const examplesTried = new Set();
+
+
+            function loadExample(exampleText) {
+                if (inputField) {
+                    inputField.value = exampleText;
+                    // Trigger the input event to generate hash
+                    inputField.dispatchEvent(new Event('input'));
+                    examplesTried.add(exampleText);
+                    checkAllExamplesTried();
+                } else {
+                    console.error('Input field with ID "inputString" not found.');
+                }
+            }
+
+
+
+            function checkAllExamplesTried() {
+                if (examples.every(example => examplesTried.has(example))) {
+                    completeButton.disabled = false;
+                }
+            }
+
+            completeButton.addEventListener('click', function() {
+                if (examples.every(example => examplesTried.has(example))) {
+                    // Redirect to the specified URL on button click
+                    window.location.href = 'hashStory.html';
+         
+                }
+            });
+
+            
+
+            // Expose loadExample to the global scope for inline onclick handlers
+            window.loadExample = loadExample;
+
+            // Event listener for input changes
+            if (inputField) {
+                inputField.addEventListener('input', updateHashText);
+            } else {
+                console.error('Input field with ID "inputString" not found.');
+            }
+
+            // Function to show the character icon and dialogue bubble
+            function showCharacter() {
+                characterIcon.style.display = 'block';
+                dialogueBubble.style.display = 'block';
+            }
+
+            // Function to hide the character icon and dialogue bubble
+            function hideCharacter() {
+                characterIcon.style.display = 'none';
+                dialogueBubble.style.display = 'none';
+            }
+
+            // Function to update the dialogue text (not used in this version)
+            function updateDialogue(message) {
+                dialogueText.innerHTML = message;
+            }
+
+            // Trigger initial dialogue on page load
+            showInitialDialogue();
+
+            // Optional: Remove animation class after animation ends to allow re-triggering
+            hashOutput.addEventListener('animationend', () => {
+                hashOutput.classList.remove('animate');
+            });
+
+ 
+
+                completeButton.addEventListener('click', function() {
+                    if (examples.every(example => examplesTried.has(example))) {
+                        // Redirect to the specified URL on button click
+                        window.location.href = 'hashStory.html';
+                        ProgressTracker.recordAttempt('hash', 1);
+                        ProgressTracker.calculateStars('hash', 1);
+
+                    } else {
+                        showCustomAlert('Please try all examples before finishing.');
+                    }
+                });
+        });
+        function showCustomAlert(message) {
+                    document.getElementById('alertMessage').textContent = message;
+                    document.getElementById('customAlert').style.display = 'flex';
+                }
+
+                function closeCustomAlert() {
+                    document.getElementById('customAlert').style.display = 'none';
+                }
+    </script>
+    <script defer src="../style/all.min.js"></script>
+
+</body>
+</html>

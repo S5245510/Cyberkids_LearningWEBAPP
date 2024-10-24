@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Decryption Hints</title>
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+        body {
+
+            background-color: #1a0f0f;
+            color: #e6d2b5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2c1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        h1 {
+            color: #8c1c13;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #f1c40f;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #8c1c13;
+            background-color: #3c2a2a;
+            color: #e6d2b5;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #a82315;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3c2a2a;
+            border-radius: 5px;
+        }
+        .caesar-table {
+            display: grid;
+            grid-template-columns: repeat(26, 20px);
+            gap: 1px;
+            margin-top: 20px;
+            background-color: #3c2a2a;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .caesar-table .cell {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            border: 1px solid #8c1c13;
+        }
+        .shift-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .shift-arrow {
+            margin: 0 10px;
+            color: #f1c40f;
+        }
+        .original-letter, .shifted-letter {
+            padding: 5px 10px;
+            background-color: #3c2a2a;
+            border-radius: 5px;
+        }
+        .original-letter {
+            color: #e74c3c;
+        }
+        .shifted-letter {
+            color: #2ecc71;
+        }
+
+
+    .character-container {
+        display: flex;
+        position: relative;
+        margin: 20px auto;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .character-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #8c1c13;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        float: left;
+    }
+
+    .character-icon video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .dialogue-bubble {
+        margin-left: 120px;
+        background-color: #e0c9a6;
+        border: 2px solid #8c1c13;
+        border-radius: 15px;
+        padding: 10px 15px;
+        width: calc(100% - 140px);
+        box-sizing: border-box;
+    }
+
+    .dialogue-bubble::before {
+        content: '';
+        position: absolute;
+        left: 110px;
+        top: 20px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #8c1c13;
+    }
+
+    .dialogue-bubble::after {
+        content: '';
+        position: absolute;
+        left: 113px;
+        top: 21px;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 9px solid #e0c9a6;
+    }
+
+    #dialogueText {
+        font-family: 'Cinzel', serif;
+        color: #2a0704;
+        margin: 0;
+        font-size: 16px;
+    }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Caesar Cipher Decryption Hints</h1>
+        <div class="character-container">
+            <div class="character-icon">
+                <video id="characterVideo" autoplay loop muted playsinline>
+                    <source src="../images/missionbriefing.mp4" type="video/mp4" >
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="dialogue-bubble">
+                <p id="dialogueText">Put the ciphertext and key to get Hints.</p>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="ciphertext">Enter Ciphertext:</label>
+            <input type="text" id="ciphertext" placeholder="Enter the encrypted message" pattern="[A-Za-z]+" title="Only letters are allowed max 3 letters" maxlength="3">
+        </div>
+        <div class="input-group">
+            <label for="key">Enter Key (1-25):</label>
+            <input type="number" id="key" min="1" max="25" placeholder="Enter the shift number">
+        </div>
+        <button onclick="decrypt()">Decrypt</button>
+        <div id="result"></div>
+        <div id="hints"></div>
+
+    </div>
+
+    <script>
+        function decrypt() {
+            const ciphertext = document.getElementById('ciphertext').value.toUpperCase();
+            const key = parseInt(document.getElementById('key').value);
+            const result = caesarDecrypt(ciphertext, key);
+            document.getElementById('result').textContent = `Decrypted: ${result}`;
+            showDecryptionHints(ciphertext, key);
+            createCaesarTable(key);
+        }
+
+        function caesarDecrypt(ciphertext, key) {
+            return ciphertext.replace(/[A-Z]/g, char => 
+                String.fromCharCode((char.charCodeAt(0) - 65 - key + 26) % 26 + 65)
+            );
+        }
+
+        function showDecryptionHints(ciphertext, key) {
+            const hintsDiv = document.getElementById('hints');
+            hintsDiv.innerHTML = '<h2>Decryption Steps</h2>';
+
+            const steps = [
+                `<strong>Step 1:</strong> Identify the shift (key) used for encryption. In this case, it's ${key}.`,
+                `<strong>Step 2:</strong> For each letter in the ciphertext, shift it back by ${key} positions in the alphabet.`,
+                `<strong>Step 3:</strong> If shifting back takes you before 'A', wrap around to the end of the alphabet.`,
+                `<strong>Example:</strong> '${ciphertext[0]}' shifts back by ${key} to become '${caesarDecrypt(ciphertext[0], key)}'.
+                <div class="shift-visual">
+                    <span class="original-letter">${ciphertext[0]}</span>
+                    <span class="shift-arrow">→ ${key} →</span>
+                    <span class="shifted-letter">${caesarDecrypt(ciphertext[0], key)}</span>
+                </div>`,
+                `<strong>Step 4:</strong> Repeat this process for each letter in the ciphertext.`,
+                `<strong>Step 5:</strong> The resulting text is your decrypted message.`
+            ];
+
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'hint-step';
+                stepDiv.innerHTML = step;
+                hintsDiv.appendChild(stepDiv);
+            });
+        }
+
+        function createCaesarTable(key) {
+            const tableElement = document.getElementById('caesar-table');
+            tableElement.innerHTML = '';
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            
+            const topRow = document.createElement('div');
+            topRow.className = 'row';
+            const bottomRow = document.createElement('div');
+            bottomRow.className = 'row';
+
+            for (let i = 0; i < 26; i++) {
+                const topCell = document.createElement('div');
+                topCell.className = 'cell';
+                topCell.textContent = alphabet[i];
+                topRow.appendChild(topCell);
+
+                const bottomCell = document.createElement('div');
+                bottomCell.className = 'cell';
+                bottomCell.textContent = alphabet[(i - key + 26) % 26];
+                bottomRow.appendChild(bottomCell);
+            }
+
+            tableElement.appendChild(topRow);
+            tableElement.appendChild(bottomRow);
+        }
+
+        // Add event listener to restrict input to letters only
+        document.getElementById('ciphertext').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^A-Za-z]/g, '');
+        });
+    </script>
+</body>
+</html>

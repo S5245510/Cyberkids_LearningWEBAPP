@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transition - Next Journey</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            min-height: 1.2em;
+        }
+        p {
+            font-size: 1.2em;
+            opacity: 0;
+            transition: opacity 2s ease-in;
+        }
+        .passcode {
+            color: #00fff2;
+            font-size: 3em;
+            letter-spacing: 0.5em;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 2s ease-in;
+        }
+        .blink {
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="typewriter"></h1>
+        <p id="fade-in">The passcode for your next mission is:</p>
+        <div id="passcode" class="passcode">
+            MERKLE <p> .</p> <span class="blink">_ _ _ Secure the Future  . . . .</span>
+        </div>
+    </div>
+
+    <script>
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                document.getElementById("typewriter").innerHTML = text.substring(0, i+1) + '<span class="blink">|</span>';
+                setTimeout(function() {
+                    typeWriter(text, i + 1, fnCallback)
+                }, 100);
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 700);
+            }
+        }
+
+        function startTextAnimation(textArray, i) {
+            if (typeof textArray[i] == 'undefined') {
+                setTimeout(function() {
+                    startTextAnimation(textArray, 0);
+                }, 20000);
+            } else if (i < textArray[i].length) {
+                typeWriter(textArray[i], 0, function() {
+                    startTextAnimation(textArray, i + 1);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            startTextAnimation(["Preparing for the next journey..."], 0);
+            setTimeout(() => {
+                document.getElementById('fade-in').style.opacity = '1';
+                setTimeout(() => {
+                    document.getElementById('passcode').style.opacity = '1';
+                }, 2000); // Show passcode 2 seconds after fade-in text
+            }, 3000);
+        });
+
+        // Automatically redirect after 12 seconds
+        setTimeout(() => {
+            window.location.href = 'chapterlist.html';
+        }, 12000);
+    </script>
+</body>
+</html>

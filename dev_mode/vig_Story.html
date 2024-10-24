@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Cipher: A Cryptographic Tale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+        body {
+            font-family: 'Cinzel', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2c1e0f;
+            color: #d4b483;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #4a2511;
+            color: #d4b483;
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #8b4513;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar h2 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            margin-top: 0;
+            border-bottom: 2px solid #d4b483;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar a {
+            color: #d4b483;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar a:hover {
+            color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-image: url('path/to/parchment-texture.jpg');
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            color: #8b4513;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .story-section {
+            background-color: rgba(74, 37, 17, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .story-section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-placeholder {
+            background-color: rgba(139, 69, 19, 0.2);
+            border: 2px dashed #8b4513;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder:hover {
+            background-color: rgba(139, 69, 19, 0.4);
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .sidebar h2, .sidebar a span {
+                display: none;
+            }
+
+            .sidebar a {
+                justify-content: center;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.5em;
+            }
+        }
+
+        #comic-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .comic-panel {
+            display: none;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .comic-panel img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dialogue-bubble {
+            position: absolute;
+            padding: 10px;
+            max-width: 200px;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .speech-bubble {
+            background-color: white;
+            border-radius: 20px;
+            border: 2px solid #000;
+        }
+
+        .thought-bubble {
+            background-color: white;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        .shout-bubble {
+            background-color: yellow;
+            border-radius: 0;
+            transform: skew(-15deg);
+            font-weight: bold;
+            border: 2px solid #000;
+        }
+
+        .whisper-bubble {
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            border: 2px dashed #999;
+        }
+
+        .sound-effect {
+            background: none;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4500;
+            text-shadow: 2px 2px 0 #000;
+            transform: rotate(-5deg);
+        }
+
+        .emotion-bubble {
+            background: none;
+            font-size: 48px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .narration-box {
+            background-color: #f0f0f0;
+            border: 2px solid #000;
+            padding: 10px;
+            font-style: italic;
+        }
+
+        .action-bubble {
+            background: none;
+            font-family: 'Impact', sans-serif;
+            font-size: 36px;
+            color: #ff0000;
+            text-transform: uppercase;
+            -webkit-text-stroke: 1px #000;
+        }
+
+        .inner-thought {
+            background-color: #e6e6e6;
+            border-radius: 15px;
+            font-style: italic;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .chapter-button {
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            background-color: #8b4513;
+            color: #d4b483;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-button:hover {
+            background-color: #a0522d;
+        }
+
+        .chapter-button:disabled {
+            background-color: #6b3e11;
+            cursor: not-allowed;
+        }
+
+        .dev-controls {
+            margin-bottom: 20px;
+        }
+
+        .dev-controls label {
+            margin-right: 10px;
+        }
+
+        .dev-controls input {
+            padding: 5px;
+            width: 50px;
+        }
+
+        .locked-chapter {
+            display: none;
+        }
+
+        .puzzle-button {
+        display: inline-block;
+        padding: 12px 24px;
+        font-family: 'Cinzel', serif;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #f3e5ab; /* Parchment color */
+        background: linear-gradient(45deg, #8b4513, #cd853f); /* Brown to golden brown gradient */
+        border: 2px solid #d2691e; /* Chocolate color border */
+        border-radius: 50px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .puzzle-button:before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ffd700, #ffa500, #ff8c00, #ffd700); /* Gold gradient */
+        z-index: -1;
+        filter: blur(5px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .puzzle-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+        color: #ffffff; /* White text on hover */
+    }
+
+    .puzzle-button:hover:before {
+        opacity: 1;
+    }
+
+    .puzzle-button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .puzzle-button i {
+        margin-right: 8px;
+    }
+
+        
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Treasure Hunter's Guide</h2>
+        <ul>
+            <li><a href="Vig_Lecture.html"><i class="fas fa-book"></i><span>Lecture</span></a></li>
+            <li><a href="vig.html"><i class="fas fa-key"></i><span>Demonstration</span></a></li>
+            <li><a href="vig_Story.html"><i class="fas fa-scroll"></i><span>Story</span></a></li>
+            <li><a href="Vig_Puzzle.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            <li><a href="Vig_Map.html"><i class="fas fa-map-marked-alt"></i><span>Map</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>The Vigenère Cipher: A Tale of Secret Messages</h1>
+        
+        <div class="dev-controls">
+            <label for="devVigStoryLevel">Dev Story Level:</label>
+            <input type="number" id="devVigStoryLevel" min="1" max="11" value="1">
+            <button id="resetVigStoryButton">Reset Story</button>
+        </div>
+
+        <div id="comic-container">
+            <!-- Comic panels will be dynamically inserted here -->
+        </div>
+
+        <div class="chapter-navigation">
+            <button id="prev-panel" class="chapter-button">Previous Panel</button>
+            <button id="next-panel" class="chapter-button">Next Panel</button>
+        </div>
+
+        <div class="chapter-navigation">
+            <button id="prev-chapter" class="chapter-button">Previous Chapter</button>
+            <select id="chapter-menu" class="chapter-button">
+                <!-- Options will be dynamically populated -->
+            </select>
+            <button id="next-chapter" class="chapter-button">Next Chapter</button>
+        </div>
+    </div>
+
+    <script>
+        const chapters = [
+            {
+                title: "Chapter 1: The Mysterious Letter",
+                panels: [
+                    {
+                        image: 'images/vig/cp1/1.png',
+                        dialogues: [
+                            { text: "What's this mysterious letter?", top: '10%', left: '5%', type: 'speech-bubble' },
+                            { text: "I must investigate further!", top: '70%', left: '60%', type: 'thought-bubble' },
+                            { text: "GASP!", top: '40%', left: '40%', type: 'sound-effect' },
+                            { text: "Our hero receives a strange letter...", top: '5%', left: '5%', type: 'narration-box' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp1/2.png',
+                        dialogues: [
+                            { text: "This cipher looks complex...", top: '20%', left: '10%', type: 'whisper-bubble' },
+                            { text: "I NEED EXPERT HELP!", top: '60%', left: '50%', type: 'shout-bubble' },
+                            { text: "😱", top: '40%', left: '80%', type: 'emotion-bubble' },
+                            { text: "DECODE", top: '30%', left: '30%', type: 'action-bubble' },
+                            { text: "What if I can't solve it?", top: '80%', left: '20%', type: 'inner-thought' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp1/3.png',
+                        dialogues: [
+                            { text: "This cipher looks complex...", top: '20%', left: '10%', type: 'whisper-bubble' },
+                            { text: "I NEED EXPERT HELP!", top: '60%', left: '50%', type: 'shout-bubble' },
+                            { text: "😱", top: '40%', left: '80%', type: 'emotion-bubble' },
+                            { text: "DECODE", top: '30%', left: '30%', type: 'action-bubble' },
+                            { text: "What if I can't solve it?", top: '80%', left: '20%', type: 'inner-thought' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp1/4.png',
+                        dialogues: [
+                            { text: "This cipher looks complex...", top: '20%', left: '10%', type: 'whisper-bubble' },
+                            { text: "I NEED EXPERT HELP!", top: '60%', left: '50%', type: 'shout-bubble' },
+                            { text: "😱", top: '40%', left: '80%', type: 'emotion-bubble' },
+                            { text: "DECODE", top: '30%', left: '30%', type: 'action-bubble' },
+                            { text: "What if I can't solve it?", top: '80%', left: '20%', type: 'inner-thought' }
+                        ]
+
+                    },
+                ]
+            },
+
+            {
+                title: "Chapter 2: The Cryptographer's Challenge",
+                panels: [
+                    {
+                        image: 'images/vig/cp2/1.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp2/2.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp2/3.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp2/4.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    // Add more panels for Chapter 2
+                ]
+            },
+            // Add more chapters here
+            {
+                title: "Chapter 3: The Cryptographer's Challenge",
+                panels: [
+                    {
+                        image: 'images/vig/cp3/1.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp3/2.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp3/3.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp3/4.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    // Add more panels for Chapter 2
+                ]
+            },
+            {
+                title: "Chapter 4: The Cryptographer's Challenge",
+                panels: [
+                    {
+                        image: 'images/vig/cp4/1.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp4/2.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp4/3.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp4/4.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp4/7.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp4/6.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+
+                ]
+            },
+            {
+                title: "Chapter 5: The Cryptographer's Challenge",
+                panels: [
+                    {
+                        image: 'images/vig/cp5/cp5_0.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp5/cp5_4.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp5/cp5_3.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp5/cp5_1.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp5/cp5_2.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    // Add more panels for Chapter 2
+                ]
+            },
+            {
+                title: "Chapter 6: The Cryptographer's Challenge",
+                panels: [
+                    {
+                        image: 'images/vig/cp6/0.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp6/1.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp6/3.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp6/2.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    {
+                        image: 'images/vig/cp6/4.png',
+                        dialogues: [
+                            { text: "Bellaso, I need your help!", top: '20%', left: '10%', type: 'speech-bubble' },
+                            { text: "Ah, a cryptographic challenge!", top: '60%', left: '50%', type: 'thought-bubble' }
+                        ]
+                    },
+                    // Add more panels for Chapter 2
+                ]
+            }
+        ];
+
+
+
+    let currentChapter = 0;
+    let currentPanel = 0;
+
+    // Store the current level for VigPuzzle in localStorage
+    function storeVigLevel(level) {
+        localStorage.setItem('vigCurrentLevel', level);
+    }
+
+    // Function to show the current panel
+    function showPanel(chapterIndex, panelIndex) {
+    const container = document.getElementById('comic-container');
+    container.innerHTML = ''; // Clear previous content
+
+    const chapter = chapters[chapterIndex];
+    const panel = chapter.panels[panelIndex];
+
+    const panelElement = document.createElement('div');
+    panelElement.className = 'comic-panel active fade-in';
+    panelElement.style.display = 'block'; // Make the panel visible
+
+    const img = document.createElement('img');
+    img.src = panel.image;
+    panelElement.appendChild(img);
+
+    panel.dialogues.forEach(dialogue => {
+        const bubble = document.createElement('div');
+        bubble.className = `dialogue-bubble ${dialogue.type}`;
+        bubble.textContent = dialogue.text;
+        bubble.style.top = dialogue.top;
+        bubble.style.left = dialogue.left;
+        panelElement.appendChild(bubble);
+    });
+
+    container.appendChild(panelElement);
+
+    // Check if it's the last panel of the chapter
+    if (panelIndex === chapter.panels.length - 1) {
+        // If it's the last chapter, display the "Back to Chapter List" button
+        if (chapterIndex === chapters.length - 1) {
+            const backButton = document.createElement('a');
+            backButton.href = '../chapterList.html'; // Link to the chapter list page
+            backButton.className = 'puzzle-button';
+            backButton.textContent = 'Back to Chapter List';
+            container.appendChild(backButton); // Add the back button after the last panel
+        } else {
+            // If it's not the last chapter, display the puzzle button
+            const puzzleButton = document.createElement('a');
+            puzzleButton.href = 'vig_Puzzle.html';
+            puzzleButton.className = 'puzzle-button';
+            puzzleButton.textContent = `Start Puzzle for Level ${chapterIndex + 1}`;
+            puzzleButton.onclick = function () {
+                storeVigLevel(chapterIndex + 1); // Store the current chapter as the puzzle level
+            };
+            container.appendChild(puzzleButton); // Add the button after the last panel
+        }
+    }
+}
+
+
+    // Function to update chapters and manage their visibility based on the user's progress
+    function updateChapters(level) {
+    const chapterMenu = document.getElementById('chapter-menu');
+    chapterMenu.innerHTML = ''; // Clear previous options
+
+    chapters.forEach((chapter, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `Chapter ${index + 1}`;
+
+        if (index < level) {
+            option.disabled = false; // Enable the option if unlocked
+        } else {
+            option.disabled = true;  // Disable future chapters
+        }
+
+        chapterMenu.appendChild(option);
+    });
+
+    // Set the current chapter in the menu
+    chapterMenu.value = currentChapter;
+
+    // Update localStorage
+    localStorage.setItem('vigCurrentChapter', level);
+}
+
+
+    // Function to update the navigation
+    function updateNavigation() {
+        const chapter = chapters[currentChapter];
+        const prevPanel = document.getElementById('prev-panel');
+        const nextPanel = document.getElementById('next-panel');
+        const prevChapter = document.getElementById('prev-chapter');
+        const nextChapter = document.getElementById('next-chapter');
+
+        prevPanel.disabled = currentPanel === 0;
+        nextPanel.disabled = currentPanel === chapter.panels.length - 1;
+        prevChapter.disabled = currentChapter === 0;
+        nextChapter.disabled = currentChapter === chapters.length - 1;
+    }
+
+    function showNextPanel() {
+        const chapter = chapters[currentChapter];
+        if (currentPanel < chapter.panels.length - 1) {
+            // Move to the next panel in the current chapter
+            currentPanel++;
+            showPanel(currentChapter, currentPanel);
+            updateNavigation();
+        } else if (currentPanel === chapter.panels.length - 1 && currentChapter < chapters.length - 1) {
+            // Move to the next chapter's first panel
+            currentChapter++;
+            currentPanel = 0;
+            showPanel(currentChapter, currentPanel);
+            updateNavigation();
+        }
+    }
+
+    function showPreviousPanel() {
+        if (currentPanel > 0) {
+            // Move to the previous panel in the current chapter
+            currentPanel--;
+            showPanel(currentChapter, currentPanel);
+            updateNavigation();
+        } else if (currentPanel === 0 && currentChapter > 0) {
+            // Move to the previous chapter's last panel
+            currentChapter--;
+            currentPanel = chapters[currentChapter].panels.length - 1;
+            showPanel(currentChapter, currentPanel);
+            updateNavigation();
+        }
+    }
+
+    function resetVigStory() {
+        currentChapter = 0;
+        currentPanel = 0;
+        const devLevelInput = document.getElementById('devVigStoryLevel');
+        devLevelInput.value = 1;
+        localStorage.setItem('vigStoryLevel', 1);
+        localStorage.setItem('vigCurrentChapter', 1);
+        localStorage.removeItem('vigCurrentLevel'); // Reset the puzzle level
+
+        // Reset chapters visibility
+        updateChapters(1);
+
+        // Show the first panel of the first chapter
+        showPanel(currentChapter, currentPanel);
+        updateNavigation();
+
+        // Scroll to the top of the page
+        window.scrollTo(0, 0);
+        console.log('Vigenère Story reset to Chapter 1');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentChapter = parseInt(localStorage.getItem('vigCurrentChapter')) || 1;
+    const currentLevel = parseInt(localStorage.getItem('vigCurrentLevel')) || 0;
+
+    // Update chapters visibility based on the current level
+    updateChapters(currentChapter);
+
+    // Show the first panel of the current chapter
+    showPanel(currentChapter - 1, 0);
+    updateNavigation();
+
+    const devLevelInput = document.getElementById('devVigStoryLevel');
+    if (devLevelInput) {
+        devLevelInput.value = storyLevel;
+    }
+
+    console.log(`Story initialized: Chapter ${currentChapter}, Level ${currentLevel}, Story Level ${storyLevel}`);
+
+
+});
+
+function updateChapters(unlockedChapter) {
+    const chapterMenu = document.getElementById('chapter-menu');
+    chapterMenu.innerHTML = ''; // Clear previous options
+
+    chapters.forEach((chapter, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `Chapter ${index + 1}`;
+
+        if (index < unlockedChapter) {
+            option.disabled = false; // Enable the option if unlocked
+        } else {
+            option.disabled = true;  // Disable future chapters
+        }
+
+        chapterMenu.appendChild(option);
+    });
+
+    // Set the current chapter in the menu
+    chapterMenu.value = unlockedChapter - 1;
+}
+
+    // On page load, initialize the story, chapters, and navigation
+    document.addEventListener('DOMContentLoaded', () => {
+        const devLevelInput = document.getElementById('devVigStoryLevel');
+        let currentLevel = parseInt(localStorage.getItem('vigStoryLevel')) || 1;
+        devLevelInput.value = currentLevel;
+
+        // Set the correct chapter based on the current story level
+        currentChapter = currentLevel - 1; // Adjusting for zero-based index
+
+        // Show the first panel of the current chapter
+        showPanel(currentChapter, currentPanel);
+        updateNavigation();
+
+        // Update chapters visibility based on the current level
+        updateChapters(currentLevel);
+
+        // Listen for developer level input changes
+        devLevelInput.addEventListener('input', function () {
+            currentLevel = parseInt(this.value) || 1;
+            localStorage.setItem('vigStoryLevel', currentLevel);
+            updateChapters(currentLevel);
+        });
+
+        // Listen for chapter menu changes
+        const chapterMenu = document.getElementById('chapter-menu');
+        chapterMenu.addEventListener('change', function () {
+            currentChapter = parseInt(this.value);
+            showPanel(currentChapter, 0); // Show the first panel of the selected chapter
+        });
+
+        // Add navigation buttons functionality
+        document.getElementById('next-panel').addEventListener('click', showNextPanel);
+        document.getElementById('prev-panel').addEventListener('click', showPreviousPanel);
+    });
+
+
+
+    window.onload = function() {
+    // Get the unlocked chapter from localStorage
+    const unlockedChapter = localStorage.getItem('vigCurrentChapter') || 1;  // Default to Chapter 1
+
+    // Show only the unlocked chapters
+    for (let i = 1; i <= unlockedChapter; i++) {
+        const chapter = document.getElementById(`chapter${i}`);
+        if (chapter) {
+            chapter.style.display = 'block';  // Show unlocked chapter
+        }
+    }
+
+    // Lock all chapters beyond the unlocked one
+    for (let i = unlockedChapter + 1; i <= totalChapters; i++) {
+        const chapter = document.getElementById(`chapter${i}`);
+        if (chapter) {
+            chapter.style.display = 'none';  // Hide locked chapters
+        }
+    }
+};
+
+
+</script>
+
+</body>
+</html>

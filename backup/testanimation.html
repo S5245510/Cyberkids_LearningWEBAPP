@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Encoder/Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label, input, textarea {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Caesar Cipher Encoder/Decoder</h2>
+
+    <label for="text">Text:</label>
+    <textarea id="text" rows="4" cols="50"></textarea>
+
+    <label for="shift">Shift:</label>
+    <input type="number" id="shift" value="3">
+
+    <button onclick="encodeText()">Encode</button>
+    <button onclick="decodeText()">Decode</button>
+
+    <h3>Result:</h3>
+    <p id="result"></p>
+</div>
+
+<script>
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+    function encode(text, shift) {
+        text = text.toUpperCase();
+        let encodedText = '';
+
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            if (chars.includes(char)) {
+                const charIndex = chars.indexOf(char);
+                const newIndex = (charIndex + shift) % chars.length;
+                encodedText += chars[newIndex];
+            } else {
+                encodedText += char; // Preserve non-alphabet characters
+            }
+        }
+
+        return encodedText;
+    }
+
+    function decode(encodedText, shift) {
+        encodedText = encodedText.toUpperCase();
+        let decodedText = '';
+
+        for (let i = 0; i < encodedText.length; i++) {
+            const char = encodedText[i];
+            if (chars.includes(char)) {
+                const charIndex = chars.indexOf(char);
+                const newIndex = (charIndex + chars.length - shift) % chars.length;
+                decodedText += chars[newIndex];
+            } else {
+                decodedText += char; // Preserve non-alphabet characters
+            }
+        }
+
+        return decodedText;
+    }
+
+    function encodeText() {
+        const text = document.getElementById('text').value;
+        const shift = parseInt(document.getElementById('shift').value);
+        const result = encode(text, shift);
+        document.getElementById('result').innerText = result;
+    }
+
+    function decodeText() {
+        const encodedText = document.getElementById('text').value;
+        const shift = parseInt(document.getElementById('shift').value);
+        const result = decode(encodedText, shift);
+        document.getElementById('result').innerText = result;
+    }
+</script>
+
+</body>
+</html>

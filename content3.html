@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"The Hacker's Labyrinth" - CyberFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+          body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #141414;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            position: fixed;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .navbar.scrolled {
+            background-color: #141414;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 30px;
+            margin-right: 20px;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: #e5e5e5;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .search-input {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ffffff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin-right: 20px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .hero {
+            position: relative;
+            height: 80vh;
+            background-image: url('images/binary3.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 50%;
+            margin-left: 50px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .hero-title {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .metadata {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .metadata > span {
+            margin-right: 15px;
+            padding: 2px 5px;
+            border: 1px solid #ffffff;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .genres {
+            margin-bottom: 20px;
+        }
+
+        .genre {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 3px 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .hero-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-play {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .btn-play:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .btn-info {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: rgba(109, 109, 110, 0.5);
+        }
+
+        .details-tabs {
+            background-color: #141414;
+            padding: 30px 50px;
+        }
+
+        .tabs-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            border-bottom: 2px solid #333;
+        }
+
+        .tab-item {
+            padding: 10px 20px;
+            margin-right: 20px;
+            cursor: pointer;
+            color: #777;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .tab-item:hover, .tab-item.active {
+            color: #fff;
+        }
+
+        .tab-item.active {
+            border-bottom: 2px solid #e50914;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            padding: 30px 0;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .episode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .episode {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .episode-thumbnail {
+            width: 200px;
+            height: 112px;
+            object-fit: cover;
+        }
+
+        .episode-info {
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        .episode-info h4 {
+            margin: 0 0 10px 0;
+        }
+
+        .episode-info p {
+            margin: 0 0 10px 0;
+            font-size: 0.9em;
+            color: #cccccc;
+        }
+
+        .episode-info .duration {
+            font-size: 0.8em;
+            color: #999999;
+        }
+
+        .popular-shows {
+            padding: 30px 50px;
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .show-item {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .show-item:hover {
+            transform: scale(1.05);
+        }
+
+        .show-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .show-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/cyberlogo.png" alt="CyberFlix" class="logo">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Start</a></li>
+                <li><a href="chapterlist.html">Stories</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <input type="text" placeholder="Search" class="search-input">
+            <img src="images/avatar.png" alt="User Avatar" class="user-avatar">
+        </div>
+    </nav>
+    <main>
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">"Digital-Man : The Hacker's Labyrinth"</h1>
+                <div class="metadata">
+                    <span class="age-rating">10+</span>
+                    <span class="duration">10 Episodes</span>
+                    <span class="year">2024</span>
+                    <span class="quality">4K Ultra HD</span>
+                </div>
+                <div class="genres">
+                    <span class="genre">Cyber</span>
+                    <span class="genre">Cartoon</span>
+                    <span class="genre">Tech</span>
+                </div>
+                <p class="hero-description">"
+                    Welcome to "The Hacker's Labyrinth"—a thrilling cyber-adventure where your hacking skills are the only thing standing between success and failure. Step into the shoes of Alex, a hacker navigating a high-security network filled with obstacles. From decoding binary and hexadecimal sequences to cracking encrypted data streams, each challenge brings you closer to uncovering crucial secrets. But be careful—every wrong move could mean the difference between escape and capture. Are you ready to outsmart the system and complete your mission? The hacker's labyrinth awaits!"</p>
+                <a href="../MissionBrief3.html" class="btn btn-play">▶ Play</a>
+            </div>
+        </div>
+        <section class="content-details">
+            <div class="details-tabs">
+                <ul class="tabs-list">
+                    <li class="tab-item active" data-tab="episodes">Episodes</li>
+                    <li class="tab-item" data-tab="agent-tools">Agent Tools</li>
+                    <li class="tab-item" data-tab="skills-needed">Skills Needed</li>
+                    <li class="tab-item" data-tab="learning-outcomes">Learning Outcomes</li>
+                </ul>
+                <div class="tab-content">
+                    <div id="episodes" class="tab-pane active">
+                        <div class="episode-list">
+                            <div class="episode">
+                                <img src="images/1.png" alt="Episode 1" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>1. Gateway</h4>
+                                    
+
+                                 
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/2.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>2. Firewall</h4>
+                                  
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/3.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>3. Data Stream</h4>
+                                
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/4.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>4. Security Drone</h4>
+                                
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/5.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>5. Alarm</h4>
+                                  
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/6.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>6. Code Lock</h4>
+                                   
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/7.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>7. Hidden Files</h4>
+                                
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/8.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>8. Secret Message I</h4>
+                        
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/9.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>9. Secret Message II</h4>
+               
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="images/10.png" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>10. The Final Lock</h4>
+                               
+                                    <span class="duration">5m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="agent-tools" class="tab-pane">
+                        <h3>Agent Tools</h3>
+                        <ul>
+                            <li>Binary-to-text converter</li>
+                            <li>ASCII code chart</li>
+                            <li>Digital logic analyzer</li>
+                            <li>Quantum computing simulator</li>
+                            <li>Holographic data visualizer</li>
+                            <li>Neural interface for rapid binary processing</li>
+                        </ul>
+                    </div>
+                    <div id="skills-needed" class="tab-pane">
+                        <h3>Skills Needed</h3>
+                        <ul>
+                            <li>Understanding of binary number system</li>
+                            <li>Proficiency in ASCII encoding and decoding</li>
+                            <li>Ability to convert between decimal, binary, and hexadecimal</li>
+                            <li>Pattern recognition in binary sequences</li>
+                            <li>Basic understanding of digital logic and Boolean algebra</li>
+                            <li>Familiarity with computer architecture fundamentals</li>
+                            <li>Quick mental arithmetic for binary operations</li>
+                        </ul>
+                    </div>
+                    <div id="learning-outcomes" class="tab-pane">
+                        <h3>Learning Outcomes</h3>
+                        <ul>
+                            <li>Master binary-to-text and text-to-binary conversions</li>
+                            <li>Understand the role of binary in digital data representation</li>
+                            <li>Develop skills in rapid binary calculations and conversions</li>
+                            <li>Gain insights into how computers process and store information</li>
+                            <li>Appreciate the fundamental nature of binary in modern technology</li>
+                            <li>Enhance problem-solving skills in a digital context</li>
+                            <li>Learn to identify patterns and structures in binary data</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="popular-shows">
+            <h2>Popular on CyberFlix</h2>
+            <div class="shows-grid">
+                <div class="show-item">
+                    <img src="images/money-heist.png" alt="Money Heist" class="show-image">
+                    <p class="show-title">Money Heist</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/Certicate4.png" alt="Certificate, Please" class="show-image" >
+                    <p class="show-title">Certificate, Please</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/binaryposter2.png" alt="Binary" class="show-image" >
+                    <p class="show-title">Digital Man</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/vigposter2.png" alt="Stranger Things" class="show-image" >
+                    <p class="show-title">Treasure Hunt</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/hashposter2.png" alt="The Witcher" class="show-image">
+                    <p class="show-title">Hash Vault</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                var navbar = document.querySelector('.navbar');
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Tab functionality
+            var tabItems = document.querySelectorAll('.tab-item');
+            var tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+
+                    tabItems.forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    tabPanes.forEach(function(pane) {
+                        pane.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

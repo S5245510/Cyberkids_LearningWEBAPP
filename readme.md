@@ -1,0 +1,151 @@
+# Cyberkids
+
+## Table of Contents
+
+1. [Aims and Objectives](#aims-and-objectives)
+2. [Features](#features)
+3. [Installation and Setup](#installation-and-setup)
+   - [Requirements](#requirements)
+   - [Running Cyberkids](#running-cyberkids)
+   - [Offline Deployment (Linux VM)](#offline-deployment-linux-vm)
+4. [Technical Details](#technical-details)
+5. [Usage](#usage)
+6. [Acknowledgments](#acknowledgments)
+
+Cyberkids is an interactive learning web application designed for high school students to gain a foundational understanding of cybersecurity concepts. It offers engaging lessons covering Caesar cipher, Vigenère cipher, Binary and Hexadecimal systems, and Hash functions. The web app aims to make learning about cybersecurity fun and accessible by incorporating interactive features.
+
+### Aims and Objectives
+
+E-learning is very common in most Brisbane high schools; however, most of the learning material consists of simple digitized paper material, with simple text and questions. Without fully utilizing the power of technology, we want to take a step forward to provide a better learning experience that motivates and encourages students to learn more complicated concepts and knowledge. By integrating interactive features, storytelling, and puzzles, Cyberkids aims to create an immersive learning environment that inspires curiosity and a deeper understanding of cybersecurity.
+
+### Features
+
+- **Dynamic Story Endings**: Student performance and ratings while solving puzzles will affect the final outcome of their journey. Depending on their success, students will either achieve a successful ending or face a bad ending, adding an element of challenge and excitement.
+
+- **Interactive Lessons**: Learn about encryption, hashing, and number systems with examples and activities.
+
+- **Stories and Puzzles**: Integrated stories and puzzles throughout the learning experience to create a more engaging journey. The chapters and puzzles are designed from easy to hard levels to gradually build student confidence and skills.
+
+- **Achievement, Scoreboard, and Rating System**: Track performance with achievements, a scoreboard, and a rating system to motivate and encourage students.
+
+- **Hint System**: Hints are provided in every puzzle and chapter to ensure students are not frustrated by failure and can continue learning.
+
+- **Tutor-Control**: Available on the chapter list page, where tutors can unlock specific chapters for students by entering a code. Below is an example of the HTML code used to implement this feature:
+
+  ```html
+  <div id="unlockModal" class="modal">
+      <div class="modal-content">
+          <h2>Select Chapters to Unlock</h2>
+          <div class="checkbox-group">
+              <label>
+                  <input type="checkbox" id="vigCheckbox"> Vigenère Cipher (Chapter 2) code: BELLASO
+              </label>
+              <label>
+                  <input type="checkbox" id="binaryCheckbox"> Binary Code (Chapter 3) code: BOOLE
+              </label>
+              <label>
+                  <input type="checkbox" id="hashCheckbox"> Hash Functions (Chapter 4) code: MERKLE
+              </label>
+          </div>
+          <button onclick="updateChapters()">Update</button>
+      </div>
+  </div>
+  ```
+
+- **Offline Capability**: Designed to be fully functional in offline environments, ideal for restricted access networks or local-only scenarios.
+
+- **Progress Tracking**: User progress is saved locally via `localStorage`, allowing students to track their learning journey.
+
+- **Local Resources**: All media resources (videos, images, fonts, and code) are packaged within the app, ensuring complete offline availability.
+
+- **AI-Generated Content**: Includes our own AI-generated content such as pictures, videos, and animations to enrich the learning experience.
+
+- **Simulations**: Exciting simulations, such as hacking and encoding/decoding, are included in all stories to make the experience more thrilling and immersive.
+
+- **Modular Development**: The code is developed in a modular way, allowing for easy expansion. If users want to add more content, such as new chapters, additional puzzles, or personalized achievements, they can do so by expanding the arrays in the corresponding code files. For example, to add a new puzzle in `vig_Puzzle.html`, simply follow the current format:
+
+  ```javascript
+  const puzzles = [
+      {
+          question: "Clue: Your first stop brings you to a towering presence that once stored life's most essential element. Remember the challenge of climbing higher?<br><br><strong class='encrypted-word'>Encrypted Word: HADICTKRV</strong>",
+          answer: "WaterTank",
+          hint: "This structure is typically tall and cylindrical, used to store and distribute water in communities or large buildings."
+      },
+      // skipping middle codes
+      {
+          question: "Clue: Your journey nears its end, where the sun sets and the rocking chair waits. This is where reflections become clearer, and the memories rest. What is the name of this peaceful final stop?<br><br><strong class='encrypted-word'>Encrypted Word: AOBGS</strong>",
+          answer: "Porch",
+          hint: "This covered entrance or platform along the outside of a house is often used for relaxation and enjoying the outdoors."
+      }
+  ];
+  ```
+
+  The puzzle page will automatically update the progress bar, total questions, and integrate with the `ProgressTracker` function without any further user modifications.
+
+## Installation and Setup
+
+### Requirements
+
+- A platform capable of running a local web server (e.g., Apache, Nginx, or Python SimpleHTTPServer).
+- An MP4 player integrated with the browser (most modern browsers have this capability).
+
+### Running Cyberkids
+
+1. **Download the Web App**: Obtain the complete Cyberkids package, which includes all necessary HTML, JavaScript, CSS files, videos, and other resources.
+
+2. **Set Up a Local Web Server**:
+
+   - For Windows, Mac, or Linux, you can use Python's built-in server:
+     ```sh
+     python -m http.server 8000
+     ```
+   - Alternatively, use Apache or any other web server to host the files locally.
+
+3. **Mission-Style Startup Script (Linux)**:
+
+   - You can use the provided desktop file `localhost.desktop` to run the mission-style script (`open_localhost_mission.sh`) automatically.
+   - Simply double-click on `localhost.desktop`, and it will execute the mission-style script to launch Cyberkids.
+   - This adds an interactive experience, creating a more fun and exciting start for students by simulating a mission brief.
+
+4. **Access the Application**: Open your browser and navigate to `http://localhost:8000` (or the port you've configured).
+
+### Offline Deployment (Linux VM)
+
+For the client, Cyberkids is designed to be deployed in a Linux-based virtual machine without internet access. The entire application is self-contained, meaning all resources are available locally.
+
+To deploy:
+
+1. Copy the Cyberkids folder into the Linux VM.
+2. Set up a local web server inside the VM (e.g., using Python or Apache).
+3. Launch the web server and access Cyberkids through the browser.
+
+## Technical Details
+
+- **LocalStorage for Progress Tracking**: User progress is saved using the browser's `localStorage` feature, allowing consistent tracking without requiring a server backend.
+- **Offline Resources**: Videos, images, fonts, and code are all stored locally, ensuring that the application works seamlessly in an offline environment.
+
+## Usage
+
+Cyberkids provides a series of modules, each designed to introduce and reinforce a key concept in cybersecurity:
+
+1. **Caesar Cipher**: Learn how simple substitution ciphers work.
+2. **Vigenère Cipher**: Understand more advanced encryption techniques using keyword-based ciphers.
+3. **Binary and Hexadecimal Systems**: Explore how computers represent data and how these systems are used in computing.
+4. **Hash Functions**: Discover the concept of hashing and its importance in cybersecurity.
+
+Students can watch instructional videos, participate in interactive puzzles, and track their progress throughout the course. All four chapters are related and have storyline and character consistency.
+
+## Contact Information
+
+For any questions or support, please contact:
+
+Tszhoi Leung
+
+- Email: [tszhoilllll@gmail.com](mailto\:tszhoilllll@gmail.com)
+- University Email: [tszhoi.leung@griffithuni.edu.au](mailto\:tszhoi.leung@griffithuni.edu.au)
+
+## Acknowledgments
+
+- Griffith University for supporting the development of this web app.
+- Dr. Elizabeth Chang for guidance on the cybersecurity content.
+

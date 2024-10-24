@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Roma Ultimatum - CyberFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/content.css">
+    <style>
+        .hero {
+        position: relative;
+        height: 80vh;
+        background-image: url('images/RomaBig.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/cyberlogo.png" alt="CyberFlix" class="logo">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="chapterlist.html">Series</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">New & Popular</a></li>
+                <li><a href="#">My List</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <input type="text" placeholder="Search" class="search-input">
+            <img src="images/avatar.png" alt="User Avatar" class="user-avatar">
+        </div>
+    </nav>
+    <main>
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">"The Roma Ultimatum"</h1>
+                <div class="metadata">
+                    <span class="age-rating">16+</span>
+                    <span class="duration">2h 15m</span>
+                    <span class="year">2023</span>
+                    <span class="quality">4K Ultra HD</span>
+                </div>
+                <div class="genres">
+                    <span class="genre">Action</span>
+                    <span class="genre">Thriller</span>
+                    <span class="genre">Historical</span>
+                </div>
+                <p class="hero-description">In the heart of ancient Rome, a Roman soldier is sent on a deadly mission to infiltrate the fortified city of Athens and retrieve a scroll containing the Greeks' most guarded military secrets. But when his covert operation is compromised, he finds himself in a deadly game of cat and mouse, pursued by enemies on all sides. With the fate of Rome hanging in the balance, he must decode the scroll and deliver it to Emperor Caesar before it's too late.</p>
+                <a href="transitionTravel.html?dest=romaLecture" class="btn btn-play">▶ Play Roma Mission</a>
+                <a href="#" class="btn btn-info">ⓘ More Info</a>
+            </div>
+        </div>
+        <section class="content-details">
+            <div class="details-tabs">
+                <ul class="tabs-list">
+                    <li class="tab-item active" data-tab="episodes">Episodes</li>
+                    <li class="tab-item" data-tab="agent-tools">Agent Tools</li>
+                    <li class="tab-item" data-tab="skills-needed">Skills Needed</li>
+                    <li class="tab-item" data-tab="learning-outcomes">Learning Outcomes</li>
+                </ul>
+                <div class="tab-content">
+                    <div id="episodes" class="tab-pane active">
+                        <div class="episode-list">
+                            <div class="episode">
+                                <img src="../images/Roma2_2.png" alt="Episode 1" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>1. The Secret Mission</h4>
+                                    <p>A skilled Roman soldier receives a covert mission to infiltrate Athens and retrieve a scroll with crucial military secrets.</p>
+                                    <span class="duration">55m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="../images/Roma3_2.jpeg" alt="Episode 2" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>2. Behind Enemy Lines</h4>
+                                    <p>Our hero navigates the dangerous streets of Athens, facing unexpected challenges and making unlikely allies.</p>
+                                    <span class="duration">52m</span>
+                                </div>
+                            </div>
+                            <div class="episode">
+                                <img src="../images/Roma4_3.png" alt="Episode 3" class="episode-thumbnail">
+                                <div class="episode-info">
+                                    <h4>3. The Betrayal</h4>
+                                    <p>A shocking betrayal puts the mission and our hero's life at risk, forcing him to question everything he knows.</p>
+                                    <span class="duration">58m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="agent-tools" class="tab-pane">
+                        <h3>Agent Tools</h3>
+                        <ul>
+                            <li>Cryptography handbook</li>
+                            <li>Caesar cipher decoder ring</li>
+                            <li>Historical context database</li>
+                            <li>Secure communication device</li>
+                            <li>Language translation software</li>
+                        </ul>
+                    </div>
+                    <div id="skills-needed" class="tab-pane">
+                        <h3>Skills Needed</h3>
+                        <ul>
+                            <li>Basic understanding of cryptography</li>
+                            <li>Analytical thinking</li>
+                            <li>Pattern recognition</li>
+                            <li>Historical knowledge of ancient Rome</li>
+                            <li>Attention to detail</li>
+                            <li>Problem-solving abilities</li>
+                        </ul>
+                    </div>
+                    <div id="learning-outcomes" class="tab-pane">
+                        <h3>Learning Outcomes</h3>
+                        <ul>
+                            <li>Understand the basics of the Caesar cipher</li>
+                            <li>Apply encryption and decryption techniques</li>
+                            <li>Recognize the historical significance of early cryptography</li>
+                            <li>Develop critical thinking skills in code-breaking</li>
+                            <li>Appreciate the evolution of cryptographic methods</li>
+                            <li>Gain insight into the importance of secure communication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="popular-shows">
+            <h2>Popular on CyberFlix</h2>
+            <div class="shows-grid">
+                <div class="show-item">
+                    <img src="images/money-heist.png" alt="Money Heist" class="show-image">
+                    <p class="show-title">Money Heist</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/Certicate4.png" alt="Certificate, Please" class="show-image" >
+                    <p class="show-title">Certificate, Please</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/binaryposter2.png" alt="Binary" class="show-image" >
+                    <p class="show-title">Digital Man</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/vigposter2.png" alt="Stranger Things" class="show-image" >
+                    <p class="show-title">Treasure Hunt</p>
+                </div>
+                <div class="show-item">
+                    <img src="images/hashposter2.png" alt="The Witcher" class="show-image">
+                    <p class="show-title">Hash Vault</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                var navbar = document.querySelector('.navbar');
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Tab functionality
+            var tabItems = document.querySelectorAll('.tab-item');
+            var tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+
+                    tabItems.forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    tabPanes.forEach(function(pane) {
+                        pane.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

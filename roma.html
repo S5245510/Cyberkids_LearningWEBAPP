@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roma Secret Mission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+        body {
+           
+            margin: 0;
+            padding: 0;
+            background-color: #1a0f0f;
+            color: #e6d2b5;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c1a1a;
+            color: #e6d2b5;
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #8c1c13;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar h2 {
+            
+            margin-top: 0;
+            border-bottom: 2px solid #8c1c13;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+        .sidebar a {
+            color: #e6d2b5;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar a:hover {
+            color: #f1c40f;
+            transform: translateX(5px);
+        }
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('path/to/dark-parchment-texture.jpg');
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+        h1 {
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            color: #8c1c13;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .input-container {
+            margin-bottom: 20px;
+            width: 540px;
+        }
+        .input-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #8c1c13;
+        }
+        .input-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #8c1c13;
+            border-radius: 5px;
+            background-color: #2c1a1a;
+            color: #e6d2b5;
+            font-family: 'Cinzel', serif;
+        }
+        button {
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-family: 'Trajan Pro', 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #b82a1f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        #caesar-table {
+            display: grid;
+            grid-template-columns: repeat(26, 30px);
+            gap: 1px;
+            margin-top: 20px;
+            background-color: rgba(140, 28, 19, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        #caesar-table .row {
+            display: contents;
+        }
+        #caesar-table .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #8c1c13;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #e6d2b5;
+        }
+        #caesar-table .row:first-child .cell {
+            background-color: #2c1a1a;
+            font-weight: bold;
+        }
+        #caesar-table .row:last-child .cell {
+            background-color: #4a2511;
+        }
+        #shift-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #f1c40f;
+        }
+        #ciphertext {
+            font-weight: bold;
+            color: #f1c40f;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .output-container {
+            margin-top: 20px;
+            width: 540px;
+        }
+        .output-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #8c1c13;
+        }
+        .output-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #8c1c13;
+            border-radius: 5px;
+            background-color: #2c1a1a;
+            color: #e6d2b5;
+            font-family: 'Cinzel', serif;
+        }
+
+
+
+.frequency-analysis {
+    background-color: #2c1a1a;
+    border: 2px solid #8c1c13;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.frequency-analysis h3 {
+    color: #f1c40f;
+    margin-top: 0;
+    border-bottom: 2px solid #8c1c13;
+    padding-bottom: 10px;
+}
+
+.analysis-steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.step {
+    flex-basis: 30%;
+    text-align: center;
+    background-color: #3c2a2a;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.step-number {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #8c1c13;
+    color: #e6d2b5;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.example-box {
+    background-color: #3c2a2a;
+    border: 1px solid #8c1c13;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.example-box h4 {
+    color: #f1c40f;
+    margin-top: 0;
+}
+
+.cipher-example {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.cipher-letter, .plain-letter {
+    font-size: 24px;
+    font-weight: bold;
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #2c1a1a;
+    border-radius: 5px;
+}
+
+.cipher-letter {
+    color: #f1c40f;
+}
+
+.plain-letter {
+    color: #e74c3c;
+}
+
+.test-yourself {
+    background-color: #2c1a1a;
+    border: 2px solid #8c1c13;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.test-yourself h3 {
+    color: #f1c40f;
+    margin-top: 0;
+    border-bottom: 2px solid #8c1c13;
+    padding-bottom: 10px;
+}
+
+.step-number {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #8c1c13;
+    color: #e6d2b5;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.hint {
+    color: #f1c40f;
+    font-style: italic;
+}
+
+.encrypted-message {
+    background-color: #3c2a2a;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.action-btn {
+    background-color: #8c1c13;
+    color: #e6d2b5;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.action-btn:hover {
+    background-color: #a82315;
+}
+
+.answer {
+    margin-top: 20px;
+    background-color: #3c2a2a;
+    border-radius: 5px;
+    border-left: 4px solid #f1c40f;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    max-height: 0;
+}
+
+.answer.show {
+    max-height: 500px; /* Adjust as needed */
+}
+
+.answer-content {
+    padding: 20px;
+}
+
+.answer h4 {
+    color: #f1c40f;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.decrypted-text, .shift-value {
+    font-size: 1.2em;
+    color: #2ecc71;
+    margin-bottom: 15px;
+}
+
+.explanation {
+    background-color: #2c1a1a;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.explanation p {
+    margin-bottom: 10px;
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Caesar's Secret Scroll</h2>
+        <ul>
+            <li><a href="romaLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="roma.html"><i class="fas fa-key"></i><span>Cipher Tool</span></a></li>
+            <li><a href="romaStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+           <!-- <li><a href="romaPuzzle.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>-->
+            <li><a href="achievements.html"><i class="fas fa-map-marked-alt"></i><span>Achievements</span></a></li>
+            <li><a href="scoreboard.html"><i class="fas fa-trophy"></i><span> Scoreboard</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Caesar's Secret Encoder</h1>
+        <div class="input-container">
+            <label for="key"><strong>Secret Key:</strong></label>
+            <input type="number" id="key" min="1" max="25" placeholder="Enter shift number (1-25)">
+        </div>
+        <div id="caesar-table"></div>
+        <div id="shift-info"></div>
+        
+        <button id="reset">Reset</button>
+
+
+
+        <div class="frequency-analysis">
+            <h2>Advanced Tips</h2>
+            
+            <h3>Frequency Analysis (Cryptanalysis)</h3>
+            <p>Look for the letters which appear most frequently in the ciphertext.</p>
+            <div class="analysis-steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <p>Identify common letters in English: E, T, A, O, I, N</p>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <p>Count letter frequencies in your ciphertext</p>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <p>Compare ciphertext frequencies with known English frequencies</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <h4>Example:</h4>
+                <p>If 'G' is most common in your ciphertext, it might represent 'E'</p>
+                <div class="cipher-example">
+                    <span class="cipher-letter">G</span> → <span class="plain-letter">E</span>
+                </div>
+                <p>This suggests a <strong>+2 shift</strong> in the Caesar cipher</p>
+            </div>
+        </div>
+        
+        <div class="test-yourself">
+            <h3>Test Yourself</h3>
+            <p>Try to decrypt this message using frequency analysis:</p>
+            <span class="step-number">*</span>
+            <span class="hint">Hint: The most common letter in English is 'E' and 'T'</span>
+            <p></p>
+            <span class="hint">Find the most common letter in the ciphertext and use that to determine the shift.</span>
+            <div class="encrypted-message">
+                <p id="ciphertext">QEBOB XOB QEOBB IBQQBOP.</p>
+            </div>
+            <button id="showAnswer" onclick="AchievementSystem.unlockAchievement('roma_tool')" class="action-btn">Show Answer</button>
+            <div id="answer" class="answer" style="display: none;">
+                <div class="answer-content">
+                    <h4>Decrypted Message:</h4>
+                    <p class="decrypted-text">THERE ARE THREE LETTERS.</p>
+                    <h4>Shift Used:</h4>
+                    <p class="shift-value">3</p>
+                    <div class="explanation">
+                        <h4>Explanation:</h4>
+                        <p>The most frequent letter in the ciphertext is 'B', which likely represents 'E'. 
+                           This suggests a shift of 3 (B → E).</p>
+                        <p>Applying this shift to the entire message reveals the decrypted text.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+
+
+        const keyInput = document.getElementById('key');
+        const shiftInfoElement = document.getElementById('shift-info');
+        const caesarTable = document.getElementById('caesar-table');
+
+        function createCaesarTable() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            caesarTable.innerHTML = '';
+            const shift = parseInt(keyInput.value) || 0;
+            
+            const topRow = document.createElement('div');
+            topRow.className = 'row';
+            const bottomRow = document.createElement('div');
+            bottomRow.className = 'row';
+
+            for (let i = 0; i < 26; i++) {
+                const topCell = document.createElement('div');
+                topCell.className = 'cell';
+                topCell.textContent = alphabet[i];
+                topRow.appendChild(topCell);
+
+                const bottomCell = document.createElement('div');
+                bottomCell.className = 'cell';
+                bottomCell.textContent = alphabet[(i + shift) % 26];
+                bottomRow.appendChild(bottomCell);
+            }
+
+            caesarTable.appendChild(topRow);
+            caesarTable.appendChild(bottomRow);
+            shiftInfoElement.textContent = `Shift: ${shift}`;
+        }
+
+
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            const answer = document.getElementById('answer');
+            answer.style.display = 'block';
+            setTimeout(() => answer.classList.add('show'), 10);
+            this.style.display = 'none';
+});
+        document.getElementById('reset').addEventListener('click', () => {
+            keyInput.value = '';
+            shiftInfoElement.textContent = '';
+            createCaesarTable();
+        });
+
+        keyInput.addEventListener('input', createCaesarTable);
+
+        createCaesarTable();
+
+
+
+    </script>
+
+
+</body>
+</html>

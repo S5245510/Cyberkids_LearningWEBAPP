@@ -1,0 +1,272 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #141414;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.navbar.scrolled {
+    background-color: #141414;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 30px;
+    margin-right: 20px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    color: #e5e5e5;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #ffffff;
+}
+
+.search-input {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #ffffff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-right: 20px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+
+.hero {
+    position: relative;
+    height: 80vh;
+    background-image: url('images/RomaBig.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 50%;
+    margin-left: 50px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.hero-title {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.metadata {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.metadata > span {
+    margin-right: 15px;
+    padding: 2px 5px;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.genres {
+    margin-bottom: 20px;
+}
+
+.genre {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 3px 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    font-size: 0.9em;
+}
+
+.hero-description {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-play {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-play:hover {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-info {
+    background-color: rgba(109, 109, 110, 0.7);
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: rgba(109, 109, 110, 0.5);
+}
+
+.details-tabs {
+    background-color: #141414;
+    padding: 30px 50px;
+}
+
+.tabs-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    border-bottom: 2px solid #333;
+}
+
+.tab-item {
+    padding: 10px 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    color: #777;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.tab-item:hover, .tab-item.active {
+    color: #fff;
+}
+
+.tab-item.active {
+    border-bottom: 2px solid #e50914;
+    margin-bottom: -2px;
+}
+
+.tab-content {
+    padding: 30px 0;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.episode-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.episode {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.episode-thumbnail {
+    width: 200px;
+    height: 112px;
+    object-fit: cover;
+}
+
+.episode-info {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.episode-info h4 {
+    margin: 0 0 10px 0;
+}
+
+.episode-info p {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    color: #cccccc;
+}
+
+.episode-info .duration {
+    font-size: 0.8em;
+    color: #999999;
+}
+
+.popular-shows {
+    padding: 30px 50px;
+}
+
+.shows-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.show-item {
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.show-item:hover {
+    transform: scale(1.05);
+}
+
+.show-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.show-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    font-size: 0.9em;
+    text-align: center;
+}

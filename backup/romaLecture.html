@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher: Roman Cryptography Lecture</title>
+
+    <link rel="stylesheet" href="../style/romaLecture.css">
+
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div id="mission-briefing" class="mission-briefing">
+        <div class="briefing-content">
+            <h2>Mission Briefing</h2>
+            <p id="briefing-message"></p>
+            <button id="acknowledge-btn">Acknowledge</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h2>Caesar's Scroll</h2>
+        <ul>
+            <li><a href="romaLecture.html"><i class="fas fa-scroll"></i><span> Lecture</span></a></li>
+            <li><a href="roma.html"><i class="fas fa-key"></i><span> Cipher Tool</span></a></li>
+            <li><a href="romaStory.html"><i class="fas fa-book"></i><span> Story</span></a></li>
+           <!-- <li><a href="romaPuzzle.html"><i class="fas fa-puzzle-piece"></i><span> Puzzle</span></a></li>-->
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+        </ul>
+    </div>
+    <div class="main-wrapper">
+        <div class="header">
+            <h1>Caesar Cipher: Roman Cryptography Lecture</h1>
+            <button id="acceptMissionBtn" >Accept the Mission</button>
+        </div>
+        <div class="main-content">
+            <h1>Caesar Cipher: Roman Cryptography Lecture</h1>
+
+            <!-- Introduction Section -->
+            <div class="section">
+                <h2>Introduction to Caesar Cipher</h2>
+                <!-- Add your introduction text here -->
+                <!-- <p>The Caesar cipher is one of the earliest known and simplest ciphers. It is a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet.</p> -->
+                
+                <p>The Caesar Cipher is one of the oldest and simplest forms of cryptography, dating back to the Roman era. It is a type of substitution cipher where each letter in the plaintext is replaced by a letter a fixed number of positions later in the alphabet. Named after Julius Caesar, who used it to secure military messages, this cipher laid the foundation for many modern encryption techniques.</p>
+                <p>For example, with a shift of 3, A becomes D, B becomes E, and so on.</p>
+                <ul>
+                    <li>Brute force attack (trying all 25 possible shifts)</li>
+                    <li>Frequency analysis</li>
+                    <li>Known plaintext attack</li>
+                </ul>
+
+                    <video width="800" height="600" controls>
+                        <source src="../images/The_Caesar_Cipher.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+
+            </div>
+            <!-- Historical Context -->
+            <div class="section">
+                <h2>Historical Context</h2>
+                <!-- Add historical information about Caesar cipher here -->
+                <!-- <p>Named after Julius Caesar, who used it in his private correspondence, this cipher was used to protect messages of military significance.</p> -->
+                <ul>
+                    <li>Julius Caesar used this cipher to protect his military communications. It is believed that he used a shift of 3 positions in his encryption.</li>
+                    <li>The Caesar cipher is part of a broader class of ciphers known as substitution ciphers, where each letter of the alphabet is substituted for another letter.</li>
+                    <li>Caesar used this method to send secret messages to his generals. While it might seem overly simple by today’s standards, it was effective in its time, mainly because literacy was low, and enemy forces were unlikely to know how to decode it.</li>
+
+                </ul>
+                <!-- Placeholder for an image of Julius Caesar or ancient Roman communication -->
+                <div class="image-placeholder">
+                    <img src="../images/Caesar.png" alt="Julius Caesar">
+                   <!-- [Place an image of Julius Caesar or ancient Roman communication here] -->
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="section">
+                <h2>How Caesar Cipher Works</h2>
+                <!-- Explain the mechanism of Caesar cipher here -->
+                <!-- <p>In a Caesar cipher, each letter in the plaintext is shifted a certain number of places down the alphabet. For example, with a shift of 1, A would be replaced by B, B would become C, and so on.</p> -->
+                 <ul>
+                    <li>The Caesar cipher is a substitution cipher where each letter in the plaintext is replaced by a letter a fixed number of positions down (or up) the alphabet. Here's a step-by-step explanation of how it works.</li>
+                    
+                 </ul>
+                 <ol>
+                    <li>Choose a Shift Value</li>
+                    <p>The cipher works by shifting the letters of the alphabet by a fixed number of positions. For example, a shift of 3 would mean that A becomes D, B becomes E, and so on.</p>
+                    <li>Encryption</li>
+                    <p>To encrypt a message</p>
+                    <ul>
+                        <li>Take each letter of the plaintext (the message you want to encrypt).</li>
+                        <li>Shift it by the fixed number (the key) of positions down the alphabet.</li>
+                        <li>If the shift goes past the letter Z, it wraps around to the beginning of the alphabet.</li>
+                    </ul>
+                    <p>For example, if you are using a shift of 3, here's how the alphabet would look.</p>
+                     <table>
+            <tr>
+                <th>Plain Alphabet</th>
+                <th>Shifted Alphabet (Shift = 3)</th>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>D</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>E</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>F</td>
+            </tr>
+            <tr>
+                <td>...</td>
+                <td>...</td>
+            </tr>
+            <tr>
+                <td>X</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td>Y</td>
+                <td>B</td>
+            </tr>
+            <tr>
+                <td>Z</td>
+                <td>C</td>
+            </tr>
+        </table>
+
+
+                 
+                <!-- Placeholder for an interactive Caesar cipher wheel or table -->
+                <div class="image-placeholder">
+                    <img src="../images/caesartable.png" alt="Julius Caesar">
+                </div>
+
+                <p>Now, to encrypt the word "HELLO" with a shift of 3</p>
+                <ul>
+                    <li>H → K</li>
+                    <li>E → H</li>
+                    <li>L → O</li>
+                    <li>L → O</li>
+                    <li>O → R</li>
+                    <p>So, the ciphertext (encrypted message) would be "KHOOR."</p>
+                    <video width="600" height="400" controls>
+                        <source src="../images/Caesardemo1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+
+                </ul>
+                <li>Decryption</li>
+                <p>To decrypt the message, the process is reversed.</p>
+                <ul>
+                    <li>Each letter of the ciphertext is shifted back by the same fixed number.</li>
+                    <li>For the previous example, to decrypt "KHOOR" with a shift of 3.</li>
+                    <li>K → H</li>
+                    <li>H → E</li>
+                    <li>O → L</li>
+                    <li>O → L</li>
+                    <li>R → O</li>
+                    <p>The decrypted message is "HELLO."</p>
+
+                </ul>
+            </ol>
+
+            </div>
+
+            <!-- Example -->
+            <div class="section">
+                <h2>Example of Caesar Cipher</h2>
+                <p>Example with a Shift of 1</p>
+                <ul>
+                    <li>Plaintext: ABCDEFGHIJKLMNOPQRSTUVWXYZ</li>      
+                    <p></p><li>Shifted Alphabet (1): BCDEFGHIJKLMNOPQRSTUVWXYZA</li></p>
+                    <p>Encrypting "HELLO" with a shift of 1 would give us "IFMMP."</p>
+                     <p>Key (Shift Value)</p>
+                     <ul>
+                        <li>The key in a Caesar cipher is the number of positions by which the alphabet is shifted. This number is needed for both encryption and decryption. For example.</li>
+                        <li>If the key is 3, you shift every letter 3 positions forward for encryption and 3 positions backward for decryption.</li>
+
+                     </ul>
+                     
+                </ul>
+                <!-- Provide a clear example of encoding and decoding -->
+                <p>Let's encrypt the word "ROME" with a shift of 3:</p>
+                <ul>
+                    <li>R → U</li>
+                    <li>O → R</li>
+                    <li>M → P</li>
+                    <li>E → H</li>
+                </ul>
+                <p>The encrypted message would be "URPH".</p>
+            </div>
+
+            <!-- Strengths and Weaknesses -->
+            <div class="section">
+                <h2>Strengths and Weaknesses</h2>
+                <!-- Discuss the advantages and disadvantages of Caesar cipher -->
+                <h3>Strengths:</h3>
+                <ol>
+                    <li>Simplicity</li>
+                    <p>The Caesar cipher is incredibly easy to understand and implement. It requires minimal computational power, making it accessible for manual encryption, even in the ancient world.</p>
+
+                    <li>Historical Importance</li>
+                    <p>The cipher holds significant historical value as it was one of the earliest forms of encryption, used by Julius Caesar to send confidential messages to his generals.</p>
+                    <li>Fast Encryption and Decryption</li>
+                    <p>Encryption and decryption using the Caesar cipher are fast because it only involves simple shifting of letters. This makes it useful in environments where quick encoding is more important than high security.</p>
+                    <li>No Need for Complex Key Management</li>
+                    <p>There is only one key (the shift value), and this can be easily communicated or remembered. This simplicity in key management reduces the complexity of the cipher.</p>
+
+                </ol>
+                <h3>Weaknesses of the Caesar Cipher</h3>
+                <ol>
+                    <li>Easy to Break</li>
+                    <p>The Caesar cipher is highly insecure because it only has 25 possible shifts (1–25). A brute force attack, where all possible shifts are tried, can quickly decipher the message. Modern computers can easily try all possibilities in a fraction of a second.</p>
+                    <li>Vulnerable to Frequency Analysis</li>
+                    <p>Even without a brute force attack, the Caesar cipher can be broken by analyzing letter frequencies. Each language has distinct letter frequency patterns (e.g., in English, 'E' is the most common letter), and these patterns remain unchanged even after a shift.</p>
+                    <li>Lack of Randomness</li>
+                    <p>Since the shift pattern is consistent across the entire message, anyone with a little knowledge of cryptography can recognize the consistent shifting and reverse it.</p>
+                    <li>No Protection Against Known Plaintext Attacks</li>
+                    <p>If an attacker knows even a small part of the plaintext (or can guess it), they can immediately determine the shift value and decrypt the rest of the message.</p>
+                    <li>Limited Key Space</li>
+                    <p>The Caesar cipher only allows for 25 unique shift values (since a shift of 0 or 26 leaves the message unchanged). This limited key space makes it trivial to try all possible keys in a brute force attack.</p>
+                    <li>Not Suitable for Modern Use</li>
+                    <p>The Caesar cipher offers almost no protection by modern standards. Today’s cryptographic needs require far more complex algorithms, such as AES or RSA, which provide far greater security.</p>
+                    
+                </ol>
+            </div>
+
+            <!-- Historical Uses -->
+            <div class="section">
+                <h2>Historical Uses of Caesar Cipher</h2>
+                <!-- Add information about how Caesar cipher was used throughout history -->
+                <p>The Caesar cipher has been used historically, especially in ancient times, for encrypting messages. While it may seem simple today, it played an important role in the early development of cryptography. Here are the most notable historical uses of the Caesar cipher.</p>
+                <ol>
+                    <li>Julius Caesar’s Military Communications</li>
+                        <ul>
+                            <li><p>Julius Caesar, the Roman general and statesman, is credited with creating and using the cipher to protect his military and political communications.</p></li>
+                            <li><p>He employed the Caesar cipher to encrypt messages sent to his generals during times of war, ensuring that even if a message was intercepted, the enemy wouldn't easily understand its contents.</p></li>
+                            <li><p>Caesar reportedly used a shift of 3, so each letter in his messages was shifted forward by three positions in the alphabet. This method helped maintain the secrecy of his tactical orders and political strategies.</p></li>
+                        </ul>
+                    <li>Usage by Caesar's Nephew Augustus</li>
+                        <ul>
+                            <li><p>Emperor Augustus, the successor to Julius Caesar, also used a variant of the Caesar cipher but with a shift of one position.</p></li>
+                            <li><p>This shows that the cipher was not only a military tool but also one used for personal and state communications during the Roman Empire.</p></li>
+                        </ul>
+                    <li>Prevention of Eavesdropping</li>  
+                    <ul>
+                        <li><p>In ancient Rome, literacy was not as widespread as it is today. Thus, encrypting messages using a simple cipher like the Caesar cipher was an effective way of protecting information from less educated or illiterate enemies and spies who might intercept messages.</p></li>
+                    </ul> 
+                    <li>Early Cipher Tools</li> 
+                    <ul>
+                        <li><p>Although the Caesar cipher itself is a simple substitution cipher, it laid the foundation for the development of more complex encryption methods throughout history. The knowledge and use of substitution ciphers grew from this early form of encryption, and many later ciphers were variations or improvements on the basic concept.</p></li>
+                        <li><p>For example, the Vigenère cipher, developed centuries later in the 16th century, was a more complex polyalphabetic cipher but still built upon the principle of shifting letters, similar to the Caesar cipher.</p></li>
+                        <li><p>Although the Caesar cipher itself was not used during World War I or World War II (as it was too simple by modern standards), it is often mentioned as an early stepping stone toward more complex ciphers like the Enigma machine used by the Germans in World War II.</p></li>
+                        <li><p>For example, the Vigenère cipher, developed centuries later in the 16th century, was a more complex polyalphabetic cipher but still built upon the principle of shifting letters, similar to the Caesar cipher.</p></li>
+                        <li><p>The Caesar cipher’s historical importance lies in its foundational role in the development of cryptography. Its use by Julius Caesar and others in the Roman Empire demonstrates its early application in securing communications. While obsolete for secure communication today, its legacy lives on in education, puzzles, and as an example of the evolution of cryptographic techniques.</p></li>
+                    </ul>
+
+                        
+                </ol>
+            </div>
+
+            <!-- Breaking the Cipher -->
+            <div class="section">
+                <h2>Breaking the Caesar Cipher</h2>
+                <!-- Explain methods to decrypt Caesar cipher -->
+                <p>The Caesar cipher can be broken using various methods, including:</p>
+                <!-- table -- >-->
+                 <p>Breaking the Caesar cipher is relatively easy because of its simplicity and limited key space. Here are a few common methods used to break it</p>
+                <ol>
+                    <li>Brute force attack (trying all 25 possible shifts)</li>
+                    <p>Since the Caesar cipher only has 25 possible shifts (because shifting by 26 or 0 results in the same message), a brute force attack can be used to try all possible shifts. This is the simplest way to break the cipher.</p>
+                    
+                    <p>With only 25 possible shifts, this process is fast, even by hand, and trivial for computers.</p>
+                    <li>Frequency analysis</li>
+                    <p>Frequency analysis is a technique used to exploit the fact that certain letters appear more frequently in a language than others. This is especially useful in simple substitution ciphers like the Caesar cipher.</p>
+                    
+                    <li>Known plaintext attack</li>
+                    <p>If part of the original plaintext (the unencrypted message) is known or can be guessed, you can easily break the cipher by deducing the shift used.</p>
+                    <li>Pattern Recognition</li>
+                    <p>Many words and letter combinations in a language follow predictable patterns. By recognizing these patterns, it is possible to break the Caesar cipher without resorting to brute force.</p>
+                    <li> Automated Tools</li>
+                    <p>There are many automated tools and programs available that can quickly break Caesar ciphers by trying all possible shifts or using frequency analysis.</p>
+                </ol>
+            </div>
+
+            <!-- Video Tutorial -->
+            <div class="section">
+                <h2>Video Tutorial</h2>
+                <!-- Placeholder for a video explaining Caesar cipher -->
+
+                    <video width="800" height="605" controls>
+                        <source src="../images/Shift_Cipher.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+    
+
+            </div>
+
+            <!-- Quiz or Interactive Element -->
+            <div class="section">
+                <h2>Test Your Knowledge</h2>
+                <!-- Add a quiz or interactive element here -->
+                <!--<div class="interactive-element"> -->
+
+                    <div class="quiz-container">
+            <h1>Test Your Knowledge: Caesar Cipher</h1>
+
+            <!-- Question 1 -->
+            <div class="question">
+                1. Who is credited with using the Caesar cipher?
+            </div>
+            <div class="choices">
+                <input type="radio" name="q1" value="0"> Albert Einstein<br>
+                <input type="radio" name="q1" value="0"> Isaac Newton<br>
+                <input type="radio" name="q1" value="1"> Julius Caesar<br>
+                <input type="radio" name="q1" value="0"> Alan Turing
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question">
+                2. What is the key in a Caesar cipher?
+            </div>
+            <div class="choices">
+                <input type="radio" name="q2" value="1"> The number of positions the alphabet is shifted<br>
+                <input type="radio" name="q2" value="0"> The word to be encrypted<br>
+                <input type="radio" name="q2" value="0"> The length of the message<br>
+                <input type="radio" name="q2" value="0"> The number of letters in the alphabet
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question">
+                3. How many possible shifts are there in a Caesar cipher?
+            </div>
+            <div class="choices">
+                <input type="radio" name="q3" value="0"> 10<br>
+                <input type="radio" name="q3" value="0"> 52<br>
+                <input type="radio" name="q3" value="1"> 25<br>
+                <input type="radio" name="q3" value="0"> Infinite
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question">
+                4. Which of the following is a Caesar cipher weakness?
+            </div>
+            <div class="choices">
+                <input type="radio" name="q4" value="0"> It is computationally expensive<br>
+                <input type="radio" name="q4" value="1"> It has only 25 possible shifts<br>
+                <input type="radio" name="q4" value="0"> It can't encrypt numbers<br>
+                <input type="radio" name="q4" value="0"> It was never used in history
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question">
+                5. What does "brute force" mean in relation to breaking a Caesar cipher?
+            </div>
+            <div class="choices">
+                <input type="radio" name="q5" value="1"> Trying all possible shifts<br>
+                <input type="radio" name="q5" value="0"> Using a dictionary of words<br>
+                <input type="radio" name="q5" value="0"> Trying the most common letters<br>
+                <input type="radio" name="q5" value="0"> Making random guesses
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers()">Submit</button>
+
+            <div class="result" id="result"></div>
+        </div>
+
+        <script>
+            let quizCompleted = false;
+
+            // Check if quiz is already completed when the page loads
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const briefingBox = document.getElementById('mission-briefing');
+                const briefingMessage = document.getElementById('briefing-message');
+                const acknowledgeBtn = document.getElementById('acknowledge-btn');
+
+                const message = "Agent, listen up. Caesar's cipher isn't just ancient history – it's the foundation of modern cryptography. Study it well. Your next mission may depend on it.";
+
+                briefingMessage.textContent = message;
+
+                // Show the briefing box
+                briefingBox.style.display = 'block';
+
+                // Hide the briefing box when acknowledged
+                acknowledgeBtn.addEventListener('click', function() {
+                    briefingBox.style.display = 'none';
+                });
+
+
+                if (localStorage.getItem('quizCompleted') === 'true') {
+                    quizCompleted = true;
+                    document.getElementById('acceptMissionBtn').disabled = false;
+                }
+            });
+
+            function checkAnswers() {
+                // Only check answers if the quiz hasn't been completed yet
+                if (!quizCompleted) {
+                    var score = 0;
+                    var totalQuestions = 5;
+
+                    var q1 = document.querySelector('input[name="q1"]:checked');
+                    var q2 = document.querySelector('input[name="q2"]:checked');
+                    var q3 = document.querySelector('input[name="q3"]:checked');
+                    var q4 = document.querySelector('input[name="q4"]:checked');
+                    var q5 = document.querySelector('input[name="q5"]:checked');
+
+                    if (q1 && q1.value === "1") score++;
+                    if (q2 && q2.value === "1") score++;
+                    if (q3 && q3.value === "1") score++;
+                    if (q4 && q4.value === "1") score++;
+                    if (q5 && q5.value === "1") score++;
+
+                    var result = document.getElementById("result");
+                    result.innerHTML = "You scored " + score + " out of " + totalQuestions + ".";
+
+                    if (score === totalQuestions) {
+                        result.style.color = "green";
+                        result.innerHTML += " Great job!";
+                        quizCompleted = true;
+                        localStorage.setItem('quizCompleted', 'true');
+                        document.getElementById('acceptMissionBtn').disabled = false;
+                    } else {
+                        result.style.color = "red";
+                        result.innerHTML += " Keep studying!";
+                    }
+                }
+            }
+
+            document.getElementById('acceptMissionBtn').addEventListener('click', function() {
+                if (!quizCompleted) {
+                    alert("Please read the lecture and complete the 'Test Your Knowledge' section successfully to start the mission.");
+                } else {
+                    window.location.href = 'MissionBrief1.html';
+                }
+            });
+        </script>
+
+                </div>
+            </div>
+
+            <!-- Further Reading -->
+            <div class="section">
+                <h2>Further Reading</h2>
+                <!-- Add links or references for additional learning -->
+                <ul>
+                    <li><a href="#">The History of Cryptography</a></li>
+                    <li><a href="#">Advanced Encryption Methods</a></li>
+                    <li><a href="#">Caesar Cipher in Popular Culture</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script defer src="../style/all.min.js"></script>
+</body>
+</html>
+
+

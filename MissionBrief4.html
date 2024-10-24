@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Briefing:  Toolkit</title>
+    <link rel="stylesheet" href="../style/missionbrief.css">
+    <link rel="stylesheet" href="../style/all.min.css">
+    <style>
+       
+    </style>
+</head>
+<body>
+
+    <div id="custom-alert" class="custom-alert">
+        <div class="alert-content">
+            <h2>Urgent Mission Update</h2>
+            <p id="alert-message"></p>
+            <button id="alert-confirm">Accept Mission</button>
+        </div>
+    </div>
+
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <h1 class="mission-title">Mission Briefing</h1>
+        <div class="content-wrapper">
+            <!-- Left column -->
+            <div class="left-column">
+                <!-- Character display area -->
+                <!-- This div can be used to display a large character, icon, or visual representation -->
+                <div class="character-display" id="character-display">
+                    <video width="100%" height="100%" autoplay loop muted playsinline>
+                        <source src="../images/missionbriefing.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="futuristic-element">
+                    <div class="agent-status">
+                        <div class="status-item">
+                            <div class="status-label">Agent ID</div>
+                            <div class="status-value" id="agent-id-display">Not Set</div>                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Clearance Level</div>
+                            <div class="status-value">Delta</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Mission Status</div>
+                            <div class="status-value">Active</div>
+                        </div>
+                    </div>
+                    <div class="mission-timer" id="mission-timer">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="right-column">
+                <!-- Terminal-like explanation container -->
+                <div class="explanation-container">
+                    <!-- Terminal header with title and control buttons -->
+                    <div class="terminal-header">
+                        <div class="terminal-title">Mission Details</div>
+                        <div class="terminal-controls">
+                            <span class="terminal-minimize"></span>
+                            <span class="terminal-maximize"></span>
+                            <span class="terminal-close"></span>
+                        </div>
+                    </div>
+                    <!-- Area for new things to add -->
+                    <div id="explanation"></div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="window.location.href='./hash/hashLecture.html'">Accept Mission</button>
+                        <button class="action-button">Review Intel</button>
+                        <button class="action-button">Equipment Check</button>
+                    </div>
+                </div>
+                <div class="equipment-block">
+                    <h3 class="equipment-title">Mission Equipment: Cryptographic Techniques and Tools</h3>
+                
+                    <div class="technique">
+                        <h4>Hashing Algorithms (SHA-256)</h4>
+                        <p>Understand how hashing algorithms, like SHA-256, create unique fixed-length outputs from any input data.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Highly secure and difficult to reverse-engineer</li>
+                                    <li>Widely used in modern cryptographic systems</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Once hashed, data cannot be easily recovered</li>
+                                    <li>Hash collisions, while rare, can occur with enough computing power</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="technique">
+                        <h4>Brute-force Attacks</h4>
+                        <p>Use brute-force methods to test every possible combination to find the correct hash or key.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Guaranteed to work given enough time and resources</li>
+                                    <li>Effective when other methods fail</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Time-consuming and requires significant processing power</li>
+                                    <li>May trigger security protocols if done too slowly</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="technique">
+                        <h4>Rainbow Tables</h4>
+                        <p>Use precomputed rainbow tables to quickly find hashed passwords, speeding up the decryption process.</p>
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h5>Pros:</h5>
+                                <ul>
+                                    <li>Highly efficient for cracking weak passwords</li>
+                                    <li>Reduces the computational load of brute-force attacks</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h5>Cons:</h5>
+                                <ul>
+                                    <li>Limited to precomputed hashes</li>
+                                    <li>Less effective against strong, unique passwords</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+    <script>
+
+
+            function showMissionAlert() {
+                alert("You've been on this page for 3 minutes. Click 'Accept Mission' to start your adventure!");
+            }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const explanation = document.getElementById('explanation');
+            const briefing = [
+                "Agent, this mission is of the utmost importance. We're sending you into a high-security digital vault, where your expertise in cryptography is needed.",
+                "Your target: Assist the team of young hackers as they try to crack the hash protecting a vault that contains crucial files.",
+                "Objective: Work with Nova, Zoe, and the rest of the team to break through SHA-256 encryption and solve a series of increasingly difficult cryptographic puzzles.",
+                "Warning: The vault is protected by some of the most advanced hash algorithms. Even a small mistake could lock you out permanently.",
+                "Technique: Use your knowledge of hash collisions and brute-force attacks to find vulnerabilities in the encryption and bypass the vault's defenses.",
+                "Reward: Every successful decryption unlocks critical information and brings you closer to saving the day and recovering the vault’s contents.",
+                "Remember, Agent, the future of secure communications depends on your ability to crack this code. Time is running out.",
+                "Good luck. The Hash Cracker mission awaits!"
+            ];
+
+
+
+            function typeWriter(text, i) {
+                if (i < text.length) {
+                    explanation.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(function() {
+                        typeWriter(text, i);
+                    }, 50);
+                } else {
+                    explanation.innerHTML += '<br><br>';
+                    showNextLine();
+                }
+            }
+
+            function showNextLine() {
+                if (briefing.length > 0) {
+                    const line = briefing.shift();
+                    typeWriter(line, 0);
+                }
+            }
+
+            showNextLine();
+
+            
+
+            // Mission timer
+            let seconds = 0;
+            const missionTimer = document.getElementById('mission-timer');
+            const timerInterval = setInterval(function() {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                missionTimer.textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+                
+                // Check if 5 minutes have passed
+                if (seconds === 180) { 
+                    showMissionAlert();
+                }
+            }, 1000);
+
+            const agentIDDisplay = document.getElementById('agent-id-display');
+            const storedAgentID = localStorage.getItem('UserID');
+            if (storedAgentID) {
+                agentIDDisplay.textContent = "Agent-" + storedAgentID;
+            } else {
+                agentIDDisplay.textContent = 'Not Set';
+            }
+
+    // Function to show mission alert
+    function showMissionAlert() {
+    const customAlert = document.getElementById('custom-alert');
+    const alertMessage = document.getElementById('alert-message');
+    const alertConfirm = document.getElementById('alert-confirm');
+
+    alertMessage.textContent = "Agent, your expertise is urgently needed. The window of opportunity is closing. Accept the mission now to safeguard the future!";
+    customAlert.style.display = 'block';
+
+    alertConfirm.onclick = function() {
+        customAlert.style.display = 'none';
+        window.location.href = './hash/hashLecture.html';
+    };
+}
+
+            const typingEffect = document.createElement('div');
+            typingEffect.className = 'typing-effect';
+            typingEffect.textContent = 'Initializing mission parameters...';
+            document.querySelector('.futuristic-element').appendChild(typingEffect);
+        });
+    </script>
+        <script defer src="../style/all.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decryption Simulation</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CryptoJS for MD5 Hashing -->
+    <script src="../style/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="../style/css/all.min.css">
+    <script src="../progressTracker.js"></script>
+    <script src="../achievements.js"></script>
+
+    <style>
+
+        /* Reset and Base Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #ffffff;
+        display: flex;
+        min-height: 100vh;
+    }
+
+     /* Sidebar Styles */
+     .sidebar {
+            width: 250px;
+            background-color: #3A3F55; /* Darker color for sidebar */
+            color: #FFFFFF; /* Light text color */
+            padding: 30px 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #4F5D75;
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            color: #CBCDCD; /* Lighter text color for links */
+            text-decoration: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #F29269; /* Accent color on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2);
+        }
+
+    /* Main Content Styles */
+    .main-content {
+        margin-left: 270px; /* Width of sidebar + some spacing */
+        padding: 20px;
+        flex: 1;
+    }
+
+    .main-content h1 {
+        color: #ea5c1f;
+        margin-bottom: 10px;
+    }
+
+    .main-content h2 {
+        color: #ddd;
+        margin-bottom: 30px;
+    }
+
+    /* Simulation Container */
+    .simulation-container {
+        background-color: #2c2c2c;
+        padding: 20px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .simulation-container h3 {
+        color: #ea5c1f;
+        margin-bottom: 10px;
+    }
+
+    .simulation-container p {
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    /* File Grid */
+    .file-grid {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .file-item {
+        background-color: #3a3f55;
+        color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+        width: 400px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .file-item:hover {
+        transform: scale(1.05);
+    }
+
+    .file-icon {
+        font-size: 50px;
+        margin-bottom: 10px;
+        color: #ea5c1f;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 60%;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .file-item:hover .overlay {
+        opacity: 1;
+    }
+
+    .overlay-text {
+        color: #ffffff;
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #e41c11;
+    }
+
+    /* Decrypt Button */
+    .decrypt-btn {
+        background-color: #ea5c1f;
+        width: 50%;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .decrypt-btn:hover {
+        background-color: #f29269;
+    }
+
+    /* Form Group */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #ddd;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    /* Modals */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 100; /* Sit on top */
+        margin-bottom: 50px;
+        left: 0;
+        top: 0;
+        width: 80%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.85); /* Black w/ opacity */
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: #2c2c2c;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #444;
+        width: 80%;
+        max-width: 700px;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-content h2 {
+        color: #ea5c1f;
+        margin-bottom: 15px;
+    }
+
+    .modal-content p {
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .modal-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+    .modal-content table, .modal-content th, .modal-content td {
+        border: 1px solid #555;
+    }
+
+    .modal-content th, .modal-content td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    .modal-content th {
+        background-color: #3a3f55;
+    }
+
+    .modal-content td {
+        background-color: #444;
+    }
+
+    .modal-content button {
+        margin-top: 10px;
+        background-color: #ea5c1f;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal-content button:hover {
+        background-color: #f29269;
+    }
+
+    /* Highlight selected row */
+    table tr.selected {
+        background-color: #50577a;
+    }
+
+
+    /* Hacked Files Animation */
+    .hacked-files .file-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .hacked-files .file-item.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        display: none;
+        background-color: #444;
+        border-radius: 25px;
+        overflow: hidden;
+        margin-top: 20px;
+        width: 100%;
+        height: 25px;
+    }
+
+    .progress-bar label
+    {
+        color: #fff;
+        padding: 5px;
+    }
+
+
+
+    .progress-bar {
+        background-color: #ea5c1f;
+        color: #fff;
+        width: 0%;
+        height: 100%;
+        text-align: center;
+        line-height: 25px;
+        transition: width 0.5s ease;
+    }
+    /* Hacker Animation Section */
+    .hacker-section {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .canvas-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    canvas {
+        width: 100%;
+        height: 150px;
+        background: #000;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Output Console */
+    .output-console {
+        background-color: #000;
+        color: #00ff00;
+        height: 150px;
+        overflow-y: auto;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+    }
+
+    /* Result Output */
+    .result-output {
+        background-color: #333;
+        color: #0f0;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 5px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Password Container */
+    .password-container {
+        background-color: #2c2c2c;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+
+    .password-container h3 {
+        color: #ea5c1f;
+        margin-bottom: 15px;
+    }
+
+    .password-container input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    .simulation-container input {
+        width: 50%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-bottom: 10px;
+
+    }
+
+    .password-container #hashedPasswordDisplay {
+        margin-top: 10px;
+        color: #0f0;
+        word-break: break-all;
+    }
+
+    /* Password Strength Meter */
+    .strength-meter {
+        width: 100%;
+        height: 25px;
+        background-color: #444;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .strength-bar {
+        height: 100%;
+        width: 0%;
+        background-color: red;
+        border-radius: 5px;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .strength-label {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 200px;
+        }
+
+        .main-content {
+            margin-left: 220px;
+        }
+
+        .file-item {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .sidebar {
+            display: none;
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+    }
+
+    .file-password {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        border: 1px solid #444;
+        background-color: #2c2c2c;
+        color: #fff;
+    }
+
+    .file-item.safe .overlay-text {
+        color: #00ff00;
+    }
+
+    .file-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .password-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .file-password {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #444;
+        background-color: #2c2c2c;
+        color: #fff;
+    }
+
+    .decrypt-btn, .open-btn {
+        width: 50%;
+        padding: 8px;
+        background-color: #ea5c1f;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .decrypt-btn:hover, .open-btn:hover {
+        background-color: #ff7f50;
+    }
+
+ 
+
+    .file-item.decrypted .open-btn {
+        display: block;
+    }
+
+    #completeButton {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        width: 30%;
+        margin-left: 0%;
+        background-color: #47f347;
+        color: #fff;
+        border: none;
+        border-radius: 55px;
+        cursor: not-allowed;
+        opacity: 0.5;
+        transition: opacity 0.3s, background-color 0.3s;
+    }
+
+    #completeButton:not(:disabled) {
+        cursor: pointer;
+        border-radius: 55px;
+        opacity: 1;
+    }
+
+    #completeButton:not(:disabled):hover {
+        background-color: #ff7f50;
+             border-radius: 55px;
+    }
+
+        .password-suggestion {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: rgba(129, 218, 185, 0.1);
+        border: 2px solid #81dab9;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #e0e0e0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .password-suggestion h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #81dab9;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .password-suggestion ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+
+        .password-suggestion li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .password-suggestion li::before {
+            content: '•';
+            color: #c1fd34;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .password-suggestion p {
+            margin: 0;
+            font-style: italic;
+            color: #fca311;
+        }
+        tr.recommended {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+tr.disabled {
+    opacity: 0.5;
+}
+
+.intro-container {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mission-briefing, .tool-explanation {
+    width: 80%;
+    background-color: #0a0a0a;
+    border-left: 4px solid #00ff00;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #00ff00;
+    font-family: 'Courier New', monospace;
+    color: #00ff00;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-briefing::before, .tool-explanation::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, #00ff00, #0a0a0a);
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.mission-briefing h2, .tool-explanation h3 {
+    color: #00ff00;
+    margin-top: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.mission-briefing ol, .tool-explanation ol {
+    padding-left: 20px;
+    list-style-type: none;
+    counter-reset: item;
+}
+
+.mission-briefing ol li, .tool-explanation ol li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.mission-briefing ol li:before, .tool-explanation ol li:before {
+    content: counter(item) ".";
+    counter-increment: item;
+    position: absolute;
+    left: 0;
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.mission-briefing ol li:after, .tool-explanation ol li:after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background-color: #00ff00;
+}
+
+.warning {
+    color: #ff0000;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+}
+
+
+.hint {
+        display: block;
+        color: #fca311;
+        font-style: italic;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 2px rgba(252, 163, 17, 0.5);
+        text-align: left;
+        font-size: 0.9em;
+    }
+
+    .strong-password-heading {
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+</style>
+</head>
+
+
+   
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>The Distress Vault</h2>
+        <ul>
+            <li><a href="hashLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="hash.html"><i class="fas fa-key"></i><span>Hashing Tool</span></a></li>
+            <li><a href="hashStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+
+            <li><a href="../achievements.html"><i class="fas fa-map-marked-alt"></i><span> Achievements</span></a></li>
+            <li><a href="javascript:clearLocalStorage()"><i class="fas fa-trash-alt"></i><span>Clear Progress</span></a></li>
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Decryption Simulation</h1>
+        <h2>Crack the hashes to save the school's vault from falling into the wrong hands!</h2>
+        <div class="mission-briefing">
+            <h2>Your Mission:</h2>
+            <ol>
+                <li>Examine the locked files below. These contain crucial information for the school.</li>
+                <li>For each file, click "Analyze file" to view its hash and recommended decryption method.</li>
+                <li>Select Preferred Attack Method to crack each file's hash and enter the password to unlock.</li>
+                <li>Once you've cracked all three files, click "Complete Mission" to secure the vault.</li>
+                <li>Try the extra activities below to learn more about vulnerabilities in common passwords.</li>
+            </ol>
+            <p class="warning">Warning: Each attempt is logged. Try to complete the mission efficiently!</p>
+        </div>
+
+        <!-- Locked Files Section -->
+        <div id="hackedFiles" class="container" style="display: none;">
+            <h3>These files have been hacked and hashed!</h3>
+            <div class="file-grid">
+                <div class="file-item" id="file1">
+                    <i class="fas fa-file-word file-icon"></i>
+                    <p>Report.docx</p>
+                    <div class="overlay">
+                        <span class="overlay-text">Encrypted</span>
+                    </div>
+                    <button class="open-btn" onclick="openFile('5f4dcc3b5aa765d61d8327deb882cf99', 'Report.docx', 'MD5', 'dictionary')">Analyze file</button>
+                    <div class="password-section">
+                        <input type="text" class="file-password" placeholder="Enter password">
+                        <button class="decrypt-btn" onclick="checkPassword('file1', 'password', '5f4dcc3b5aa765d61d8327deb882cf99', 'MD5', 'dictionary')">Unlock</button>
+                    </div>
+                    </div>
+                    
+                    <div class="file-item" id="file2">
+                    <i class="fas fa-file-excel file-icon"></i>
+                    <p>Budget.xlsx</p>
+                    <div class="overlay">
+                        <span class="overlay-text">Access Denied</span>
+                    </div>
+                    <button class="open-btn" onclick="openFile('e99a18c428cb38d5f260853678922e03', 'Budget.xlsx', 'SHA-1', 'rainbow')">Analyze file</button>
+                    <div class="password-section">
+                        <input type="text" class="file-password" placeholder="Enter password">
+                        <button class="decrypt-btn" onclick="checkPassword('file2', 'abc123', 'e99a18c428cb38d5f260853678922e03', 'SHA-1', 'rainbow')">Unlock</button>
+                    </div>
+                    </div>
+                    
+                    <div class="file-item" id="file3">
+                    <i class="fas fa-file-powerpoint file-icon"></i>
+                    <p>Presentation.pptx</p>
+                    <div class="overlay">
+                        <span class="overlay-text">Corrupted</span>
+                    </div>
+                    <button class="open-btn" onclick="openFile('098f6bcd4621d373cade4e832627b4f6', 'Presentation.pptx', 'MD5 (Short Password)', 'brute-force')">Analyze file</button>
+                    <div class="password-section">
+                        <input type="text" class="file-password" placeholder="Enter password">
+                        <button class="decrypt-btn" onclick="checkPassword('file3', 'test', '098f6bcd4621d373cade4e832627b4f6', 'MD5 (Short Password)', 'brute-force')">Unlock</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="completeButton" disabled style=" margin-left : 23%; margin-right : 20%;">Complete Mission</button>
+
+
+ <h1> Extra activities </h1>
+
+        
+        <script>
+            let decryptedFiles = 0;
+        
+            function checkPassword(fileId, correctPassword, correctHash, attackMethod) {
+                const fileItem = document.getElementById(fileId);
+                const passwordInput = fileItem.querySelector('.file-password');
+                const overlayText = fileItem.querySelector('.overlay-text');
+                const enteredPassword = passwordInput.value;
+
+                // Hash the entered password (assuming you're using MD5 for this example)
+                const hashedPassword = CryptoJS.MD5(enteredPassword).toString();
+
+                if (hashedPassword === correctHash) {
+                    overlayText.textContent = 'Decrypted';
+                    overlayText.style.color = '#00ff00';
+                    fileItem.classList.add('decrypted');
+                    passwordInput.disabled = true;
+                    fileItem.querySelector('.decrypt-btn').disabled = true;
+                    fileItem.querySelector('.open-btn').style.display = 'block';
+                    decryptedFiles++;
+                    checkAllFilesDecrypted();
+                } else {
+                    alert(`Incorrect password. Click "Open file" and use the ${attackMethod} attack to crack the password.`);
+                }
+            }
+        
+            function checkAllFilesDecrypted() {
+                const completeButton = document.getElementById('completeButton');
+                if (decryptedFiles === 3) {
+                    completeButton.disabled = false;
+                }
+            }
+        
+
+            document.getElementById('completeButton').addEventListener('click', function() {
+                const storyKey = 'hash';
+                const currentLevel = 3;
+                ProgressTracker.recordAttempt(storyKey, currentLevel);
+                const stars = ProgressTracker.calculateStars(storyKey, currentLevel);
+                console.log(`Earned ${stars} stars for level ${currentLevel}`);
+                alert(`Congratulations! You've decrypted all files and earned ${stars} stars!`);
+               
+                window.location.href = '../end.html';
+            });
+        </script>
+
+         <!-- Password Container -->
+            <div id="password-hash" class="password-container">
+                <h3>Generate your password's hash below and try to see if you can crack your own password using the above tool!!</h3>
+                <label for="passwordInput">Enter your password: </label>
+                <p class="hint">Try some simple passwords like "password", "123456", "qwerty" which are commonly used and are already leaked.</p>
+                <input type="password" id="passwordInput" placeholder="Your password" style="width: 50%;">
+                <button id="hashPasswordButton" class="decrypt-btn">Hash My Password</button>
+                <p id="hashedPasswordDisplay"></p>
+            </div>
+
+            
+        
+        <!-- Decrypt a Hash Section -->
+        <div id="decrypt-hash" class="simulation-container">
+            <h3>Decrypt a Hash</h3>
+            <div class="form-group">
+                <label for="hashInput">Enter the Hash:</label>
+                <input type="text" id="hashInput" placeholder="Paste  hash here">
+            </div>
+
+            <div class="form-group">
+                <label for="attackMethod">Choose Attack Method:</label>
+                <select id="attackMethod" style="width: 50%;">
+                    <option value="rainbow" >Rainbow Table</option>
+                    <option value="dictionary">Dictionary Attack</option>
+                    <option value="brute-force">Brute-Force Attack</option>
+                </select>
+                <p> Note: Brute force attack in this tool can only crack the passwords of max character length 4.</p>
+            </div>
+
+            <button id="helpButton" class="decrypt-btn" onclick="showHelp()">Help</button>
+
+            <!-- Help Modal -->
+            <div id="helpModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeHelpModal()">&times;</span>
+                    <h2>Attack Methods Explained</h2>
+                    <p id="attackExplanation">Select an attack method to see its explanation.</p>
+                    <button class="decrypt-btn" onclick="closeHelpModal()">Close</button>
+                </div>
+            </div>
+        
+
+            <!-- Initial Message Modal -->
+            <div id="initialMessageModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeInitialMessageModal()">&times;</span>
+                    <h2>File Encrypted</h2>
+                    <p>The file you've selected is encrypted. To unlock it, you'll need to choose a method to decrypt the hash.</p>
+                    <button class="continue-btn" onclick="closeInitialMessageModal()">Continue to Decryption Methods</button>
+                </div>
+            </div>
+
+            <!-- Attack Method Comparison Modal -->
+            <div id="attackOptionsModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeAttackOptionsModal()">&times;</span>
+                    <h2>Select Attack Method</h2>
+                    <p>Please choose an attack method to decrypt the hash. Below are the details for each method:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Select</th> <!-- Added Select Column -->
+                                <th>Attack Method</th>
+                                <th>Success Rate</th>
+                                <th>Time Required</th>
+                                <th>CPU Usage</th>
+                                <th>Memory Usage</th>
+                                <th>Weaknesses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="radio" name="attackMethod" value="brute-force"></td>
+                                <td>Brute-Force Attack</td>
+                                <td>100% (guaranteed, eventually)</td>
+                                <td>Varies (minutes to years based on complexity)</td>
+                                <td>100% (high CPU usage)</td>
+                                <td>Low (50MB)</td>
+                                <td>
+                                    <ul>
+                                        <li>Guaranteed success but can take a very long time</li>
+                                        <li>Highly time-consuming for long or complex passwords</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="attackMethod" value="rainbow"></td>
+                                <td>Rainbow Table Attack</td>
+                                <td>90% (for common passwords)</td>
+                                <td>Instant (if precomputed table exists)</td>
+                                <td>10%-30% (low CPU usage)</td>
+                                <td>High (1GB+ memory for tables)</td>
+                                <td>
+                                    <ul>
+                                        <li>Requires large precomputed tables</li>
+                                        <li>Ineffective against salted hashes</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="attackMethod" value="dictionary"></td>
+                                <td>Dictionary Attack</td>
+                                <td>50%-80% (depends on wordlist)</td>
+                                <td>Varies (minutes to hours)</td>
+                                <td>40%-70% (moderate CPU usage)</td>
+                                <td>Medium (200MB-500MB for wordlist)</td>
+                                <td>
+                                    <ul>
+                                        <li>Limited by the quality and size of the wordlist</li>
+                                        <li>Ineffective for complex or random passwords</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    <button class="decrypt-btn" onclick="selectAttackMethod()">Select Method</button>
+                </div>
+            </div>
+
+
+            <button id="startButton" class="decrypt-btn" onclick="startDecryptionProcess()">Start Decryption</button>
+
+    </div>
+    <h2 class="strong-password-heading">Now Try to Create a Strong Password</h2>
+    <!-- Password Strength Meter -->
+    <div id="password-strength" class="simulation-container">
+        <h1>Password Strength Meter</h1>
+        <input type="password" id="password" placeholder="Enter your password" oninput="checkPasswordStrength()">
+        <div id="strength-meter" class="strength-meter">
+            <div id="strength-bar" class="strength-bar"></div>
+            <div id="strength-label" class="strength-label">Strength</div>
+        </div>
+        <div id="password-suggestion" class="password-suggestion"></div>
+    </div>
+
+            <!-- Decryption Process Modal -->
+            <div id="decryptionModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeDecryptionModal()">&times;</span>
+                    <h2>Decryption in Progress</h2>
+                    <label>Progress: 100X Faster Simulation</label>
+                    <div class="progress-container" id="progressContainer">
+                        
+                        <div class="progress-bar" id="progressBar">0%</div>
+                    </div>
+                    <div class="output-console"></div>
+                    <div class="hacker-section">
+                        <canvas class="hacker-3d-shiz"></canvas>
+                        <canvas class="bars-and-stuff"></canvas>
+                    </div>
+                    <div id="resultOutput" class="result-output"></div>
+                </div>
+            </div>
+
+            <!-- Explanation Modal -->
+            <div id="explanationModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeModal()">&times;</span>
+                    <h2>Why Unsalted Hashing is Insecure</h2>
+                    <p>Hash functions are used to secure data by converting it into a fixed-size string of characters, typically a hash code. However, when hashes are not salted, it becomes easier for attackers to use techniques like brute-force attacks and rainbow tables to crack these hashes and retrieve the original data.</p>
+                    <p><strong>Salting</strong> adds a unique value to each input before hashing, making precomputed attacks significantly more difficult and enhancing the security of hashed data.</p>
+                    <p>Since the files have been hashed without salting, they are vulnerable to being decrypted using these attack methods.</p>
+                    <button class="decrypt-btn" onclick="closeModal()">Got It!</button>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JavaScript Code -->
+
+<script>
+    
+     /********************************************
+     * Decryption Simulation JavaScript Code
+     ********************************************/
+
+    // Existing Data Structures
+    const rainbowTable = {
+        "5f4dcc3b5aa765d61d8327deb882cf99": "password",           // password
+        "202cb962ac59075b964b07152d234b70": "123",                 // 123
+        "098f6bcd4621d373cade4e832627b4f6": "test",                // test
+        "e99a18c428cb38d5f260853678922e03": "abc123",             // abc123
+        "c4ca4238a0b923820dcc509a6f75849b": "1",                  // 
+        "d8578edf8458ce06fbc5bb76a58c5ca4": "qwerty",             // qwerty
+        "5ebe2294ecd0e0f08eab7690d2a6ee69": "secret",              // secret
+        "5d41402abc4b2a76b9719d911017c592": "hello",              // hello
+        "7d793037a0760186574b0282f2f435e7": "world",               // world
+        "21232f297a57a5a743894a0e4a801fc3": "admin",               // admin
+        "827ccb0eea8a706c4c34a16891f84e7b": "12345",               // 12345
+        "e10adc3949ba59abbe56e057f20f883e": "123456",             // 123456
+        "0d107d09f5bbe40cade3de5c71e9e9b7": "letmein",             // letmein
+        "d0763edaa9d9bd2a9516280e9044d885": "monkey",             // monkey
+        "8621ffdbc5698829397d97767ac13db3": "dragon",              // dragon
+        "1a1dc91c907325c69271ddf0c944bc72": "pass",                // pass
+        "7c6a180b36896a0a8c02787eeafb0e4c": "password1",          // password1
+        "40be4e59b9a2a2b5dffb918c0e86b3d7": "welcome",            // welcome
+        "37b4e2d82900d5e94b8da524fbeb33c0": "football",           // football
+        "2c6ee24b09816a6f14f95d1698b24ead": "letmein1",           // letmein1
+        "4b1c4e05950b2cbefba8f45f5cb44a7d": "sunshine",           // sunshine
+        "3e23e8160039594a33894f6564e1b134": "trustno1",           // trustno1
+        "1f3870be274f6c49b3c1d2d3b45c0d0d": "welcome1",          // welcome1
+        "3c59dc048e885026330e6364455a4d03": "qwerty123",          // qwerty123
+        "4c6c947b1980a40f09dfe0423c486e34": "1q2w3e4r5t",         // 1q2w3e4r5t
+        "bec92397646e8feb93667ae2e6bc931b": "letmein123",         // letmein123
+        "a906449d5769fa7361d7ecc6aa3f6d28": "123abc",             // 123abc
+        "6cb75f652a9b52798eb6cf2201057c73": "password2",          // password2
+        "fac3b6c91a03f0896f369e471b1976e3": "dragon123",          // dragon123
+        "cc25c0f861a83f5efadc6e1ba9d1269e": "monkey123",          // monkey123
+        "f25a2fc72690b780b2a14e140ef6a9e0": "iloveyou",           // iloveyou
+        "f30aa7a662c728b7407c54ae6bfd27d1": "hello123",           // hello123
+        "fcea920f7412b5da7be0cf42b8c93759": "1234567",            // 1234567
+        "d796b1242dc89cedffe596d14517f2ac": "iloveyou2",          // iloveyou2
+        "7bc6c31880aeda581aa34e218af25753": "abcde123",           // abcde123
+        "996ce17f6abc9fe126b57aa5f1d8c92c": "1234567890abcdef",   // 1234567890abcdef
+        "6eea9b7ef19179a06954edd0f6c05ceb": "qwertyuiop",        // qwertyuiop
+        "0192023a7bbd73250516f069df18b500": "admin123",           // admin123
+        "0659c7992e268962384eb17fafe88364": "abc123456",          // abc123456
+        "5d7845ac6ee7cfffafc5fe5f35cf666d": "secret123",          // secret123
+        "185aef3b1c810799a6be8314abf6512c": "12345abc",           // 12345abc
+        "1669972908967b4076b39d4626090817": "sunshine123",        // sunshine123
+        "bc3d7e94568197967e2f43580c15bc47": "letmeinagain",       // letmeinagain
+        "abb45c192f0818ff22b7ddda8566dac3": "myname",             // myname
+        "c055cc1274fb110ab702a17368176bd1": "123qweas",           // 123qweas
+        "0cc175b9c0f1b6a831c399e269772661": "a",                   // a
+        "241faca171641e4a0c25740625494018": "notyourpassword",    // notyourpassword
+        "1cbfa39decfe82e70d857672e3903e37": "thisisfun",         // thisisfun
+        "d3658fcfdcafb7a90f3fe30b62bf56d4": "letmein12345",      // letmein12345
+        "b44dedf74e7634e790316472e0e995f9": "fpassword",          // fpassword
+        "7241cd0ebbbd2e79c7b3a5f6615aeeeb": "monkey1234",        // monkey1234
+        "34819d7beeabb9260a5c854bc85b3e44": "mypassword",         // mypassword
+        "58b4e38f66bcdb546380845d6af27187": "qwerty1234",        // qwerty1234
+        "5ef64bad8f9d7e0c85f821580e4d6629": "biteme",             // biteme
+        "d7eea11dffaf0936611d58d3c5aff066": "wrongpassword",      // wrongpassword
+        "637b9adadf7acce5c70e5d327a725b13": "yourpassword",       // yourpassword
+        "9c87baa223f464954940f859bcf2e233": "mypassword123",     // mypassword123
+        "a152e841783914146e4bcd4f39100686": "asdfgh",             // asdfgh
+        "c44a471bd78cc6c2fea32b9fe028d30a": "asdfghjkl",          // asdfghjkl
+        "6a46bb1de0f9776cac984a1b7aed9610": "letmein!123",       // letmein!123
+        "1897a69ef451f0991bb85c6e7c35aa31": "1a2b3c4d",           // 1a2b3c4d
+        "56c541e621a19f35f1516f540f0b42b3": "notabadday",         // notabadday
+        "3c7eb8275e0869e49228573033e77c58": "mydog",              // mydog
+        "faa4b0d94da61f59fb40c180a90fda47": "iloveyou123",       // iloveyou123
+            // More entries can be added here
+        };
+
+
+
+    const dictionary = [
+        "password",
+        "123456",
+        "123456789",
+        "12345678",
+        "12345",
+        "1234567",
+        "qwerty",
+        "abc123",
+        "password1",
+        "letmein",
+        "monkey",
+        "dragon",
+        "welcome",
+        "iloveyou",
+        "admin",
+        "football",
+        "1234567890",
+        "123123",
+        "sunshine",
+        "qwertyuiop",
+        "123321",
+        "1q2w3e4r",
+        "superman",
+        "letmein123",
+        "welcome123",
+        "123qwe",
+        "abcde",
+        "1234",
+        "1qaz2wsx",
+        "qwerty123",
+        "password123",
+        "myspace1",
+        "passwords",
+        "michael",
+        "loveme",
+        "monkey123",
+        "starwars",
+        "1234abcd",
+        "ashley",
+        "trustno1",
+        "chocolate",
+        "sunshine123",
+        "iloveyou2",
+        "justin",
+        "1234567a",
+        "1password",
+        "1qaz2wsx3edc",
+        "qazwsx",
+        "password!",
+        "1qazxsw2",
+        "welcome1",
+        "qwertyabc",
+        "test123",
+        "passwordxyz",
+        "abcxyz",
+        "letmeinagain",
+        "1234pass",
+        "111111",
+        "1q2w3e",
+        "password2",
+        "monkeybusiness",
+        "yourmom",
+        "password3",
+        "iloveyou!",
+        "1pass",
+        "qwerty1",
+        "iloveyou1234",
+        "ashleymadison",
+        "rockyou",
+        "password4",
+        "loveyou123",
+        "baby",
+        "12345!@#",
+        "trustme",
+        "123321!@#",
+        "1q2w3e4r5t6y",
+        "letmein2",
+        "12345qwert",
+        "abcdef",
+        "thisisawesome",
+        "1a2b3c4",
+        "gandalf",
+        "iloveyou2",
+        "loveyou",
+        "letmein!!",
+        "hello12345",
+        "qwerty11",
+        "admin1",
+        "root",
+        "password1234",
+        "abcde12345",
+        "mycat",
+        "superman123",
+        "letmein#",
+        "welcome@1",
+        "love",
+        "ilovepasswords",
+        "1password1",
+        "myfriends",
+        "qwerty12",
+        "batman",
+        "asdf",
+        "qwerty1!",
+        "1qaz1qaz",
+        "123456a",
+        "monkeybusiness1",
+        "iloveyou1",
+        "notmypassword",
+        "pencil",
+        "justdoit",
+        "ilovemyself",
+        // Add more common passwords as needed
+        ];
+
+
+
+    // Variables to store selected hash and file name
+    let selectedHash = "";
+    let selectedFileName = "";
+    let selectedAttackMethod = "rainbow"; // Default attack method
+    let animationRunning = false; // Global variable
+
+    /********************************************
+     * Modal Management Functions
+     ********************************************/
+
+    // Function to show the explanation modal on page load
+    window.onload = function() {
+        showModal(); // Show the explanation modal on page load
+    };
+
+    // Function to show the explanation modal
+    function showModal() {
+        document.getElementById('explanationModal').style.display = 'flex';
+    }
+
+    // Function to close the explanation modal
+    function closeModal() {
+        document.getElementById('explanationModal').style.display = 'none';
+        showHackedFiles(); // Show hacked files after closing the modal
+    }
+
+    // Function to display hacked files with animation
+    function showHackedFiles() {
+        const hackedFiles = document.getElementById('hackedFiles');
+        hackedFiles.style.display = 'block';
+        const fileItems = hackedFiles.querySelectorAll('.file-item');
+        fileItems.forEach((item, index) => {
+            setTimeout(() => item.classList.add('show'), index * 200);
+        });
+    }
+
+    // Function to show help modal with attack method explanation
+    function showHelp() {
+        const attackMethod = document.getElementById('attackMethod').value;
+        let explanation = "";
+
+        switch (attackMethod) {
+            case "rainbow":
+                explanation = "<strong>Rainbow Table:</strong> A precomputed table for reversing cryptographic hash functions, primarily for cracking password hashes.";
+                break;
+            case "dictionary":
+                explanation = "<strong>Dictionary Attack:</strong> An attack that uses a prearranged list of words (dictionary) to guess passwords.";
+                break;
+            case "brute-force":
+                explanation = "<strong>Brute-Force Attack:</strong> An exhaustive search method where every possible combination is tried until the correct one is found.";
+                break;
+            default:
+                explanation = "Select an attack method to see its explanation.";
+        }
+
+        document.getElementById('attackExplanation').innerHTML = explanation;
+        document.getElementById('helpModal').style.display = 'flex';
+    }
+
+    // Function to close help modal
+    function closeHelpModal() {
+        document.getElementById('helpModal').style.display = 'none';
+    }
+    //load animation before open file
+    function showLoadingAnimation(duration, callback) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.style.position = 'fixed';
+            loadingDiv.style.top = '50%';
+            loadingDiv.style.left = '50%';
+            loadingDiv.style.transform = 'translate(-50%, -50%)';
+            loadingDiv.style.zIndex = '1000';
+            loadingDiv.style.backgroundColor = '#1e1e1e';
+            loadingDiv.style.padding = '20px';
+            loadingDiv.style.borderRadius = '10px';
+            loadingDiv.style.color = '#ffffff';
+            loadingDiv.innerHTML = '<h3>Analyzing File...</h3><div id="loadingBar" style="width: 200px; height: 20px; background-color: #333; border-radius: 10px; overflow: hidden;"><div id="loadingProgress" style="width: 0%; height: 100%; background-color: #20c20e; transition: width 0.5s;"></div></div>';
+            document.body.appendChild(loadingDiv);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 100 / (duration / 100);
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.body.removeChild(loadingDiv);
+                    callback();
+                } else {
+                    document.getElementById('loadingProgress').style.width = `${progress}%`;
+                }
+            }, 100);
+        }
+
+        // For openfile modal function
+        const explanations = {
+                        'MD5': {
+                            description: "MD5 (Message Digest Algorithm 5) generates a 128-bit hash value and was once widely used. However, it is now considered cryptographically broken due to its vulnerability to collisions and fast computation speed, making it unsuitable for security purposes.",
+                            attackComplexity: "Low",
+                            safety: "Low",
+                            bestAttack: "dictionary",
+                            educationalNote: "MD5 is often cracked using precomputed hash values in dictionary or rainbow table attacks. Its speed makes it vulnerable, especially without salting."
+                        },
+                        'SHA-1': {
+                            description: "SHA-1 (Secure Hash Algorithm 1) produces a 160-bit hash and was widely used for digital signatures and SSL certificates before being deprecated due to vulnerabilities. It's no longer considered secure due to advances in attack techniques.",
+                            attackComplexity: "Medium",
+                            safety: "Low",
+                            bestAttack: "rainbow",
+                            educationalNote: "SHA-1's 160-bit hash length makes it vulnerable to collision attacks and rainbow table attacks. While it was once widely used, the discovery of practical collision attacks has led to its deprecation for secure applications."
+                        },
+
+                        'MD5 (Short Password)': {
+                            description: "This is a short password hashed with MD5, which combines a weak hash function with limited password length. This makes it highly susceptible to brute-force attacks, where attackers can guess all possible combinations quickly.",
+                            attackComplexity: "Very Low",
+                            safety: "Very Low",
+                            bestAttack: "brute-force",
+                            educationalNote: "Short passwords hashed with MD5 are especially vulnerable because brute-force attacks can easily crack them within seconds. Using longer passwords or a stronger hash function like SHA-256 is recommended."
+                        }
+                    };
+
+    // Function to open a file and initiate decryption process
+    function openFile(hash, fileName, hashMethod, attackMethod) {
+            document.getElementById('hashInput').value = hash;
+            showLoadingAnimation(2000, () => {
+
+
+
+                const info = explanations[hashMethod];
+                
+                const alertContent = `
+                    <div style="background-color: #2c2c2c; color: #f0f0f0; padding: 25px; border-radius: 10px; font-family: 'Arial', sans-serif; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #ea5c1f; text-align: center; margin-bottom: 20px; font-size: 24px;">File Analysis Report</h2>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>File:</strong> <span style="color: #ffd700;">${fileName}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Hash:</strong> <span style="color: #00d1ff;">${hash}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Hash Method:</strong> <span style="color: #90ee90;">${hashMethod}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Description:</strong> <span style="color: #ffffff;">${info.description}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Attack Complexity:</strong> <span style="color: ${info.attackComplexity === 'Low' ? '#ff4444' : info.attackComplexity === 'Medium' ? '#ffaa00' : '#44ff44'}; font-weight: bold;">${info.attackComplexity}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Safety Level:</strong> <span style="color: ${info.safety === 'Low' ? '#ff4444' : info.safety === 'Medium' ? '#ffaa00' : '#44ff44'}; font-weight: bold;">${info.safety}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Note:</strong> <span style="color: #dcdcdc;">${info.educationalNote}</span>
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 18px;">
+                            <strong>Recommended Attack Method:</strong> <span style="color: #ff7f50; font-weight: bold;">${info.bestAttack}</span>
+                        </p>
+                    </div>
+
+                `;
+
+                showCustomAlert(alertContent, () => {
+                    // Set the attack method in the dropdown
+                    document.getElementById('attackMethod').value = attackMethod;
+                    
+                    // Show the attack options modal
+                    document.getElementById('attackOptionsModal').style.display = 'flex';
+
+                    updateAttackOptions(info.bestAttack);
+                });
+            });
+        }
+
+        function showCustomAlert(content, callback) {
+
+ 
+
+
+                //Styles
+                const alertBackground = document.createElement('div');
+                alertBackground.style.position = 'fixed';
+                alertBackground.style.top = '0';
+                alertBackground.style.left = '0';
+                alertBackground.style.width = '100%';
+                alertBackground.style.height = '100%';
+                alertBackground.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                alertBackground.style.zIndex = '1000';
+                alertBackground.style.display = 'flex';
+                alertBackground.style.justifyContent = 'center';
+                alertBackground.style.alignItems = 'center';
+
+                const alertDiv = document.createElement('div');
+                alertDiv.style.backgroundColor = '#1e1e1e';
+                alertDiv.style.padding = '30px';
+                alertDiv.style.borderRadius = '15px';
+                alertDiv.style.boxShadow = '0 0 20px rgba(234, 92, 31, 0.5)';
+                alertDiv.style.maxWidth = '80%';
+                alertDiv.style.maxHeight = '80%';
+                alertDiv.style.overflow = 'auto';
+                alertDiv.style.animation = 'float 3s ease-in-out infinite';
+                alertDiv.innerHTML = content;
+
+                const closeButton = document.createElement('button');
+                closeButton.textContent = 'Close';
+                closeButton.style.marginTop = '20px';
+                closeButton.style.padding = '10px 20px';
+                closeButton.style.backgroundColor = '#013370';
+                closeButton.style.color = '#ffffff';
+                closeButton.style.border = 'none';
+                closeButton.style.borderRadius = '5px';
+                closeButton.style.cursor = 'pointer';
+                closeButton.style.fontSize = '16px';
+                closeButton.style.fontWeight = 'bold';
+                closeButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                closeButton.style.transition = 'background-color 0.3s ease';
+                closeButton.onmouseover = function() {
+                    this.style.backgroundColor = '#014a9c';
+                };
+                closeButton.onmouseout = function() {
+                    this.style.backgroundColor = '#013370';
+                };
+                closeButton.onclick = function() {
+                    document.body.removeChild(alertBackground);
+                    if (callback) callback();
+                };
+
+                alertDiv.appendChild(closeButton);
+                alertBackground.appendChild(alertDiv);
+                document.body.appendChild(alertBackground);
+
+
+
+                // Add floating animation keyframes
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% { transform: translateY(0px); }
+                        50% { transform: translateY(-10px); }
+                        100% { transform: translateY(0px); }
+                    }
+                `;
+                document.head.appendChild(style);
+}
+
+    // Function to close initial message modal and show attack options
+    function closeInitialMessageModal(recommendedAttack) {
+            document.getElementById('initialMessageModal').style.display = 'none';
+            updateAttackOptions(recommendedAttack);
+            document.getElementById('attackOptionsModal').style.display = 'flex';
+        }
+
+
+        // Define attack methods and their details
+    const attackMethods = {
+                "brute-force": {
+                    successRate: "Guaranteed (100%) over time",
+                    timeRequired: "Varies (from minutes to years, depending on password length and complexity)",
+                    cpuUsage: "100% (maximal use due to trying all combinations)",
+                    memoryUsage: "Low (only requires memory for each attempt, generally minimal)",
+                    weaknesses: [
+                        "Extremely time-consuming for long or complex passwords",
+                        "Computationally expensive, especially for modern hash functions"
+                    ]
+                },
+                "rainbow": {
+                    successRate: "High (90% for common passwords, less for complex or salted hashes)",
+                    timeRequired: "Instant (precomputed tables allow fast lookup)",
+                    cpuUsage: "Low (minimal CPU usage due to lookup nature)",
+                    memoryUsage: "High (requires significant storage for precomputed tables)",
+                    weaknesses: [
+                        "Requires large pre-computed tables",
+                        "Less effective or useless against salted hashes",
+                        "Tables need to be regenerated if new passwords are introduced"
+                    ]
+                },
+                "dictionary": {
+                    successRate: "Moderate (50%-80%, depends on quality of wordlist)",
+                    timeRequired: "Varies (usually fast for common passwords, longer for larger lists)",
+                    cpuUsage: "Medium (depends on wordlist size and hash comparisons)",
+                    memoryUsage: "Medium (needs memory for processing wordlist and hashing)",
+                    weaknesses: [
+                        "Limited by the size and quality of the wordlist",
+                        "Not effective for random or complex passwords",
+                        "Fails if password is not in the dictionary"
+                            ]
+                        }
+                    };
+
+            function selectAttackMethod() {
+                    // Retrieve all radio buttons with name 'attackMethod'
+                    const attackMethodRadios = document.getElementsByName('attackMethod');
+                    let selectedMethod = null;
+
+                    // Loop through radio buttons to find the checked one
+                    for (let i = 0; i < attackMethodRadios.length; i++) {
+                        if (attackMethodRadios[i].checked) {
+                            selectedMethod = attackMethodRadios[i].value;
+                            break;
+                        }
+                    }
+
+                    console.log("Selected Attack Method: ", selectedMethod);
+
+                    if (!selectedMethod) {
+                        alert("Please select an attack method.");
+                        return;
+                    }
+
+                    // Get the details of the selected method
+                    const methodDetails = attackMethods[selectedMethod];
+
+                    if (!methodDetails) {
+                        alert("Selected attack method details are missing.");
+                        return;
+                    }
+
+                    // Assign the selected method to the global variable
+                    selectedAttackMethod = selectedMethod;
+
+                    // Close the attack options modal
+                    closeAttackOptionsModal();
+
+                    
+
+                    // Show the decryption modal
+                    document.getElementById('decryptionModal').style.display = 'flex';
+
+                    // Display the selected method's details
+                    displayAttackMethodDetails(methodDetails);
+
+                    // Start the decryption simulation with the selected method
+                    startDecryption(selectedHash, selectedAttackMethod, () => {
+                        // Callback after decryption ends
+                        resetAttackOptions(); // Reset options for next use
+                    });
+                }
+
+
+
+
+    // Function to display attack method details in the decryption modal
+    function displayAttackMethodDetails(details) {
+        const resultOutput = document.getElementById('resultOutput');
+        const detailsHTML = `
+            <h3>Attack Method Details</h3>
+            <p><strong>Success Rate:</strong> ${details.successRate}</p>
+            <p><strong>Time Required:</strong> ${details.timeRequired}</p>
+            <p><strong>CPU Usage:</strong> ${details.cpuUsage}</p>
+            <p><strong>Memory Usage:</strong> ${details.memoryUsage}</p>
+            <h4>Weaknesses:</h4>
+            <ul>
+                ${details.weaknesses.map(weakness => `<li>${weakness}</li>`).join('')}
+            </ul>
+        `;
+        resultOutput.innerHTML = detailsHTML;
+    }
+
+
+    // Function to close attack options modal
+    function closeAttackOptionsModal() {
+        document.getElementById('attackOptionsModal').style.display = 'none';
+        resetAttackOptions(); // Reset options when closing the modal
+    }
+
+    // Function to close decryption modal
+    function closeDecryptionModal() {
+        document.getElementById('decryptionModal').style.display = 'none';
+        stopHackerAnimation();
+    }
+
+    /********************************************
+     * Decryption Simulation Functions
+     ********************************************/
+
+    // Function to start the decryption simulation
+    function startDecryption(hash, attackMethod, callback) {
+        selectedHash = document.getElementById('hashInput').value;
+        const resultOutput = document.getElementById('resultOutput');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const decryptionModal = document.getElementById('decryptionModal');
+
+        // Reset previous results
+        resultOutput.innerHTML = "";
+        progressBar.style.width = '0%';
+        progressBar.innerHTML = '0%';
+        progressContainer.style.display = 'block';
+
+        // Show hacker animation section within the decryption modal
+        const hackerSection = decryptionModal.querySelector('.hacker-section');
+        hackerSection.style.display = 'flex';
+
+        // Simulate different durations based on attack method
+        let durationInSeconds;
+        switch (attackMethod) {
+            case "rainbow":
+                durationInSeconds = 3; // Fast
+                break;
+            case "dictionary":
+                durationInSeconds = 5; // Medium
+                break;
+            case "brute-force":
+                durationInSeconds = 15; // Slow
+                break;
+            default:
+                durationInSeconds = 10;
+        }
+
+        // Start the decryption simulation
+        simulateDecryption(hash, attackMethod, durationInSeconds, () => {
+            // Callback after simulation ends
+            // Optionally, you can perform additional actions here
+        });
+    }
+
+    // Function to simulate decryption with a timer
+    function simulateDecryption(hash, attackMethod, durationInSeconds, callback) {
+        const resultOutput = document.getElementById('resultOutput');
+        const progressBar = document.getElementById('progressBar');
+        const decryptionModal = document.getElementById('decryptionModal');
+        const outputConsole = decryptionModal.querySelector(".output-console");
+
+        let startTime = Date.now();
+        let endTime = startTime + durationInSeconds * 1000;
+
+        // Initialize hacker animation and console if not already running
+        if (!animationRunning) {
+            initHackerAnimation();
+            animationRunning = true;
+        }
+
+        // Display initial message based on attack method
+        displaySimulationOutput(`Starting ${capitalizeFirstLetter(attackMethod)} attack on hash ${hash}...\n`);
+
+        // Function to generate combinations for brute-force
+        function generateCombinations(characters, maxLength) {
+            const results = [];
+            
+            function generate(prefix, length) {
+                if (length === 0) {
+                    results.push(prefix);
+                    return;
+                }
+                for (let i = 0; i < characters.length; i++) {
+                    generate(prefix + characters[i], length - 1);
+                }
+            }
+            
+            for (let length = 1; length <= maxLength; length++) {
+                generate('', length);
+            }
+            
+            return results;
+        }
+
+        // Simulate decryption progress
+        function updateProgress() {
+            let now = Date.now();
+            let progress = Math.min(((now - startTime) / (durationInSeconds * 1000)) * 100, 100);
+            progressBar.style.width = progress + '%';
+            progressBar.innerHTML = Math.floor(progress) + '%';
+
+            // Simulate CPU and Memory usage
+            let cpuUsage, memoryUsage, timeLeft;
+            switch (attackMethod) {
+                case "rainbow":
+                    cpuUsage = "20%";
+                    memoryUsage = "32GB";
+                    timeLeft = Math.max(Math.ceil((endTime - now) / 1000), 0);
+                    break;
+                case "dictionary":
+                    cpuUsage = "50%";
+                    memoryUsage = "8GB";
+                    timeLeft = Math.max(Math.ceil((endTime - now) / 1000), 0);
+                    break;
+                case "brute-force":
+                    cpuUsage = "100%";
+                    memoryUsage = "50MB";
+                    timeLeft = Math.max(Math.ceil((endTime - now) / 1000), 0);
+                    break;
+                default:
+                    cpuUsage = "50%";
+                    memoryUsage = "300MB";
+                    timeLeft = Math.max(Math.ceil((endTime - now) / 1000), 0);
+            }
+
+            displaySimulationOutput(`CPU Usage: ${cpuUsage}% | Memory Usage: ${memoryUsage}% | Time Left: ${timeLeft}s\n`);
+                // Retrieve the hash value
+                const hash = document.getElementById('hashInput').value.trim().toLowerCase();
+
+
+            if (now >= endTime) {
+                // Time's up, reveal the cracked password
+                let crackedPassword = "";
+                if (attackMethod === "rainbow") {
+                    const lowercaseHash = hash.toLowerCase();
+                    crackedPassword = rainbowTable[lowercaseHash] || "Password not found in Rainbow Table.";
+                    console.log("Input hash:", lowercaseHash);
+                    console.log("Rainbow table entries:", Object.keys(rainbowTable));
+                } else if (attackMethod === "dictionary") {
+                    let found = false;
+                    for (let i = 0; i < dictionary.length; i++) {
+                        const word = dictionary[i];
+                        const wordHash = CryptoJS.MD5(word).toString();
+                        if (wordHash === hash.toLowerCase()) {
+                            crackedPassword = word;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        crackedPassword = "Password not found in Dictionary.";
+                    }
+                } else if (attackMethod === "brute-force") {
+                    const characters = "abcdefghijklmnopqrstuvwxyz0123456789"; // Customize this as needed
+                    const maxLength = 4; // Adjust based on expected password length
+
+                    // Generate combinations
+                    const combinations = generateCombinations(characters, maxLength);
+                    let foundPassword = false;
+
+                    for (const combination of combinations) {
+                        const combinationHash = CryptoJS.MD5(combination).toString();
+                        if (combinationHash === hash.toLowerCase()) {
+                            crackedPassword = combination;
+                            foundPassword = true;
+                            break;
+                        }
+                    }
+
+                    if (foundPassword) {
+                        resultOutput.innerHTML = `Result: ${crackedPassword}`;
+                    } else {
+                        crackedPassword = "Brute-Force Attack Failed to Crack the Password.";
+                        resultOutput.innerHTML = `Result: ${crackedPassword}`;
+                    }
+                }
+                resultOutput.innerHTML = `Result: ${crackedPassword}`;
+                displaySimulationOutput(`Decryption using ${capitalizeFirstLetter(attackMethod)} attack complete.\n`);
+
+                // Stop the hacker animation and console
+                stopHackerAnimation();
+                animationRunning = false;
+
+                // Hide hacker animation section after a short delay
+                setTimeout(() => {
+                    decryptionModal.querySelector('.hacker-section').style.display = 'none';
+                }, 2000); // 2 seconds delay
+
+                // Hide progress bar after a short delay
+                setTimeout(() => {
+                    document.getElementById('progressContainer').style.display = 'none';
+                }, 2000);
+
+                // Execute callback if provided
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+                // Continue updating progress
+                setTimeout(updateProgress, 500); // Update every 0.5 seconds
+            }
+        }
+
+        updateProgress(); // Start the progress update loop
+    }
+
+    function updateAttackOptions(recommendedAttack) {
+            const attackMethodRadios = document.getElementsByName('attackMethod');
+            attackMethodRadios.forEach(radio => {
+                if (radio.value === recommendedAttack) {
+                    radio.checked = true;
+                    radio.closest('tr').classList.add('recommended');
+                } else {
+                    radio.disabled = true;
+                    radio.closest('tr').classList.add('disabled');
+                }
+            });
+        }
+
+        function resetAttackOptions() {
+                const attackMethodRadios = document.getElementsByName('attackMethod');
+                attackMethodRadios.forEach(radio => {
+                    radio.disabled = false;
+                    radio.checked = false;
+                    radio.closest('tr').classList.remove('recommended', 'disabled');
+                });
+            }
+
+    
+
+    // Function to generate combinations for brute-force
+    function generateCombinations(characters, maxLength) {
+        const results = [];
+        
+        function generate(prefix, length) {
+            if (length === 0) {
+                results.push(prefix);
+                return;
+            }
+            for (let i = 0; i < characters.length; i++) {
+                generate(prefix + characters[i], length - 1);
+            }
+        }
+        
+        for (let length = 1; length <= maxLength; length++) {
+            generate('', length);
+        }
+        
+        return results;
+    }
+
+    // Function to start the decryption process
+    function startDecryptionProcess() {
+        selectedHash = document.getElementById('hashInput').value;
+        // Get user inputs
+        const hash = document.getElementById('hashInput').value.trim().toLowerCase();
+        const attackMethod = document.getElementById('attackMethod').value;
+        const resultOutput = document.getElementById('resultOutput');
+        
+        // Reset result output
+        resultOutput.innerHTML = '';
+        
+        // Validate the hash input
+        if (!hash) {
+            alert("Please enter a valid hash.");
+            return;
+        }
+        
+        // Display initial message based on attack method
+        displaySimulationOutput(`Starting ${capitalizeFirstLetter(attackMethod)} attack on hash ${hash}...\n`);
+        
+        // Set up simulation parameters
+        const durationInSeconds = 5; // Total duration for the attack simulation
+        const startTime = Date.now();
+        const endTime = startTime + durationInSeconds * 1000;
+        
+        // Function to update progress and handle attack completion
+        function updateProgress() {
+            let now = Date.now();
+            let progress = Math.min(((now - startTime) / (durationInSeconds * 1000)) * 100, 100);
+            updateProgressBar(progress);
+        
+            // Simulate CPU and Memory usage
+            let cpuUsage, memoryUsage, timeLeft;
+            switch (attackMethod) {
+                case "rainbow":
+                    cpuUsage = "40%";
+                    memoryUsage = "500MB";
+                    break;
+                case "dictionary":
+                    cpuUsage = "50%";
+                    memoryUsage = "300MB";
+                    break;
+                case "brute-force":
+                    cpuUsage = "70%";
+                    memoryUsage = "200MB";
+                    break;
+                default:
+                    cpuUsage = "50%";
+                    memoryUsage = "300MB";
+            }
+            
+            timeLeft = Math.max(Math.ceil((endTime - now) / 1000), 0);
+            displaySimulationOutput(`CPU Usage: ${cpuUsage}% | Memory Usage: ${memoryUsage} | Time Left: ${timeLeft}s\n`);
+        
+            if (now >= endTime) {
+                // Time's up, reveal the cracked password
+                performAttack(attackMethod, hash, resultOutput);
+                
+                displaySimulationOutput(`Decryption using ${capitalizeFirstLetter(attackMethod)} attack complete.\n`);
+        
+                // Stop the hacker animation and console
+                stopHackerAnimation();
+                animationRunning = false;
+        
+                // Hide hacker animation section after a short delay
+                setTimeout(() => {
+                    const decryptionModal = document.getElementById('decryptionModal');
+                    if (decryptionModal) {
+                        decryptionModal.querySelector('.hacker-section').style.display = 'none';
+                    }
+                }, 1000); // 1 second delay
+        
+                // Hide progress bar after a short delay
+                setTimeout(() => {
+                    const progressContainer = document.getElementById('progressContainer');
+                    if (progressContainer) {
+                        progressContainer.style.display = 'none';
+                    }
+                }, 2000);
+        
+                // Execute callback if provided
+                // Assuming callback is defined elsewhere
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+                // Continue updating progress
+                setTimeout(updateProgress, 500); // Update every 0.5 seconds
+            }
+        }
+        
+        // Start the progress update loop
+        updateProgress(); 
+    }
+
+    // Function to perform the attack based on method
+    function performAttack(attackMethod, hash, resultOutput) {
+        let crackedPassword = "";
+        
+        if (attackMethod === "rainbow") {
+            crackedPassword = rainbowTable[hash.toLowerCase()] || "Password not found in Rainbow Table.";
+        } else if (attackMethod === "dictionary") {
+            let found = false;
+            for (let i = 0; i < dictionary.length; i++) {
+                const word = dictionary[i];
+                const wordHash = CryptoJS.MD5(word).toString();
+                if (wordHash === hash.toLowerCase()) {
+                    crackedPassword = word;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                crackedPassword = "Password not found in Dictionary.";
+            }
+        } else if (attackMethod === "brute-force") {
+            const characters = "abcdefghijklmnopqrstuvwxyz0123456789"; // Customize this as needed
+            const maxLength = 4; // Adjust based on expected password length
+        
+            // Generate combinations
+            const combinations = generateCombinations(characters, maxLength);
+            let foundPassword = false;
+        
+            // To prevent blocking the UI, process combinations in chunks
+            const chunkSize = 1000; // Number of combinations to process per chunk
+            let index = 0;
+        
+            function processChunk() {
+                    const end = Math.min(index + chunkSize, combinations.length);
+                    for (; index < end; index++) {
+                        const combination = combinations[index];
+                        const combinationHash = CryptoJS.MD5(combination).toString();
+                        console.log(`Attempting password: ${combination}, Hash: ${combinationHash}`);
+                        displaySimulationOutput(`Attempting password: ${combination}...`);
+                        if (combinationHash === hash.toLowerCase()) {
+                            crackedPassword = combination;
+                            foundPassword = true;
+                            console.log(`Password found: ${combination}`);
+                            break;
+                        }
+                    }
+        
+                if (foundPassword || index >= combinations.length) {
+                    if (foundPassword) {
+                        crackedPassword = combination;
+                    } else {
+                        crackedPassword = "Brute-Force Attack Failed to Crack the Password.";
+                    }
+                    resultOutput.innerHTML = `Result: ${crackedPassword}`;
+                } else {
+                    // Continue processing
+                    setTimeout(processChunk, 0);
+                }
+            }
+        
+            // Start processing chunks
+            processChunk();
+        
+            // If no password was found after processing all combinations
+            if (!foundPassword && index >= combinations.length) {
+                crackedPassword = "Brute-Force Attack Failed to Crack the Password.";
+            }
+        }
+        
+        // Display the result
+        resultOutput.innerHTML = `Result: ${crackedPassword}`;
+    }
+
+// Function to update the progress bar
+function updateProgressBar(progress) {
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+        progressBar.innerHTML = `${Math.floor(progress)}%`;
+    }
+}
+
+// Helper function to display output in the console
+function displaySimulationOutput(message) {
+    const decryptionModal = document.getElementById('decryptionModal');
+    if (!decryptionModal) return;
+    
+    const outputConsole = decryptionModal.querySelector(".output-console");
+    if (outputConsole) {
+        const textEl = document.createElement('p');
+        textEl.textContent = message;
+        outputConsole.appendChild(textEl);
+        outputConsole.scrollTop = outputConsole.scrollHeight; // Scroll to bottom
+
+        // Remove old messages to prevent overflow
+        if (outputConsole.scrollHeight > decryptionModal.clientHeight) {
+            const removeNodes = outputConsole.querySelectorAll('p');
+            for (let n = 0; n < Math.floor(removeNodes.length / 3); n++) {
+                outputConsole.removeChild(removeNodes[n]);
+            }
+        }
+    }
+}
+
+// Capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Example functions for hacker animation (implement as needed)
+function stopHackerAnimation() {
+    // Implement the logic to stop your hacker animation
+    console.log("Hacker animation stopped.");
+}
+
+// Example callback function (implement as needed)
+function callback() {
+    console.log("Callback function executed.");
+}
+
+
+
+
+    
+
+    // Helper function to display output in the console
+    function displaySimulationOutput(message) {
+        const decryptionModal = document.getElementById('decryptionModal');
+        const outputConsole = decryptionModal.querySelector(".output-console");
+        if (outputConsole) {
+            const textEl = document.createElement('p');
+            textEl.textContent = message;
+            outputConsole.appendChild(textEl);
+            outputConsole.scrollTop = outputConsole.scrollHeight; // Scroll to bottom
+
+            // Remove old messages to prevent overflow
+            if (outputConsole.scrollHeight > decryptionModal.clientHeight) {
+                const removeNodes = outputConsole.querySelectorAll('p');
+                for (let n = 0; n < Math.floor(removeNodes.length / 3); n++) {
+                    outputConsole.removeChild(removeNodes[n]);
+                }
+            }
+        }
+    }
+
+    // Capitalize the first letter of a string
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    /********************************************
+     * Hacker 3D Animation & Console Integration
+     ********************************************/
+
+    // Select Elements
+    var canvas = document.querySelector(".hacker-3d-shiz"),
+        ctx = canvas.getContext("2d"),
+        canvasBars = document.querySelector(".bars-and-stuff"),
+        ctxBars = canvasBars.getContext("2d"),
+        outputConsole = document.querySelector(".output-console");
+
+    // Function to set canvas sizes
+    function setCanvasSizes() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = 200; // Adjusted height for better fit
+
+        canvasBars.width = canvas.parentElement.clientWidth;
+        canvasBars.height = canvas.height;
+    }
+
+    // Call initially and on window resize
+    setCanvasSizes();
+    window.addEventListener('resize', function(){
+        setCanvasSizes();
+
+        focal = canvas.width / 2;
+        vpx = canvas.width / 2;
+        vpy = canvas.height / 2;
+        ctx.strokeStyle = ctxBars.strokeStyle = ctxBars.fillStyle = '#00FF00';
+    });
+
+    /* Graphics stuff */
+    function Square(z) {
+        this.width = canvas.width / 4;
+
+        if(canvas.height < 200){
+        this.width = 100;
+        };
+
+        this.height = canvas.height / 2;
+        z = z || 0;
+
+        this.points = [
+            new Point({
+                x: (canvas.width / 2) - this.width,
+                y: (canvas.height / 2) - this.height,
+                z: z
+            }),
+            new Point({
+                x: (canvas.width / 2) + this.width,
+                y: (canvas.height / 2) - this.height,
+                z: z
+            }),
+            new Point({
+                x: (canvas.width / 2) + this.width,
+                y: (canvas.height / 2) + this.height,
+                z: z
+            }),
+            new Point({
+                x: (canvas.width / 2) - this.width,
+                y: (canvas.height / 2) + this.height,
+                z: z
+            })
+        ];
+        this.dist = 0;
+    }
+
+    Square.prototype.update = function () {
+        for (var p = 0; p < this.points.length; p++) {
+            this.points[p].rotateZ(0.001);
+            this.points[p].z -= 3;
+            if (this.points[p].z < -300) {
+                this.points[p].z = 2700;
+            }
+            this.points[p].map2D();
+        }
+    }
+
+    Square.prototype.render = function () {
+        ctx.beginPath();
+        ctx.moveTo(this.points[0].xPos, this.points[0].yPos);
+        for (var p = 1; p < this.points.length; p++) {
+            if (this.points[p].z > -(focal - 50)) {
+                ctx.lineTo(this.points[p].xPos, this.points[p].yPos);
+            }
+        }
+
+        ctx.closePath();
+        ctx.stroke();
+
+        this.dist = this.points[this.points.length - 1].z;
+
+    };
+
+    function Point(pos) {
+        this.x = pos.x - canvas.width / 2 || 0;
+        this.y = pos.y - canvas.height / 2 || 0;
+        this.z = pos.z || 0;
+
+        this.cX = 0;
+        this.cY = 0;
+        this.cZ = 0;
+
+        this.xPos = 0;
+        this.yPos = 0;
+        this.map2D();
+    }
+
+    Point.prototype.rotateZ = function (angleZ) {
+        var cosZ = Math.cos(angleZ),
+            sinZ = Math.sin(angleZ),
+            x1 = this.x * cosZ - this.y * sinZ,
+            y1 = this.y * cosZ + this.x * sinZ;
+
+        this.x = x1;
+        this.y = y1;
+    }
+
+    Point.prototype.map2D = function () {
+        var scaleX = focal / (focal + this.z + this.cZ),
+            scaleY = focal / (focal + this.z + this.cZ);
+
+        this.xPos = vpx + (this.cX + this.x) * scaleX;
+        this.yPos = vpy + (this.cY + this.y) * scaleY;
+    };
+
+    // Init graphics stuff
+    var squares = [],
+        focal = canvas.width / 2,
+        vpx = canvas.width / 2,
+        vpy = canvas.height / 2,
+        barVals = [],
+        sineVal = 0;
+
+    /* Fake console stuff */
+    var commandStart = [
+            'Performing DNS Lookups for ', 
+            'Searching ', 
+            'Analyzing ', 
+            'Estimating Approximate Location of ', 
+            'Compressing ', 
+            'Requesting Authorization From: ', 
+            'wget -a -t ', 
+            'tar -xzf ', 
+            'Entering Location ', 
+            'Compilation Started of ',
+            'Downloading '
+        ],
+        commandParts = [
+            'Data Structure', 
+            'http://wwjd.com?au&2', 
+            'Texture', 
+            'TPS Reports', 
+            '.... Searching ... ', 
+            'http://zanb.se/?23&88&far=2', 
+            'http://ab.ret45-33/?timing=1ww'
+        ],
+        commandResponses = [
+            'Authorizing ', 
+            'Authorized...', 
+            'Access Granted..', 
+            'Going Deeper....', 
+            'Compression Complete.', 
+            'Compilation of Data Structures Complete..', 
+            'Entering Security Console...', 
+            'Encryption Unsuccessful. Attempting Retry...', 
+            'Waiting for response...', 
+            '....Searching...', 
+            'Calculating Space Requirements '
+        ],
+        isProcessing = false,
+        processTime = 0,
+        lastProcess = 0;
+
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        squares.sort(function (a, b) {
+            return b.dist - a.dist;
+        });
+        for (var i = 0, len = squares.length; i < len; i++) {
+            squares[i].update();
+            squares[i].render();
+        }
+        
+        ctxBars.clearRect(0, 0, canvasBars.width, canvasBars.height);
+        
+        ctxBars.beginPath();
+        var y = canvasBars.height / 6;
+        ctxBars.moveTo(0, y);
+        
+        for(let i = 0; i < canvasBars.width; i++){
+            let ran = (Math.random() * 20) - 10;
+            if(Math.random() > 0.98){
+                ran = (Math.random() * 50) - 25;   
+            }
+            ctxBars.lineTo(i, y + ran);
+        }
+        
+        ctxBars.stroke();
+        
+        for(let i = 0; i < canvasBars.width; i += 20){
+            if(!barVals[i]){
+                barVals[i] = {
+                    val : Math.random() * (canvasBars.height / 2),
+                    freq : 0.1,
+                    sineVal : Math.random() * 100
+                };
+            }
+            
+            barVals[i].sineVal += barVals[i].freq;
+            barVals[i].val += Math.sin(barVals[i].sineVal * Math.PI / 2) * 5;
+            ctxBars.fillRect(i + 5, canvasBars.height, 15, -barVals[i].val);
+        }
+        
+        requestAnimationFrame(render);
+    }
+
+    function displaySimulationOutput(message) {
+        const decryptionModal = document.getElementById('decryptionModal');
+        const outputConsole = decryptionModal.querySelector(".output-console");
+        if (outputConsole) {
+            const textEl = document.createElement('p');
+            textEl.textContent = message;
+            outputConsole.appendChild(textEl);
+            outputConsole.scrollTop = outputConsole.scrollHeight; // Scroll to bottom
+
+            // Remove old messages to prevent overflow
+            if (outputConsole.scrollHeight > decryptionModal.clientHeight) {
+                const removeNodes = outputConsole.querySelectorAll('p');
+                for (let n = 0; n < Math.floor(removeNodes.length / 3); n++) {
+                    outputConsole.removeChild(removeNodes[n]);
+                }
+            }
+        }
+    }
+
+    function consoleOutput(){
+        
+        const decryptionModal = document.getElementById('decryptionModal');
+        const outputConsole = decryptionModal.querySelector(".output-console");
+        var textEl = document.createElement('p');
+        
+        if(isProcessing){
+            textEl = document.createElement('span');
+            textEl.textContent += Math.random() + " ";
+            if(Date.now() > lastProcess + processTime){
+                isProcessing = false;   
+            }
+        } else {
+            var commandType = Math.floor(Math.random() * 4);
+            switch(commandType){
+                case 0:
+                    textEl.textContent = commandStart[Math.floor(Math.random() * commandStart.length)] + commandParts[Math.floor(Math.random() * commandParts.length)];
+                    break;
+                case 3: 
+                    isProcessing = true;
+                    processTime = Math.floor(Math.random() * 5000);
+                    lastProcess = Date.now();
+                    textEl.textContent = "Processing...";
+                    break;
+                default:
+                    textEl.textContent = commandResponses[Math.floor(Math.random() * commandResponses.length)];
+                    break;
+            }
+        }
+
+        if (outputConsole) {
+            outputConsole.appendChild(textEl);
+            outputConsole.scrollTop = outputConsole.scrollHeight; // Scroll to bottom
+
+            if (outputConsole.scrollHeight > decryptionModal.clientHeight) {
+                const removeNodes = outputConsole.querySelectorAll('p');
+                for (let n = 0; n < Math.floor(removeNodes.length / 3); n++) {
+                    outputConsole.removeChild(removeNodes[n]);
+                }
+            }
+        }
+        
+        setTimeout(consoleOutput, Math.floor(Math.random() * 200));
+    }
+
+    function initHackerAnimation() {
+        setCanvasSizes();
+
+        focal = canvas.width / 2;
+        vpx = canvas.width / 2;
+        vpy = canvas.height / 2;
+
+        for (var i = 0; i < 15; i++) {
+            squares.push(new Square(-300 + (i * 200)));
+        }
+
+        ctx.strokeStyle = ctxBars.strokeStyle = ctxBars.fillStyle = '#00FF00';
+
+        render();
+        consoleOutput();
+    }
+
+    function analyzePassword(password) {
+        let suggestions = [];
+
+        if (password.length < 8) {
+            suggestions.push("Make your password at least 8 characters long.");
+        }
+        if (!/[A-Z]/.test(password)) {
+            suggestions.push("Include at least one uppercase letter.");
+        }
+        if (!/[a-z]/.test(password)) {
+            suggestions.push("Include at least one lowercase letter.");
+        }
+        if (!/[0-9]/.test(password)) {
+            suggestions.push("Include at least one number.");
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            suggestions.push("Include at least one special character (e.g., !@#$%^&*).");
+        }
+        if (/(.)\1{2,}/.test(password)) {
+            suggestions.push("Avoid repeating characters more than twice in a row.");
+        }
+        if (/^(123|abc|qwerty|password)/i.test(password)) {
+            suggestions.push("Avoid using common words or patterns at the start of your password.");
+        }
+
+        return suggestions;
+    }
+
+    function stopHackerAnimation() {
+        // Clear all squares and bars
+        squares = [];
+        barVals = [];
+
+        // Clear canvases
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctxBars.clearRect(0, 0, canvasBars.width, canvasBars.height);
+
+        // Clear console
+        const decryptionModal = document.getElementById('decryptionModal');
+        const outputConsole = decryptionModal.querySelector(".output-console");
+        if (outputConsole) {
+            outputConsole.innerHTML = '';
+        }
+
+        animationRunning = false;
+    }
+
+    /********************************************
+     * Password Hashing and Strength Meter Functions
+     ********************************************/
+
+    // Function to handle password hashing
+    document.getElementById('hashPasswordButton').addEventListener('click', function() {
+        const password = document.getElementById('passwordInput').value.trim();
+        if (password === "") {
+            alert("Please enter a password to hash.");
+            return;
+        }
+
+        // Use a hashing function (e.g., MD5)
+        const hash = CryptoJS.MD5(password).toString(); // Example with MD5
+        document.getElementById('hashInput').value = hash;
+        document.getElementById('hashedPasswordDisplay').textContent = `Your password hash is: ${hash}`;
+    });
+
+    // Password Strength Meter Logic
+    function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            let strength = "Weak";
+            let strengthColor = "red";
+            let strengthWidth = "30%";
+
+            if (password.length > 8) {
+                strength = "Strong";
+                strengthColor = "green";
+                strengthWidth = "100%";
+            } else if (password.length > 5) {
+                strength = "Medium";
+                strengthColor = "orange";
+                strengthWidth = "60%";
+            }
+
+            document.getElementById('strength-label').textContent = strength;
+            document.getElementById('strength-bar').style.width = strengthWidth;
+            document.getElementById('strength-bar').style.backgroundColor = strengthColor;
+
+            // Get and display suggestions
+            const suggestions = analyzePassword(password);
+            const suggestionElement = document.getElementById('password-suggestion');
+            if (suggestions.length > 0) {
+                suggestionElement.innerHTML = "<h3>Suggestions to improve your password:</h3><ul>" + 
+                    suggestions.map(s => `<li>${s}</li>`).join('') + "</ul>";
+            } else {
+                suggestionElement.innerHTML = "<p>Great job! Your password is strong.</p>";
+            }
+        }
+
+    /********************************************
+     * Event Listener for Start Decryption Button
+     ********************************************/
+
+    // Function to handle Start Decryption button click
+    function startDecryptionProcess() {
+        const hashInput = document.getElementById('hashInput').value.trim();
+        const attackMethod = document.getElementById('attackMethod').value;
+        const resultOutput = document.getElementById('resultOutput');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+
+        if (hashInput === "") {
+            alert("Please enter a hash to decrypt.");
+            return;
+        }
+
+        // Store the selected attack method
+        selectedAttackMethod = attackMethod;
+
+        // Show the attack options modal
+        document.getElementById('attackOptionsModal').style.display = 'flex';
+
+        // Reset previous results
+        resultOutput.innerHTML = "";
+        progressBar.style.width = '0%';
+        progressBar.innerHTML = '0%';
+        progressContainer.style.display = 'block';
+    }
+
+    /********************************************
+     * Window Click Event to Close Modals
+     ********************************************/
+
+    // Close modals when clicking outside of them
+    window.onclick = function(event) {
+        const modals = ['explanationModal', 'helpModal', 'attackOptionsModal', 'decryptionModal', 'initialMessageModal'];
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal && event.target == modal) {
+                // Prevent closing the decryption modal by clicking outside if desired
+                if (modalId === 'decryptionModal') {
+                    // Optionally, you can add logic to prevent closing
+                    // For now, allow closing
+                    modal.style.display = 'none';
+                    stopHackerAnimation();
+                    animationRunning = false;
+                } else {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+    };
+
+    
+</script>
+</body>
+
+</html>

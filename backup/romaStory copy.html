@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tale of Caesar's Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+   <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a0f0f;
+            color: #e6d2b5;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c1a1a;
+            color: #e6d2b5;
+            padding: 20px;
+            height: 100vh;
+            border-right: 2px solid #8c1c13;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar h2 {
+            font-family: 'Cinzel', serif;
+            margin-top: 0;
+            border-bottom: 2px solid #8c1c13;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+        .sidebar a {
+            color: #e6d2b5;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar a:hover {
+            color: #f1c40f;
+            transform: translateX(5px);
+        }
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-image: url('path');
+            background-repeat: repeat;
+            background-size: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #8c1c13;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .story-section {
+            background-color: rgba(140, 28, 19, 0.1);
+            border: 2px solid #8c1c13;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .story-section:hover {
+            transform: scale(1.02);
+        }
+        .story-section h2 {
+            font-family: 'Cinzel', serif;
+            color: #8c1c13;
+            border-bottom: 1px solid #8c1c13;
+            padding-bottom: 10px;
+        }
+        .story-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        .location-frame, .character-action, .character-dialogue, .difficulty, .end-frame {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .location-frame {
+            background-color: rgba(210, 180, 140, 0.2);
+            border-left: 5px solid #d2b48c;
+        }
+        .character-action {
+            background-color: rgba(144, 238, 144, 0.2);
+            border-left: 5px solid #90ee90;
+        }
+        .character-dialogue {
+            background-color: rgba(255, 235, 205, 0.3);
+            border-left: 5px solid #ffebcd;
+            font-style: italic;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .difficulty {
+            background-color: rgba(255, 99, 71, 0.2);
+            border-left: 5px solid #ff6347;
+            animation: slideInLeft 0.5s forwards;
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .end-frame {
+            background-color: rgba(70, 130, 180, 0.2);
+            border-left: 5px solid #4682b4;
+        }
+        .puzzle-button {
+            display: block;
+            width: 30%;
+            padding: 15px;
+            text-align: center;
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        .puzzle-button:hover {
+            background-color: #a82315;
+            transform: translateY(-3px);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        
+        .chapter-content {
+       display: none;
+   }
+   .chapter-content.active {
+       display: block;
+   }
+   .locked-chapter .chapter-toggle {
+       cursor: not-allowed;
+   }
+   .locked-content {
+       display: none;
+   }
+
+
+   
+        .unlock-message {
+            text-align: center;
+            color: #8c1c13;
+            font-weight: bold;
+        }
+        .dev-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .dev-controls input {
+            width: 50px;
+            margin-left: 10px;
+            padding: 5px;
+        }
+        .locked-chapter .chapter-toggle {
+    cursor: not-allowed;
+}
+        .puzzle-button {
+            font-size: 14px;
+            padding: 8px 16px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .end-frame {
+            margin-top: 15px;
+        }
+        .story-image {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.5s, filter 0.5s;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .story-image:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .story-video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        /* Animation effects */
+        @keyframes zoomInOut {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes panLeftRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+        @keyframes panTopBottom {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(20px); }
+        }
+        @keyframes rotateSlightly {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes pulseEffect {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+        .zoom-effect { animation: zoomInOut 10s infinite alternate; }
+        .pan-left-right { animation: panLeftRight 15s infinite alternate; }
+        .pan-top-bottom { animation: panTopBottom 15s infinite alternate; }
+        .rotate-effect { animation: rotateSlightly 8s infinite alternate; }
+        .pulse-effect { animation: pulseEffect 5s infinite alternate; }
+
+        .puzzle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e0c9a6;
+            background-image: url('path/to/parchment-texture.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            border: 2px solid #8c1c13;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .encrypted-message {
+            font-size: 32px;
+            text-align: center;
+            font-family: 'Almendra Display', cursive;
+            letter-spacing: 3px;
+            color: #2a0704;
+            text-shadow: 1px 1px 0px #e0c9a6, -1px -1px 0px #e0c9a6, 1px -1px 0px #e0c9a6, -1px 1px 0px #e0c9a6;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .key-display {
+            font-size: 24px;
+            font-family: 'Cinzel', serif;
+            color: #8c1c13;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dev-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #devRomaStoryLevel {
+            width: 60px;
+            margin-right: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #resetStoryButton {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #8c1c13;
+            color: #e6d2b5;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #resetStoryButton:hover {
+            background-color: #a82315;
+        }
+
+        .chapter-content {
+            display: none;
+        }
+
+        .chapter-content.active {
+            display: block;
+        }
+
+        .locked-chapter .chapter-toggle {
+            cursor: not-allowed;
+        }
+
+        .locked-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Caesar's Scroll</h2>
+        <ul>
+            <li><a href="romaLecture.html"><i class="fas fa-scroll"></i><span>Lecture</span></a></li>
+            <li><a href="roma.html"><i class="fas fa-key"></i><span>Cipher Tool</span></a></li>
+            <li><a href="romaStory.html"><i class="fas fa-book"></i><span>Story</span></a></li>
+            <li><a href="romaPuzzle.html"><i class="fas fa-puzzle-piece"></i><span>Puzzle</span></a></li>
+            <li><a href="romaMap.html"><i class="fas fa-map-marked-alt"></i><span>Achievements</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>The Tale of Caesar's Cipher</h1>
+        <div class="dev-controls">
+            <input type="number" id="devRomaStoryLevel" min="1" max="6" value="1">
+            <button id="resetStoryButton">Reset Story</button>
+        </div>
+        <div class="story-section" id="chapter1">
+            <h2 class="chapter-toggle">Chapter 1: A Greek City Under the Night Sky <i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="location-frame">
+                    <p>A Greek city is shrouded in darkness under a cloudy night sky. The faint moonlight barely illuminates the ancient stone streets, which are paved with uneven, weathered cobblestones.</p>
+                    <!-- Assign a specific effect using the data-effect attribute -->
+                <img src="images/Greekcitynight.jpeg" alt="Greek city at night" class="story-image" data-effect="zoom-effect">
+                    </div>
+                         <!-- Video Element Usage:
+                            1. Ensure the video file 'citysearch.mp4' is in the 'images' folder.
+                            2. The 'poster' attribute sets a thumbnail image to show before the video plays.
+                            3. To enable autoplay, add the 'autoplay' attribute.
+                            4. To loop the video, add the 'loop' attribute.
+                            5. To start muted (recommended for autoplay), add the 'muted' attribute.
+                            6. To show video controls, add the 'controls' attribute.
+                            7. The 'data-src' attribute is used for lazy loading. If not using lazy loading, change it to 'src'.
+                            8. Remove the 'preload="none"' attribute if you want the video to start loading immediately.
+                            
+                            Example with autoplay, loop, and muted:
+                            <video class="story-video" data-src="images/citysearch.mp4" poster="images/video-poster.jpg" autoplay loop muted>
+                            -->
+                        
+                    <div class="character-action">
+                        <p>In the midst of a war between Greece and Rome, a Roman soldier has stolen a critical scroll containing Greece's defense strategy. Greek soliders were searching for the scroll and the Roman soldier.</p>
+                        <video class="story-video" data-src="images/citysearch.mp4" poster="images/video-poster.jpg" preload="none" autoplay loop>
+                            <source src="images/citysearch.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <!-- Remove this img tag if you're using the video element -->
+                        <!-- <img src="" alt="Stone buildings" class="story-image" data-effect="pan-left-right"> -->
+                    </div>
+                    <div class="difficulty">
+                        <p>A Roman soldier, Sam,  clad in worn armor emerges from the shadows, clutching a scroll tightly in his hand. His eyes dart around with anxiety and determination, aware that the information he holds could determine Rome's fate. He moves quickly, navigating through narrow alleys to avoid Greek patrols.</p>
+                        <!-- You can choose from zoom-effect, pan-left-right, pan-top-bottom, rotate-effect, or pulse-effect -->
+                        <img src="images/characterR1.png" alt="City walls" class="story-image pan-top-bottom">
+                    </div>
+                    <div class="puzzle-frame">
+                        <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(1)">I need your help!</a>
+                    </div>
+                    
+                </div>
+            </div>
+      
+
+        <div class="story-section" id="chapter2">
+            <h2 class="chapter-toggle"> Chapter 2: The Tunnel Entrance at the City's Edge <i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="end-frame">
+                    <p>You and Sam successfully escape from Greek Solider and meet at the tunnel entrance.</p>
+                    <video class="story-video" data-src="../images/Roma1_4.mp4" poster="images/video-poster.jpg" preload="none" autoplay loop>
+                        <source src="../images/Roma1_4.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="location-frame">
+                    <p>A hidden tunnel entrance at the edge of the city, covered by dense bushes and thick vines. The entrance is small and partially obscured, with vines hanging down like curtains.</p>
+                    <img src="../images/Roma2_1.jpeg" alt="Tunnel entrance" class="story-image">
+                </div>
+                <div class="character-action">
+                    <p>The surrounding stone walls of the tunnel are rough, dark gray rocks, covered in patches of green moss and streaks of moisture. Dim light from a nearby torch casts shifting shadows on the walls, creating an atmosphere of secrecy and mystery.</p>
+                    <img src="../images/Roma2_2.png" alt="Tunnel walls" class="story-image">
+                </div>
+                <div class="difficulty">
+                    <p>The are some mysterious words on this wall. must be the message to unlock the mechanism.</p>
+                    <video class="story-video" data-src="../images/Roma2_3.mp4" poster="images/video-poster.jpg" preload="none" autoplay loop>
+                        <source src="../images/Roma2_3.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="puzzle-frame">
+                    <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(2)">Decode the message to find the exit</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-section" id="chapter3">
+            <h2 class="chapter-toggle">Chapter 3: Head to the Forest <i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="end-frame">
+                    <p>The hidden tunnel entrance suggests a secret passage, adding intrigue to the unfolding story.</p>
+                    <video class="story-video" data-src="../images/Roma2_4.mp4" poster="images/video-poster.jpg" preload="none" autoplay loop>
+                        <source src="../images/Roma2_4.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="location-frame">
+                    <p>Inside the tunnel, the stone walls are cold and slick with moisture, their dark gray surfaces glistening in the dim light of a torch. The narrow passageway winds slightly, with the rough texture of the walls and ceiling occasionally brushing against those who pass through.</p>
+                    <img src="images/Roma3_1.jpeg" alt="Tunnel inside" class="story-image">
+                </div>
+                <div class="character-action">
+                    <p>Ancient symbols and grooves are carved into a stone wall blocking the path ahead, the engravings filled with dirt and partially obscured by moss, hinting at a hidden mechanism.</p>
+                    <img src="images/Roma3_2.jpeg" alt="Hidden mechanism" class="story-image">
+                </div>
+                <div class="character-dialogue">
+                    <p>Sam Heathcote, a Roman soldier, lights a torch and carefully examines the ancient symbols, comparing them to a scroll he holds, searching for the correct sequence to unlock the hidden mechanism.</p>
+                    <img src="images/Roma3_3.jpeg" alt="Sam examining" class="story-image">
+                </div>
+                <div class="puzzle-frame">
+                    <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(3)">Solve the Puzzle</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-section" id="chapter4">
+            <h2 class="chapter-toggle">Chapter 4 <i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="end-frame">
+                    <p>The hidden tunnel entrance suggests a secret passage, adding intrigue to the unfolding story.</p>
+                    <img src="../images/Roma3_4.jpeg" alt="Secret passage" class="story-image">
+                </div>
+                <div class="location-frame">
+                    <p>Inside the tunnel, the stone walls are cold and slick with moisture, their dark gray surfaces glistening in the dim light of a torch. The narrow passageway winds slightly, with the rough texture of the walls and ceiling occasionally brushing against those who pass through.</p>
+                    <img src="../images/Roma4_1.png" alt="Tunnel inside" class="story-image">
+                </div>
+                <div class="character-action">
+                    <p>Ancient symbols and grooves are carved into a stone wall blocking the path ahead, the engravings filled with dirt and partially obscured by moss, hinting at a hidden mechanism.</p>
+                    <img src="../images/Roma4_2.jpeg" alt="Hidden mechanism" class="story-image">
+                </div>
+                <div class="character-dialogue">
+                    <p>Sam Heathcote, a Roman soldier, lights a torch and carefully examines the ancient symbols, comparing them to a scroll he holds, searching for the correct sequence to unlock the hidden mechanism.</p>
+                    <img src="../images/Roma4_3.png" alt="Sam examining" class="story-image">
+                </div>
+                <div class="character-dialogue">
+                    <p>Sam Heathcote, a Roman soldier, lights a torch and carefully examines the ancient symbols, comparing them to a scroll he holds, searching for the correct sequence to unlock the hidden mechanism.</p>
+                    <img src="../images/Roma4_4.jpeg" alt="Sam examining" class="story-image">
+                </div>
+                <div class="puzzle-frame">
+                    <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(4)">Solve the Puzzle</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-section" id="chapter5">
+            <h2 class="chapter-toggle">Chapter 5: Outside the Caesar Tent<i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="end-frame">
+                    <p>The hidden tunnel entrance suggests a secret passage, adding intrigue to the unfolding story.</p>
+                    <img src="../images/Roma4_4.png" alt="Secret passage" class="story-image">
+                </div>
+                <div class="location-frame">
+                    <p>Inside the tunnel, the stone walls are cold and slick with moisture, their dark gray surfaces glistening in the dim light of a torch. The narrow passageway winds slightly, with the rough texture of the walls and ceiling occasionally brushing against those who pass through.</p>
+                    <img src="../images/Roma5_1.jpeg" alt="Tunnel inside" class="story-image">
+                </div>
+                <div class="character-action">
+                    <p>Ancient symbols and grooves are carved into a stone wall blocking the path ahead, the engravings filled with dirt and partially obscured by moss, hinting at a hidden mechanism.</p>
+                    <img src="../images/Roma5_2.jpeg" alt="Hidden mechanism" class="story-image">
+                </div>
+                <div class="character-dialogue">
+                    <p>Sam Heathcote, a Roman soldier, lights a torch and carefully examines the ancient symbols, comparing them to a scroll he holds, searching for the correct sequence to unlock the hidden mechanism.</p>
+                    <img src="../images/Roma3_3.jpeg" alt="Sam examining" class="story-image">
+                </div>
+                <div class="puzzle-frame">
+                    <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(5)">Solve the Puzzle</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-section" id="chapter6">
+            <h2 class="chapter-toggle">Chapter 6: The Emperor<i class="fas fa-chevron-down"></i></h2>
+            <div class="chapter-content">
+                <div class="end-frame">
+                    <p>The hidden tunnel entrance suggests a secret passage, adding intrigue to the unfolding story.</p>
+                    <img src="../images/Roma5_4.png" alt="Secret passage" class="story-image">
+                </div>
+                <div class="location-frame">
+                    <p>Inside the tunnel, the stone walls are cold and slick with moisture, their dark gray surfaces glistening in the dim light of a torch. The narrow passageway winds slightly, with the rough texture of the walls and ceiling occasionally brushing against those who pass through.</p>
+                    <img src="../images/Roma6_1.jpeg" alt="Tunnel inside" class="story-image">
+                </div>
+                <div class="character-action">
+                    <p>Ancient symbols and grooves are carved into a stone wall blocking the path ahead, the engravings filled with dirt and partially obscured by moss, hinting at a hidden mechanism.</p>
+                    <img src="../images/Roma6_2.jpeg" alt="Hidden mechanism" class="story-image">
+                </div>
+                <div class="character-dialogue">
+                    <p>Sam Heathcote, a Roman soldier, lights a torch and carefully examines the ancient symbols, comparing them to a scroll he holds, searching for the correct sequence to unlock the hidden mechanism.</p>
+                    <img src="../images/Roma6_3.jpeg" alt="Sam examining" class="story-image">
+                </div>
+                <div class="puzzle-frame">
+                    <a href="romaPuzzle.html" class="puzzle-button" onclick="storeLevel(6)">Solve the Puzzle</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    </div>
+
+    <script>
+        let currentLevel;
+        let chapters;
+        let devLevelInput;
+        let resetStoryButton;
+        
+        
+        function updateChapters(level) {
+                chapters.forEach((chapter, index) => {
+                    const chapterContent = chapter.querySelector('.chapter-content');
+                    const puzzleButton = chapter.querySelector('.puzzle-button');
+                    const toggle = chapter.querySelector('.chapter-toggle');
+
+                    // Fully unlocked previous chapters
+                    if (index < level - 1) {
+                        chapter.classList.remove('locked-chapter');
+                        chapterContent.classList.remove('locked-content');
+                        if (puzzleButton) puzzleButton.style.display = 'none'; // Hide the puzzle button for past chapters
+                        toggle.style.cursor = 'pointer'; // Allow toggling for previous chapters
+                    } 
+                    
+                    // Current chapter (unlocked with puzzle button visible)
+                    else if (index === level - 1) {
+                        chapter.classList.remove('locked-chapter');
+                        chapterContent.classList.remove('locked-content');
+                        if (puzzleButton) puzzleButton.style.display = 'block'; // Show the puzzle button for the current chapter
+                        toggle.style.cursor = 'pointer'; // Enable toggling for the current chapter
+                    } 
+                    
+                    // Locked future chapters
+                    else {
+                        chapter.classList.add('locked-chapter');
+                        chapterContent.classList.add('locked-content');
+                        if (puzzleButton) puzzleButton.style.display = 'none'; // Hide the puzzle button for future chapters
+                        toggle.style.cursor = 'not-allowed'; // Disable toggling for locked future chapters
+                    }
+                });
+
+                // Update the current level in localStorage to track progress
+                localStorage.setItem('romaStoryLevel', level); 
+            }
+
+
+
+    
+        function toggleChapter(chapterIndex) {
+            const chapter = chapters[chapterIndex];
+            const content = chapter.querySelector('.chapter-content');
+            const toggle = chapter.querySelector('.chapter-toggle i');
+    
+            if (chapter.classList.contains('locked-chapter')) {
+                return; // Don't toggle locked chapters
+            }
+    
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                toggle.classList.remove('fa-chevron-up');
+                toggle.classList.add('fa-chevron-down');
+            } else {
+                content.classList.add('active');
+                toggle.classList.remove('fa-chevron-down');
+                toggle.classList.add('fa-chevron-up');
+            }
+        }
+    
+        function resetStory() {
+            currentLevel = 1;
+            devLevelInput.value = currentLevel;
+            localStorage.setItem('romaStoryLevel', currentLevel);
+            localStorage.setItem('lastSolvedPuzzleLevel', 0);
+            AchievementSystem.initializeUser(); // Reset achievement system
+            updateChapters(currentLevel);
+    
+            chapters.forEach((chapter, index) => {
+                const content = chapter.querySelector('.chapter-content');
+                content.classList.remove('active');
+                const toggle = chapter.querySelector('.chapter-toggle i');
+                toggle.classList.remove('fa-chevron-up');
+                toggle.classList.add('fa-chevron-down');
+    
+                if (index > 0) {
+                    chapter.classList.add('locked-chapter');
+                    content.classList.add('locked-content');
+                }
+            });
+    
+            window.scrollTo(0, 0);
+            console.log('Story reset to level 1');
+        }
+    
+        window.onload = function() {
+            // Retrieve all story sections (chapters)
+            chapters = document.querySelectorAll('.story-section');
+            devLevelInput = document.getElementById('devRomaStoryLevel');
+            resetStoryButton = document.getElementById('resetStoryButton');
+
+            // Add event listeners to each chapter's toggle for expand/collapse functionality
+            chapters.forEach((chapter, index) => {
+                const toggle = chapter.querySelector('.chapter-toggle');
+                toggle.addEventListener('click', () => toggleChapter(index));
+            });
+
+            // Get the current level from localStorage
+            const lastSolvedLevel = parseInt(localStorage.getItem('lastSolvedPuzzleLevel')) || 0; // Last solved level
+            const storedStoryLevel = parseInt(localStorage.getItem('romaStoryLevel')) || 1; // Stored level from story progress
+            currentLevel = Math.max(storedStoryLevel, lastSolvedLevel + 1); // Calculate the current level (next unsolved level)
+
+            // Set the value of the level input to the current level
+            devLevelInput.value = currentLevel;
+
+            // Update the chapters based on the current level (lock/unlock appropriate chapters)
+            updateChapters(currentLevel);
+
+            // Automatically expand the correct chapter and scroll to it
+            const expandChapter = parseInt(localStorage.getItem('expandChapter'));
+            if (expandChapter && expandChapter <= currentLevel) {
+                toggleChapter(expandChapter - 1); // Expand the correct chapter
+                setTimeout(() => {
+                    chapters[expandChapter - 1].scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll to the correct chapter
+                }, 100);
+
+                // Clear expandChapter from localStorage after expanding
+                localStorage.removeItem('expandChapter');
+            }
+
+            // Reset the story when the reset button is clicked
+            resetStoryButton.addEventListener('click', resetStory);
+
+            // Update the level input dynamically
+            devLevelInput.addEventListener('input', function() {
+                currentLevel = parseInt(this.value); // Set the current level based on the input value
+                updateChapters(currentLevel); // Update the chapters accordingly
+            });
+        };
+
+
+    
+        // Lazy load videos
+        const videos = document.querySelectorAll('.story-video');
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    video.src = video.dataset.src;
+                    video.load();
+                    observer.unobserve(video);
+                }
+            });
+        });
+    
+        videos.forEach(video => {
+            videoObserver.observe(video);
+        });
+    
+        // Preload videos for the next chapter
+        function preloadNextChapterVideos(currentChapter) {
+            const nextChapter = document.getElementById(`chapter${currentChapter + 1}`);
+            if (nextChapter) {
+                const nextVideos = nextChapter.querySelectorAll('.story-video');
+                nextVideos.forEach(video => {
+                    const preloadLink = document.createElement('link');
+                    preloadLink.rel = 'preload';
+                    preloadLink.as = 'video';
+                    preloadLink.href = video.dataset.src;
+                    document.head.appendChild(preloadLink);
+                });
+            }
+        }
+    
+        // Call this function when a chapter is expanded
+        function onChapterExpand(chapterNumber) {
+            preloadNextChapterVideos(chapterNumber);
+        }
+
+        function storeLevel(level) {
+    localStorage.setItem('currentPuzzleLevel', level); // Store the level in localStorage
+}
+
+    </script>
+    
+</body>
+</html>

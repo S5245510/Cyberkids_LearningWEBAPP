@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Briefing: Time Traveler's Toolkit</title>
+    <link rel="stylesheet" href="../style/missionbrief.css">
+    <link rel="stylesheet" href="../style/all.min.css">
+    <script src="progressTracker.js"></script>
+    <script src="achievements.js"></script>
+    <style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #0a192f;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #00ffaa;
+    width: 80%;
+    max-width: 600px;
+    color: #00ffaa;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.3);
+}
+
+#agentIDAnimation {
+    font-size: 48px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 170, 0.7);
+}
+
+.modal-content button {
+    background-color: #00ffaa;
+    color: #0a192f;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.modal-content button:hover {
+    background-color: #00cc88;
+}
+
+.modal-content button {
+    background-color: #00ffaa;
+    color: #0a192f;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+.modal-content button:hover {
+    background-color: #00cc88;
+}
+#missionImportanceModal .modal-content {
+    background-color: #0a192f;
+    color: #00ffaa;
+    border: 2px solid #00ffaa;
+    box-shadow: 0 0 30px rgba(0, 255, 170, 0.5);
+}
+
+#missionImportanceModal h2 {
+    color: #ff3e00;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+#missionImportanceModal p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+#missionImportanceModal button {
+    background-color: #ff3e00;
+    color: #0a192f;
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+#missionImportanceModal button:hover {
+    background-color: #ff6b3d;
+    box-shadow: 0 0 15px rgba(255, 62, 0, 0.7);
+}
+
+</style>
+
+        
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1 class="mission-title">New Agent Briefing</h1>
+        <div class="content-wrapper">
+            <div class="left-column">
+                <div class="character-display" id="character-display">
+                    <video width="100%" height="100%" autoplay loop muted playsinline>
+                        <source src="../images/missionbriefing.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="futuristic-element">
+                    <div class="agent-status">
+                        <div class="status-item">
+                            <div class="status-label">Agent ID</div>
+                            <div class="status-value" id="agent-id-display">Not Set</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Clearance Level</div>
+                            <div class="status-value">Rookie</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Mission Status</div>
+                            <div class="status-value">Briefing</div>
+                        </div>
+                    </div>
+                    <div class="mission-timer" id="mission-timer">00:00:00</div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <!-- Terminal-like explanation container -->
+                <div class="explanation-container">
+                    <!-- Terminal header with title and control buttons -->
+                    <div class="terminal-header">
+                        <div class="terminal-title">Mission Details</div>
+                        <div class="terminal-controls">
+                            <span class="terminal-minimize"></span>
+                            <span class="terminal-maximize"></span>
+                            <span class="terminal-close"></span>
+                        </div>
+                    </div>
+                    <!-- Area for new things to add -->
+                    <div id="explanation"></div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="assignAgentID()">Accept Mission</button>
+                        <button class="action-button" onclick="reviewIntel()">Review Intel</button>
+                        <button class="action-button" onclick="equipmentCheck()">Equipment Check</button>
+                        
+                    </div>
+                    <div id="agentIDModal" class="modal">
+                        <div class="modal-content">
+                            <h2>Agent ID Assignment</h2>
+                            <div id="agentIDAnimation"></div>
+                            <p>Your assigned Agent ID is: <span id="assignedAgentID"></span></p>
+                            <button onclick="confirmAgentID()">Confirm</button>
+                            <button onclick="resetAgentID()">Reset ID</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Add this modal for Intel Review -->
+                    <div id="intelModal" class="modal">
+                        <div class="modal-content">
+                            <h2>Mission Intel</h2>
+                            <div id="intelContent"></div>
+                            <button onclick="closeModal()">Close</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Add this modal for Equipment Check -->
+                    <div id="equipmentModal" class="modal">
+                        <div class="modal-content">
+                            <h2>Equipment Check</h2>
+                            <div id="equipmentContent"></div>
+                            <button onclick="closeModal()">Close</button>
+                        </div>
+                    </div>
+                    
+                </div>
+               
+         </div>
+            
+        </div>
+    </div>
+
+    <div id="agentIDModal" class="modal">
+        <div class="modal-content">
+            <h2>Agent ID Assignment</h2>
+            <div id="agentIDAnimation"></div>
+            <p>Your assigned Agent ID is: <span id="assignedAgentID"></span></p>
+            <button onclick="confirmAgentID()">Confirm</button>
+            <button onclick="resetAgentID()">Reset ID</button>
+        </div>
+    </div>
+    
+    <div id="missionImportanceModal" class="modal">
+        <div class="modal-content">
+            <h2>Mission Briefing</h2>
+            <p>Agent <span id="finalAgentID"></span>, your mission is of the utmost importance.</p>
+            <p>The fate of global cybersecurity rests in your hands. Your actions in the past will shape the future of digital security.</p>
+            <p>Remember your training, stay vigilant, and trust no one but yourself.</p>
+            <p>The world is counting on you. Good luck, Agent.</p>
+            <button onclick="startMission()">Acknowledge</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const explanation = document.getElementById('explanation');
+            const briefing = [
+                "Welcome, new agent. The year is 2377, and the world's cybersecurity has collapsed due to World War V.",
+                "Your mission is critical: travel through time to gather information about cryptographic techniques from the past.",
+                "This knowledge is crucial to rebuilding the data safety protocols of our time.",
+                "You will be assigned to different time periods, assisting key cryptographers in their work.",
+                "Your actions may alter the course of cryptographic history, so proceed with caution.",
+                "The fate of our world's digital security rests in your hands.",
+                "Are you ready to begin your journey through time and secure our future?"
+            ];
+
+            function typeWriter(text, i) {
+                if (i < text.length) {
+                    explanation.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(function() {
+                        typeWriter(text, i);
+                    }, 50);
+                } else {
+                    explanation.innerHTML += '<br><br>';
+                    showNextLine();
+                }
+            }
+
+            function showNextLine() {
+                if (briefing.length > 0) {
+                    const line = briefing.shift();
+                    typeWriter(line, 0);
+                } else {
+                    document.querySelector('.input-section').style.display = 'block';
+                }
+            }
+
+            showNextLine();
+
+            // Mission timer
+            let seconds = 0;
+            setInterval(function() {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                document.getElementById('mission-timer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+            }, 1000);
+        });
+
+        
+        function assignAgentID() {
+    const agentID = Math.floor(Math.random() * 900) + 100; // Generate random 3-digit number
+    animateAndSetAgentID(agentID);
+}
+
+function animateAndSetAgentID(agentID) {
+    const modal = document.getElementById('agentIDModal');
+    const animationContainer = document.getElementById('agentIDAnimation');
+    const assignedIDSpan = document.getElementById('assignedAgentID');
+    
+    // Clear previous animation
+    animationContainer.innerHTML = '';
+    
+    // Create animation effect
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const randomID = Math.floor(Math.random() * 900) + 100;
+            animationContainer.textContent = randomID;
+            
+            if (i === 19) {
+                animationContainer.textContent = agentID;
+                assignedIDSpan.textContent = agentID;
+                localStorage.setItem('UserID', agentID);
+            }
+        }, i * 100);
+    }
+    
+    modal.style.display = 'block';
+}
+
+function resetAgentID() {
+    const newAgentID = Math.floor(Math.random() * 900) + 100;
+    animateAndSetAgentID(newAgentID);
+}
+
+function confirmAgentID() {
+    const agentID = localStorage.getItem('UserID');
+    document.getElementById('agentIDModal').style.display = 'none';
+    document.getElementById('finalAgentID').textContent = agentID;
+    document.getElementById('missionImportanceModal').style.display = 'block';
+}
+
+
+function reviewIntel() {
+    const intelContent = document.getElementById('intelContent');
+    intelContent.innerHTML = `
+        <h3>Ancient Rome (Caesar Cipher)</h3>
+        <p>Technical Data: Caesar shift algorithm, key range 1-25</p>
+        <p>Location: Roman Senate, 44 BC</p>
+        
+        <h3>Modern Age (Vigenère Cipher)</h3>
+        <p>Technical Data: Polyalphabetic substitution cipher, keyword-based</p>
+        <p>Location: Bletchley Park, England, 1940s</p>
+        
+        <h3>Digital Age (Binary Code)</h3>
+        <p>Technical Data: ASCII encoding, binary-to-text conversion</p>
+        <p>Location: Silicon Valley, California, 2070s</p>
+        
+        <h3>Quantum Future (Hash Functions)</h3>
+        <p>Technical Data: SHA-256 algorithm, collision resistance</p>
+        <p>Location: Quantum Research Facility, 2177</p>
+    `;
+    
+    document.getElementById('intelModal').style.display = 'block';
+}
+
+function equipmentCheck() {
+    const equipmentContent = document.getElementById('equipmentContent');
+    equipmentContent.innerHTML = `
+        <h3>Ancient Rome</h3>
+        <ul>
+            <li>Wax Tablets and Stylus</li>
+            <li>Caesar Cipher Decoder Ring</li>
+        </ul>
+        
+        <h3>Modern Age</h3>
+        <ul>
+            <li>Enigma Machine Replica</li>
+            <li>Vigenère Table</li>
+        </ul>
+        
+        <h3>Digital Age</h3>
+        <ul>
+            <li>Portable Binary-to-Text Converter</li>
+            <li>Early Model Personal Computer</li>
+        </ul>
+        
+        <h3>Quantum Future</h3>
+        <ul>
+            <li>Quantum Encryption Device</li>
+            <li>Holographic Data Visualizer</li>
+        </ul>
+    `;
+    
+    document.getElementById('equipmentModal').style.display = 'block';
+}
+
+function confirmAgentID() {
+    const agentID = localStorage.getItem('UserID');
+    document.getElementById('agentIDModal').style.display = 'none';
+    document.getElementById('finalAgentID').textContent = agentID;
+    document.getElementById('missionImportanceModal').style.display = 'block';
+}
+
+function startMission() {
+    
+    window.location.href = 'chapterlist.html';
+}
+
+
+function closeModal() {
+    document.getElementById('agentIDModal').style.display = 'none';
+    document.getElementById('intelModal').style.display = 'none';
+    document.getElementById('equipmentModal').style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}
+window.onload = function() {
+    localStorage.clear();
+    AchievementSystem.unlockAchievement('mission_start');
+};
+</script>
+    </script>
+</body>
+</html>
