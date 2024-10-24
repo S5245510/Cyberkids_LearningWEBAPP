@@ -22,13 +22,25 @@ E-learning is very common in most Brisbane high schools; however, most of the le
 
 - **Dynamic Story Endings**: Student performance and ratings while solving puzzles will affect the final outcome of their journey. Depending on their success, students will either achieve a successful ending or face a bad ending, adding an element of challenge and excitement.
 
+![Alt Text](/screenshot/feature1.png)
+
 - **Interactive Lessons**: Learn about encryption, hashing, and number systems with examples and activities.
+
+![Alt Text](/screenshot/feature2.png)
 
 - **Stories and Puzzles**: Integrated stories and puzzles throughout the learning experience to create a more engaging journey. The chapters and puzzles are designed from easy to hard levels to gradually build student confidence and skills.
 
+![Alt Text](/screenshot/feature3.png)
+
 - **Achievement, Scoreboard, and Rating System**: Track performance with achievements, a scoreboard, and a rating system to motivate and encourage students.
 
+![Alt Text](/screenshot/feature4.png)
+  ![Alt Text](/screenshot/feature42.png)
+  ![Alt Text](/screenshot/feature43.png)
+
 - **Hint System**: Hints are provided in every puzzle and chapter to ensure students are not frustrated by failure and can continue learning.
+
+![Alt Text](/screenshot/feature5.png)
 
 - **Tutor-Control**: Available on the chapter list page, where tutors can unlock specific chapters for students by entering a code. Below is an example of the HTML code used to implement this feature:
 
