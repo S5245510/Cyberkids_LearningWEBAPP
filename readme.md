@@ -103,13 +103,27 @@ Welcome to CyberApp! Follow these steps to set up the web application and experi
 
 ## Prerequisites
 
-Before installing CyberApp, ensure you have the following:
+    System Requirements 
 
-- Ubuntu or another Linux-based system
-- Apache Web Server (apache2) installed
-- VLC Media Player (for MP4 playback) installed
-- Firefox Web Browser installed
-- `sudo` privileges
+    Operating System: Ubuntu or another Linux-based system preferred/ Any platform with local webserver allowed 
+
+    Web Server: Apache Web Server (apache2) 
+
+    Media Player: VLC Media Player (for MP4 playback) 
+
+    Web Browser: Firefox/ Chrome/ Edge 
+
+    Admin/ Sudo privileges (for installation) 
+
+    Testing VM Specifications (Minimum):  
+
+    3 CPUS 
+
+    4GB RAM  
+
+    64MB VideoMemory 
+
+    1GB available Space 
 
 ## Step-by-Step Installation
 
