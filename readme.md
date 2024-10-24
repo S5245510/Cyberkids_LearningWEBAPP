@@ -20,7 +20,7 @@ E-learning is very common in most Brisbane high schools; however, most of the le
 
 ### Features
 
-- **Dynamic Story Endings**: Student performance and ratings while solving puzzles will affect the final outcome of their journey. Depending on their success, students will either achieve a successful ending or face a bad ending, adding an element of challenge and excitement.
+- **Stories and Puzzles**: Integrated stories and puzzles throughout the learning experience to create a more engaging journey. The chapters and puzzles are designed from easy to hard levels to gradually build student confidence and skills.
 
 ![Alt Text](/screenshot/feature1.png)
 
@@ -28,7 +28,8 @@ E-learning is very common in most Brisbane high schools; however, most of the le
 
 ![Alt Text](/screenshot/feature2.png)
 
-- **Stories and Puzzles**: Integrated stories and puzzles throughout the learning experience to create a more engaging journey. The chapters and puzzles are designed from easy to hard levels to gradually build student confidence and skills.
+
+- **Dynamic Story Endings**: Student performance and ratings while solving puzzles will affect the final outcome of their journey. Depending on their success, students will either achieve a successful ending or face a bad ending, adding an element of challenge and excitement.
 
 ![Alt Text](/screenshot/feature3.png)
 
@@ -112,20 +113,21 @@ Before installing CyberApp, ensure you have the following:
 
 ## Step-by-Step Installation
 
-1. **Download and Prepare the Setup Script**
+1. **Download and Prepare the Setup Script and Source Code**
 
-   - cd \<repository\_directory>Clone the repository or download the setup script (`webapp_setup.sh`) from the repository:
+   - cd \<repository\_directory>Clone the repository from the GitHub:
      ```bash
-     git Cyberkids_LearningWEBAPPyberkids_LearningWEBAPP.git
+     git https://github.com/S5245510/Cyberkids_LearningWEBAPP.git
      cd Cyberkids_LearningWEBAPP
      ```
 ![Alt Text](/screenshot/install1.png)
+
 2. **Run the Setup Script**
 
    - Make sure the `webapp_setup.sh` script is executable:
 
      ```bash
-     chmod +x webapp_setup.sh
+     sudo chmod +x webapp_setup.sh
      ```
 
    - Execute the setup script:
@@ -146,10 +148,45 @@ Before installing CyberApp, ensure you have the following:
 
 3. **Check the Installation**
 
-   - After running the setup script, you will find a new file on your desktop called **CyberApp Mission**. Double-click this file to start the immersive missioad
+   - After running the setup script, you will find a new file on your desktop called **CyberApp Mission**. Double-click this file to start the immersive mission.
+
    ![Alt Text](/screenshot/install2.png)
+
    ![Alt Text](/screenshot/install3.png)
 
+  -Make sure the /var/www/html folder has all files from GitHub. 
+
+  ![Alt Text](/screenshot/install32.png)
+
+4. **Troubleshooting**
+
+ 
+
+If encounter any permission deny issue, you could try to enter the root level by: 
+ 
+
+ ```bash
+ su -
+ ```
+
+ 
+then open the sudoers.tmp to add user account to root privilage 
+
+ 
+ ```bash
+ sudo visudo
+ ```
+
+ ![Alt Text](/screenshot/trouble1.png)
+
+
+ 
+Find ”root ALL=(ALL:ALL) ALL”  
+Add a line (revise to your name) ”username ALL=(ALL:ALL) ALL” 
+Use Ctrl+X to leave and save the file. 
+Restart the VM to install again.  
+
+![Alt Text](/screenshot/trouble2.png)
 ## Uninstallation
 
 To remove CyberApp, delete the web app files and desktop shortcuts manually:
@@ -166,24 +203,29 @@ Thank you for installing CyberApp! Enjoy the journey through cryptography.
 
 ### Running Cyberkids
 
-1. **Download the Web App**: Obtain the complete Cyberkids package, which includes all necessary HTML, JavaScript, CSS files, videos, and other resources.
-
-2. **Set Up a Local Web Server**:
-
-   - For Windows, Mac, or Linux, you can use Python's built-in server:
-     ```sh
-     python -m http.server 8000
-     ```
-   - Alternatively, use Apache or any other web server to host the files locally.
-
-3. **Mission-Style Startup Script (Linux)**:
+1. **Mission-Style Startup Script (Linux)**:
 
    - You can use the provided desktop file `launch_cyberapp_mission.desktop` which shown as "CyberAPP Mission" in Desktop to run the mission-style script (`open_localhost_mission.sh`) automatically.
-   - If not executable, run `chmod +x launch_cyberapp_mission.desktop` to make it executable and right-click to "Allow Launching".
+   - If not executable, run `sudo chmod +x launch_cyberapp_mission.desktop` to make it executable and right-click to "Allow Launching".
+
+     ![Alt Text](/screenshot/run1.png)
+
+    ![Alt Text](/screenshot/run2.png)
+
    - Simply double-click on "CyberAPP Mission", and it will execute the mission-style script to launch Cyberkids.
    - This adds an interactive experience, creating a more fun and exciting start for students by simulating a mission brief.
 
-4. **Access the Application**: Open your browser and navigate to `http://localhost:8000` (or the port you've configured).
+   ![Alt Text](/screenshot/install3.png)
+
+   ![Alt Text](/screenshot/run3.png)
+  
+
+OR 2.  **Set Up a Local Web Server**:
+
+
+  -Use Apache or any other web server to host the files locally.
+
+ **Access the Application**: Open your browser and navigate to `http://localhost` (or the port you've configured).
 
 ### Offline Deployment (Linux VM)
 
