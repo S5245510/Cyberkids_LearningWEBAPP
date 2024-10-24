@@ -104,7 +104,7 @@ Before installing CyberApp, ensure you have the following:
 
    - cd \<repository\_directory>Clone the repository or download the setup script (`webapp_setup.sh`) from the repository:
      ```bash
-     giCyberkids_LearningWEBAPPyberkids_LearningWEBAPP.git
+     git Cyberkids_LearningWEBAPPyberkids_LearningWEBAPP.git
      cd Cyberkids_LearningWEBAPP
      ```
 
