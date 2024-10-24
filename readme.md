@@ -84,10 +84,69 @@ E-learning is very common in most Brisbane high schools; however, most of the le
 
 ## Installation and Setup
 
-### Requirements
+# Installation Instructions for CyberApp
 
-- A platform capable of running a local web server (e.g., Apache, Nginx, or Python SimpleHTTPServer).
-- An MP4 player integrated with the browser (most modern browsers have this capability).
+Welcome to CyberApp! Follow these steps to set up the web application and experience the immersive mission briefing.
+
+## Prerequisites
+
+Before installing CyberApp, ensure you have the following:
+
+- Ubuntu or another Linux-based system
+- Apache Web Server (apache2) installed
+- VLC Media Player (for MP4 playback) installed
+- Firefox Web Browser installed
+- `sudo` privileges
+
+## Step-by-Step Installation
+
+1. **Download and Prepare the Setup Script**
+
+   - cd \<repository\_directory>Clone the repository or download the setup script (`webapp_setup.sh`) from the repository:
+     ```bash
+     giCyberkids_LearningWEBAPPyberkids_LearningWEBAPP.git
+     cd Cyberkids_LearningWEBAPP
+     ```
+
+2. **Run the Setup Script**
+
+   - Make sure the `webapp_setup.sh` script is executable:
+
+     ```bash
+     chmod +x webapp_setup.sh
+     ```
+
+   - Execute the setup script:
+
+     ```bash
+     ./webapp_setup.sh
+     ```
+
+   This script will:
+
+   - Create and set up the web app directory in `/var/www/html/`
+   - Copy necessary files
+   - Set the correct permissions
+   - Restart the Apache server
+   - Create an immersive mission script (`launch_mission.sh`) and a Desktop shortcut (`launch_cyberapp_mission.desktop`)
+
+3. **Check the Installation**
+
+   - After running the setup script, you will find a new file on your desktop called **CyberApp Mission**. Double-click this file to start the immersive missioad
+
+## Uninstallation
+
+To remove CyberApp, delete the web app files and desktop shortcuts manually:
+
+```bash
+sudo rm -rf /var/www/html/*
+rm ~/Desktop/launch_mission.sh
+rm ~/Desktop/launch_cyberapp_mission.desktop
+```
+
+Thank you for installing CyberApp! Enjoy the journey through cryptography.
+
+
 
 ### Running Cyberkids
 
@@ -103,8 +162,9 @@ E-learning is very common in most Brisbane high schools; however, most of the le
 
 3. **Mission-Style Startup Script (Linux)**:
 
-   - You can use the provided desktop file `localhost.desktop` to run the mission-style script (`open_localhost_mission.sh`) automatically.
-   - Simply double-click on `localhost.desktop`, and it will execute the mission-style script to launch Cyberkids.
+   - You can use the provided desktop file `launch_cyberapp_mission.desktop` which shown as "CyberAPP Mission" in Desktop to run the mission-style script (`open_localhost_mission.sh`) automatically.
+   - If not executable, run `chmod +x launch_cyberapp_mission.desktop` to make it executable and right-click to "Allow Launching".
+   - Simply double-click on "CyberAPP Mission", and it will execute the mission-style script to launch Cyberkids.
    - This adds an interactive experience, creating a more fun and exciting start for students by simulating a mission brief.
 
 4. **Access the Application**: Open your browser and navigate to `http://localhost:8000` (or the port you've configured).
