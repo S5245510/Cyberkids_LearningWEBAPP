@@ -119,7 +119,7 @@ Before installing CyberApp, ensure you have the following:
      git Cyberkids_LearningWEBAPPyberkids_LearningWEBAPP.git
      cd Cyberkids_LearningWEBAPP
      ```
-
+![Alt Text](/screenshot/install1.png)
 2. **Run the Setup Script**
 
    - Make sure the `webapp_setup.sh` script is executable:
@@ -142,9 +142,13 @@ Before installing CyberApp, ensure you have the following:
    - Restart the Apache server
    - Create an immersive mission script (`launch_mission.sh`) and a Desktop shortcut (`launch_cyberapp_mission.desktop`)
 
+![Alt Text](/screenshot/install22.png)
+
 3. **Check the Installation**
 
    - After running the setup script, you will find a new file on your desktop called **CyberApp Mission**. Double-click this file to start the immersive missioad
+   ![Alt Text](/screenshot/install2.png)
+   ![Alt Text](/screenshot/install3.png)
 
 ## Uninstallation
 
