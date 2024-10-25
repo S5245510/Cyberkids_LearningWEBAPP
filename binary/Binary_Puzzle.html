@@ -307,6 +307,10 @@
         <p>The First Barrier appears before you: a binary code flashing on the monitor. The system awaits your response. To proceed, you must decode the binary sequence to its decimal equivalent to unlock the gateway.</p>
 
         <p><strong>Binary Code:</strong> 1101</p>
+       <p class="hint">Step 2: Calculate the Value of Each Position</p>
+       <p class="hint">Multiply each binary digit by its corresponding power of 2:</p>
+        <img src="h1.png" alt="Description of the image" style="width: 30%; height: 30%;"></img>
+            <p class="hint">Step 3:Add up all the values to get the decimal equivalent:</p>
             
         <p class="result" id="result1"></p>
         <form id="form1" class="answer-input">
@@ -334,6 +338,9 @@
         </div>
         <p>You encounter a sophisticated firewall. To bypass it, convert this decimal number into its binary form and send the correct code.</p>
         <p><strong>Decimal Number:</strong> 9</p>
+        <p class="hint">Step 1: Divide the number by 2 and record the remainder each time repeatedly until the quotient is 0.</p>
+        <img src="h2.png" alt="Description of the image" style="width: 30%; height: 30%;"></img>
+            <p class="hint">Step 2: Write the Remainders in Reverse Order</p>
         <p class="result" id="result2"></p>
         <form id="form2" class="answer-input">
             <label for="answer2">Your Answer:</label>
@@ -358,7 +365,8 @@
     </div>
     <p>When the guard leaves, you open your laptop and a stream of encrypted data flows through the system. Decode the binary code to decimal and reveal the hidden message and gain access to the next node.</p>
     <p><strong>Binary Code:</strong> 10110</p>
-    <p class="hint">Hint  2^4 + 0 ⋅ 2^3 + 1 ⋅ 2^2 + 1 ⋅ 2^1 + 0 ⋅ 2^0</p>
+    <p class="hint">Each digit in binary corresponds to a power of 2, starting from the right. For 10110, we label the positions as follows:</p>
+    <p class="hint">2^4 + 0 ⋅ 2^3 + 1 ⋅ 2^2 + 1 ⋅ 2^1 + 0 ⋅ 2^0</p>
    
     <p class="result" id="result3"></p>
     <form id="form3" class="answer-input">
@@ -384,6 +392,9 @@
     </div>
     <p>A security drone spots you and blocks your path. Quickly convert this decimal number into binary to disable it and avoid detection.</p>
     <p><strong>Decimal Number:</strong> 12</p>
+    <p class="hint">This time calculate by yourself.</p>
+    <p class="hint">Write down the remainders in reverse order. This gives you the binary representation of 12.</p>
+    <img src="h4.png" alt="Description of the image" style="width: 30%; height: 30%;"></img>
     <p class="result" id="result4"></p>
     <form id="form4" class="answer-input">
         <label for="answer4">Your Answer:</label>
@@ -408,6 +419,8 @@
     </div>
     <p>Oh No! You tripped the sensor! Convert the binary code into decimal to stop it!</p>
     <p><strong>Binary Code:</strong> 10011</p>
+    <p class="hint">This time calculate by yourself.</p>
+    <img src="h5.png" alt="Description of the image" style="width: 70%; height: 10%;"></img>
     <p class="result" id="result5"></p>
     <form id="form5" class="answer-input">
         <label for="answer5">Your Answer:</label>
@@ -416,7 +429,7 @@
     </form>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <video src="5.mp4" alt="Description of the image" autoplay loop muted style="width: 50%; height: 50%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
+    <video src="5.mp4" alt="Description of the image" autoplay loop muted style="width: 30%; height: 30%; display: block; margin-left: 0; margin-bottom: 20px;"></video>
     <!-- <img src="5.png" alt="Description of the image"> -->
     <p class="hidden story" id="story5">It is too late, you hear footsteps approaching. You stash the USB drive in your jacket and quickly duck behind a pillar. A group of security guards passes by, talking about a suspicious activity alert. You wait for them to leave before sneaking into the main server room to continue your mission.</p>
 </div>
@@ -432,7 +445,12 @@
     </div>
     <p>You need a decryption key to unlock a high-end code lock. Convert the hexadecimal code to text to gain access to the secured area.</p>
     <p><strong>Hexadecimal Code:</strong> 48 65 6c 6c 6f</p>
+    <p class="hint">Step 1: Convert Each Hexadecimal Pair to Decimal</p>
+    <img src="h6.png" alt="Description of the image" style="width: 50%; height: 50%;"></img>
+    <p class="hint">Step 2: Find the ASCII Character for Each Decimal Value</p>
+    <img src="ascii.png" alt="Description of the image" style="width: 50%; height: 50%;"></img>
     <p class="hint">Beaware of the Case Sensitivity.</p>
+    
     <p class="result" id="result6"></p>
     <form id="form6" class="answer-input">
         <label for="answer6">Your Answer:</label>
@@ -458,6 +476,8 @@
     </div>
     <p>You've found an air vent to sneak into. To access the transferred files on your laptop, convert the hexadecimal code to text and decrypt the system.</p>
     <p><strong>Hexadecimal Code:</strong> 57 6f 72 6c 64</p>
+    <p class="hint">This time calculate by yourself. Follow steps in the last puzzle.</p>
+    <img src="ascii.png" alt="Description of the image" style="width: 50%; height: 50%;"></img>
     <p class="hint">Beaware of the Case Sensitivity.</p>
     <p class="result" id="result7"></p>
     <form id="form7" class="answer-input">

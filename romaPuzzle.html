@@ -1007,6 +1007,8 @@
             key: puzzle.key
         });
 
+            ProgressTracker.recordAttempt('roma', currentLevel);
+
             if (puzzle) {
                 const userSolution = Array.from(decodeSlots).map(slot => slot.textContent).join('');
                 const correctSolution = caesarDecrypt(puzzle.encryptedMessage, puzzle.key);
@@ -1027,7 +1029,7 @@
                     };
 
                     const storyKey = 'roma'; // Make sure this function is defined
-                        ProgressTracker.recordAttempt(storyKey, currentLevel);
+                        
                         const stars = ProgressTracker.calculateStars(storyKey, currentLevel);
                         console.log(`Earned ${stars} stars for level ${currentLevel}`);
                         
